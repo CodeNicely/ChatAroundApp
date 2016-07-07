@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_below="@+id/app_Bar"
+    tools:context="com.fame.plumbum.chataround.MainActivity"
+    tools:showIn="@layout/app_bar_main">
+    <ImageView
+        android:id="@+id/image_user"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@mipmap/ic_launcher"
+        android:background="#7F224446"
+        android:layout_above="@+id/phone"
+        />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="KAUSTUB JOSHI"
+        android:textSize="20sp"
+        android:textColor="#FFFFFF"
+        android:paddingLeft="8dp"
+        android:layout_marginLeft="8dp"
+        android:paddingTop="8dp"
+        android:layout_marginTop="60dp"
+        />
+    <TextView
+        android:id="@+id/phone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="+91-9643531782"
+        android:textSize="18sp"
+        android:textColor="#000000"
+        android:padding="10dp"
+        android:gravity="center_horizontal"
+        android:layout_above="@+id/edit_button"
+
+        />
+    <Button
+        android:id="@+id/edit_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="EDIT"
+        android:textSize="20sp"
+        android:background="#FFFF00"
+        android:layout_alignParentBottom="true"
+        />
+
+</RelativeLayout>
