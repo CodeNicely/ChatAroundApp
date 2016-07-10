@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
     android:layout_below="@+id/app_Bar"
     tools:context="com.fame.plumbum.chataround.MainActivity"
     tools:showIn="@layout/app_bar_main">
@@ -10,41 +11,53 @@
         android:id="@+id/image_user"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@mipmap/ic_launcher"
         android:background="#7F224446"
         android:layout_above="@+id/phone"
         />
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:src="@drawable/ic_profile"
+        />
     <TextView
+        android:id="@+id/name_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="KAUSTUB JOSHI"
         android:textSize="20sp"
         android:textColor="#FFFFFF"
-        android:paddingLeft="8dp"
-        android:layout_marginLeft="8dp"
+        android:paddingLeft="16dp"
         android:paddingTop="8dp"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="4dp"
         />
     <TextView
-        android:id="@+id/phone"
+        android:id="@+id/phone_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="+91-9643531782"
         android:textSize="18sp"
         android:textColor="#000000"
+        android:background="@color/colorPrimary"
         android:padding="10dp"
         android:gravity="center_horizontal"
-        android:layout_above="@+id/edit_button"
-
-        />
-    <Button
-        android:id="@+id/edit_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="EDIT"
-        android:textSize="20sp"
-        android:background="#FFFF00"
         android:layout_alignParentBottom="true"
         />
+
+    <com.github.clans.fab.FloatingActionButton
+        android:id="@+id/edit_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:layout_marginBottom="8dp"
+        android:layout_marginRight="8dp"
+        android:src="@drawable/ic_edit_white_36dp"
+        fab:fab_colorNormal="@color/green"
+        fab:fab_colorPressed="#E55101"
+        fab:fab_colorRipple="#99FFFFFF"
+        android:layout_above="@+id/phone_text"
+        android:layout_alignParentRight="true"
+        />
+    
 
 </RelativeLayout>

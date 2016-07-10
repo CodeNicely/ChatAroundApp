@@ -1,46 +1,111 @@
 package com.fame.plumbum.chataround;
 
+import android.app.Dialog;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.view.View;
-import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.Window;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+import com.github.clans.fab.FloatingActionButton;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
+
+public class MainActivity extends AppCompatActivity {
+    String phone = "", name = "", editing = "0";
+    TextView phone_text, name_text;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        setContentView(R.layout.app_bar_main);
+        FloatingActionButton edit_button = (FloatingActionButton) findViewById(R.id.edit_button);
+        phone_text = (TextView)findViewById(R.id.phone_text);
+        name_text = (TextView) findViewById(R.id.name_text);
+        edit_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Dialog dialogLogout = new Dialog(MainActivity.this);
+                dialogLogout.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                dialogLogout.setContentView(R.layout.dialog_edit);
+                final EditText name_edit = (EditText) dialogLogout.findViewById(R.id.name);
+                final EditText phone_edit = (EditText) dialogLogout.findViewById(R.id.phone);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+                Button update = (Button) dialogLogout.findViewById(R.id.update);
+                update.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (phone_edit.getText().toString().length() == 10 && name_edit.getText().toString().length() != 0) {
+                            name = name_edit.getText().toString();
+                            phone = phone_edit.getText().toString();
+                            dialogLogout.dismiss();
+                            sendData();
+                        }else
+                            Toast.makeText(MainActivity.this, "Invalid Entries!", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                dialogLogout.show();
+            }
+        });
     }
 
-    @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
+    private void sendData() {
+        StringRequest myReq = new StringRequest(Request.Method.POST,
+                "http://ec2-52-66-45-251.ap-south-1.compute.amazonaws.com:8080/AddProfile",
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject jO = new JSONObject(response);
+                            if (jO.getString("Status").contentEquals("200")){
+                                name_text.setText(name);
+                                phone_text.setText(phone);
+                            }else if(jO.getString("Status").contentEquals("400")){
+                                Toast.makeText(MainActivity.this, "Something went wrong", Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(MainActivity.this, "Something went wrong", Toast.LENGTH_SHORT).show();
+                    }
+                }) {
+            protected Map<String, String> getParams() throws com.android.volley.AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+                Log.e("TAG", sp.getString("uid", null)+" "+ phone+" "+ name+" "+ editing);
+                params.put("UserID", sp.getString("uid", null));
+                params.put("Mobile", phone);
+                params.put("Name", name);
+                params.put("IsEditing", editing);
+                return params;
+            };
+        };
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(myReq);
     }
 
     @Override
@@ -63,30 +128,5 @@ public class MainActivity extends AppCompatActivity
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
-        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
     }
 }

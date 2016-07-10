@@ -2,10 +2,12 @@ package com.fame.plumbum.chataround;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -122,17 +124,32 @@ public class LoginActivity extends AppCompatActivity {
 
     void registerUser(){
         StringRequest myReq = new StringRequest(Request.Method.POST,
-                "52.77.174.102:8080/CreateUser",
+                "http://ec2-52-66-45-251.ap-south-1.compute.amazonaws.com:8080/CreateUser",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Log.e("RESPONSE", response);
+                        try {
+                            JSONObject jO = new JSONObject(response);
+                            if (jO.getString("Status").contentEquals("200")){
+                                SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(LoginActivity.this);
+                                SharedPreferences.Editor editor = sp.edit();
+                                editor.putString("uid", jO.getString("UserId"));
+                                editor.apply();
+                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                startActivity(intent);
+                            }else if(jO.getString("Status").contentEquals("400")){
+                                Toast.makeText(LoginActivity.this, "Email  already registered", Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-
+                        Toast.makeText(LoginActivity.this, "Something went wrong", Toast.LENGTH_SHORT).show();
                     }
                 }) {
             protected Map<String, String> getParams() throws com.android.volley.AuthFailureError {
