@@ -10,6 +10,9 @@ android {
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
+
+        multiDexEnabled true
+
     }
     buildTypes {
         release {
@@ -17,6 +20,15 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    dexOptions {
+        javaMaxHeapSize "4g"
+    }
+}
+
+
+repositories {
+    mavenCentral()
 }
 
 dependencies {
@@ -27,9 +39,21 @@ dependencies {
     compile 'com.facebook.android:facebook-android-sdk:4.6.0'
     compile 'com.android.volley:volley:1.0.0'
     compile 'com.github.clans:fab:1.5.5'
+//    compile 'com.squareup.okhttp:okhttp:2.2.0'
+//    compile 'com.google.code.gson:gson:2.3'
+    compile 'com.squareup.retrofit2:retrofit:2.1.0'
+    compile 'com.squareup.retrofit2:converter-gson:2.0.2'
 
+    compile 'com.google.firebase:firebase-core:9.2.1'
+    compile 'com.google.android.gms:play-services:9.2.1'
+    compile 'com.android.support:multidex:1.0.1'
+//    compile group: 'cz.msebera.android' , name: 'httpclient', version: '4.4.1.1'
+//    compile group: 'org.apache.httpcomponents', name: 'httpmime', version: '4.3.1'
+
+
+
+    compile 'junit:junit:4.12'
 }
 
-repositories {
-    mavenCentral()
-}
+
+apply plugin: 'com.google.gms.google-services'

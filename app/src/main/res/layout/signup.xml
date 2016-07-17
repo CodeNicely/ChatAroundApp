@@ -5,15 +5,6 @@
     android:layout_height="match_parent"
     android:background="@drawable/ic_bg_main"
     >
-    <TextView
-        android:id="@+id/auto"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="#000000"
-        android:text="KEY"
-        android:layout_alignParentTop="true"
-        android:layout_margin="8dp"
-        />
     <LinearLayout
         android:orientation="vertical" android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -37,7 +28,7 @@
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
+            android:layout_gravity="center"
             >
             <EditText
                 android:id="@+id/email_edit"
@@ -63,10 +54,10 @@
                 android:layout_alignRight="@+id/email_edit"
                 />
             <Button
-                android:id="@+id/login"
+                android:id="@+id/sign_up"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Login"
+                android:text="Sign Up"
                 android:background="@color/colorPrimary"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="4dp"
@@ -74,43 +65,5 @@
                 android:layout_centerHorizontal="true"
                 />
         </RelativeLayout>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="OR"
-            android:textColor="#000000"
-            android:textStyle="bold"
-            android:textSize="15sp"
-            android:layout_marginTop="8dp"
-            android:layout_gravity="center_horizontal"
-            />
-
-        <com.facebook.login.widget.LoginButton
-            android:id="@+id/fb_signin"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:paddingBottom="15dp"
-            android:paddingTop="15dp"
-            android:layout_marginTop="8dp"/>
     </LinearLayout>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="OR"
-        android:textColor="#000000"
-        android:textStyle="bold"
-        android:textSize="15sp"
-        android:layout_marginBottom="4dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_above="@+id/sign_up"
-        android:layout_centerHorizontal="true"
-        />
-    <Button
-        android:id="@+id/sign_up"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="SIGN UP"
-        android:layout_alignParentBottom="true"
-        android:background="@color/colorPrimary" />
 </RelativeLayout>

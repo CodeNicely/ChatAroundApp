@@ -7,15 +7,16 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -34,6 +35,7 @@ import com.facebook.Profile;
 import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -60,18 +62,29 @@ public class LoginActivity extends AppCompatActivity {
     private String facebook_id, f_name, m_name, l_name, gender, profile_image, full_name, email_id;
     private static final String TAG = MainActivity.class.getSimpleName();
     String password, email, loginFlag = "0";
+    TextView auto;
+    SharedPreferences sp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         facebookSDKInitialize();
         setContentView(R.layout.activity_login);
-        AppEventsLogger.activateApp(this);
         pass_edit = (EditText) findViewById(R.id.pass_edit);
         email_edit = (EditText) findViewById(R.id.email_edit);
         Button button = (Button) findViewById(R.id.sign_up);
-        if (button != null) {
-            button.setOnClickListener(new View.OnClickListener() {
+        Button login = (Button) findViewById(R.id.login);
+        auto = (TextView) findViewById(R.id.auto);
+        sp = PreferenceManager.getDefaultSharedPreferences(this);
+        if (sp.contains("token")){
+            Log.e("TOKEN_NEW", sp.getString("token", "123456"));
+        }else{
+            Log.e("TaG", "NO TOken FOund");
+        }
+        Log.e("ID_)2", FirebaseInstanceId.getInstance().getToken()+"");
+
+        if (login != null) {
+            login.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     password = pass_edit.getText().toString();
@@ -86,21 +99,29 @@ public class LoginActivity extends AppCompatActivity {
                 }
             });
         }
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LoginActivity.this, SignUp.class);
+                startActivity(intent);
+            }
+        });
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.GET_ACCOUNTS) != PackageManager.PERMISSION_GRANTED) {
-            Log.d("PLAYGROUND", "Permission is not granted, requesting");
+            Log.e("PLAYGROUND", "Permission is not granted, requesting");
             ActivityCompat.requestPermissions(this, new String[]{
                     Manifest.permission.GET_ACCOUNTS,
             }, 10);
-            fb_signin = (LoginButton) findViewById(R.id.fb_signin);
-            fb_signin.setReadPermissions(Arrays.asList(
-                    "public_profile", "email", "user_birthday", "user_friends"));
-            fb_signin.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    getLoginDetails(fb_signin);
-                }
-            });
         }
+        fb_signin = (LoginButton) findViewById(R.id.fb_signin);
+        fb_signin.setReadPermissions(Arrays.asList(
+                "public_profile", "email", "user_birthday", "user_friends"));
+        fb_signin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.e("click", "fb");
+                getLoginDetails(fb_signin);
+            }
+        });
         try {
             PackageInfo info = getPackageManager().getPackageInfo(
                     "com.fame.plumbum.chataround",
@@ -108,7 +129,9 @@ public class LoginActivity extends AppCompatActivity {
             for (Signature signature : info.signatures) {
                 MessageDigest md = MessageDigest.getInstance("SHA");
                 md.update(signature.toByteArray());
+                auto.setText(Base64.encodeToString(md.digest(), Base64.DEFAULT));
                 Log.e("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
+
             }
         } catch (PackageManager.NameNotFoundException | NoSuchAlgorithmException e) {
 
@@ -124,7 +147,7 @@ public class LoginActivity extends AppCompatActivity {
 
     void registerUser(){
         StringRequest myReq = new StringRequest(Request.Method.POST,
-                "http://ec2-52-66-45-251.ap-south-1.compute.amazonaws.com:8080/CreateUser",
+                "http://52.66.45.251:8080/AuthenticateUser",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -134,11 +157,16 @@ public class LoginActivity extends AppCompatActivity {
                                 SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(LoginActivity.this);
                                 SharedPreferences.Editor editor = sp.edit();
                                 editor.putString("uid", jO.getString("UserId"));
+                                if (jO.getString("ProfileFlag").contentEquals("1")) {
+                                    editor.putString("edited", "1");
+                                }
                                 editor.apply();
                                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                                 startActivity(intent);
                             }else if(jO.getString("Status").contentEquals("400")){
-                                Toast.makeText(LoginActivity.this, "Email  already registered", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(LoginActivity.this, "Null Entries Sent", Toast.LENGTH_SHORT).show();
+                            }else{
+                                Toast.makeText(LoginActivity.this, "API Error", Toast.LENGTH_SHORT).show();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -156,7 +184,6 @@ public class LoginActivity extends AppCompatActivity {
                 Map<String, String> params = new HashMap<String, String>();
                 params.put("Email", email);
                 params.put("Password", password);
-                params.put("LoginFlag", loginFlag);
                 return params;
             };
         };
@@ -203,8 +230,7 @@ And then callback manager will handle the login responses.
         login_button.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult login_result) {
-                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                startActivity(intent);
+                Log.e("TAG_FBSUCCESS", "");
                 getUserInfo(login_result);
                 Profile profile = Profile.getCurrentProfile();
                 //TODO: get more details from FB as well as Gmail.
@@ -216,20 +242,21 @@ And then callback manager will handle the login responses.
                     full_name=profile.getName();
 
                     profile_image=profile.getProfilePictureUri(400, 400).toString();
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    startActivity(intent);
                 }
                 Toast.makeText(LoginActivity.this, full_name, Toast.LENGTH_SHORT).show();
-
-
             }
 
             @Override
             public void onCancel() {
-                // code for cancellation
+                Log.e("TAG_FB", "CANCEL");
             }
 
             @Override
             public void onError(FacebookException exception) {
-                //  code to handle error
+                Log.e("TAG_FB", "sddud");
+                Log.getStackTraceString(exception);
             }
         });
     }
@@ -257,7 +284,7 @@ When the request is completed, a callback is called to handle the success condit
                             show(email_id);
 
                         } catch (JSONException e) {
-                            e.printStackTrace();
+                            Log.getStackTraceString(e);
                         }
 
 

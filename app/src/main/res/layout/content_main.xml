@@ -8,13 +8,16 @@
     tools:context="com.fame.plumbum.chataround.MainActivity"
     tools:showIn="@layout/app_bar_main">
     <ImageView
-        android:id="@+id/image_user"
+        android:id="@+id/image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#7F224446"
         android:layout_above="@+id/phone"
+        android:layout_marginTop="58dp"
         />
+
     <ImageView
+        android:id="@+id/image_user"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
@@ -29,7 +32,7 @@
         android:textColor="#FFFFFF"
         android:paddingLeft="16dp"
         android:paddingTop="8dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="64dp"
         />
     <TextView
         android:id="@+id/phone_text"
@@ -42,6 +45,21 @@
         android:padding="10dp"
         android:gravity="center_horizontal"
         android:layout_alignParentBottom="true"
+        />
+
+    <com.github.clans.fab.FloatingActionButton
+        android:id="@+id/add_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:layout_marginBottom="8dp"
+        android:layout_marginRight="8dp"
+        android:src="@drawable/ic_edit_white_36dp"
+        fab:fab_colorNormal="@color/green"
+        fab:fab_colorPressed="#E55101"
+        fab:fab_colorRipple="#99FFFFFF"
+        android:layout_above="@+id/edit_button"
+        android:layout_alignParentRight="true"
         />
 
     <com.github.clans.fab.FloatingActionButton

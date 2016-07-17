@@ -18,23 +18,45 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:name="android.support.multidex.MultiDexApplication"
+        >
+        <service
+            android:name=".fcm.MyFirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
+        <service
+            android:name=".fcm.MyFirebaseInstanceIDService"
+            >
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+            </intent-filter>
+        </service>
         <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
         <activity
             android:name=".LoginActivity"
-            android:label="@string/app_name"/>
-        <activity android:name=".SplashScreen"
-            android:theme="@style/SplashTheme">
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            </activity>
+        <activity android:name=".SplashScreen"
+            android:theme="@style/SplashTheme">
             </activity>
         <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_main"
+            android:theme="@style/AppTheme.NoActionBar"
             />
+        <activity
+            android:name=".SignUp"
+            android:label="@string/title_activity_main"
+            >
+
+        </activity>
 
         <activity
             android:name="com.facebook.FacebookActivity"

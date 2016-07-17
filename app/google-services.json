@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "174878464807",
+    "firebase_url": "https://onemile-244e4.firebaseio.com",
+    "project_id": "onemile-244e4",
+    "storage_bucket": "onemile-244e4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:174878464807:android:6cbd1eb37ebd5645",
+        "android_client_info": {
+          "package_name": "com.fame.plumbum.chataround"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "174878464807-p22e365n34151bpjk72s4fgumuok7eks.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.fame.plumbum.chataround",
+            "certificate_hash": "253BF9C345C9EC78145D1BF50F9AC28D3FCCB217"
+          }
+        },
+        {
+          "client_id": "174878464807-os6fo4saakicef9oafe6f4ul8p56hjol.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBjrrA5WZVcShJ13A6q428F552joqLILmc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "174878464807-os6fo4saakicef9oafe6f4ul8p56hjol.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
