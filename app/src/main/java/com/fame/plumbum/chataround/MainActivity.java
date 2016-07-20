@@ -33,7 +33,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.fame.plumbum.chataround.models.FromServer;
 import com.github.clans.fab.FloatingActionButton;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -46,6 +48,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -56,6 +59,9 @@ import retrofit2.Callback;
 //import com.squareup.okhttp.RequestBody;
 
 public class MainActivity extends AppCompatActivity {
+
+    public final String LOG_TAG = getClass().getSimpleName();
+
     String phone = "", name = "", editing = "0";
     TextView phone_text, name_text;
     ImageView user;
@@ -117,64 +123,44 @@ public class MainActivity extends AppCompatActivity {
         }
     }
         //1. What We Need From Server
-        public class FromServer {
-            String Message;
-            int Status;
-            String filename;
 
-            public int getStatus() {
-                return Status;
-            }
-
-            public String getMessage() {
-                return Message;
-            }
-
-            public String getFilename() {
-                return filename;
-            }
-
-            public void setFilename(String filename) {
-                this.filename = filename;
-            }
-
-            public void setStatus(int status) {
-                Status = Status;
-            }
-
-            public void setMessage(String message) {
-                Message = Message;
-            }
+    private void getImage(){
+        if (sp.contains("image")) {
+            Picasso.with(MainActivity.this).load("http://52.66.45.251:8080/ImageReturn?UserId=" + sp.getString("uid", "578b119a7c4ec26dcab64a21")).resize(512, 512).into(user);
         }
-
+    }
         //3. How To Upload
         void sendImage_one() {
             ServerAPI api = ServerAPI.retrofit.create(ServerAPI.class);
 
             //MediaType.parse(file.getName().substring(file.getName().lastIndexOf(".")+1).endsWith("png") ? "image/png" : "image/jpeg"), file)
             RequestBody to_server = RequestBody.create(MediaType.parse("multipart/form-data"), file);
-            api.upload("578b119a7c4ec26dcab64a21", to_server).enqueue(new Callback<FromServer>() {
+
+            MultipartBody.Part body = MultipartBody.Part.createFormData("file", file.getName(),
+                    to_server);
+
+            api.upload(sp.getString("uid", "578b119a7c4ec26dcab64a21"), body).enqueue(new Callback<FromServer>() {
                 @Override
                 public void onResponse(Call<FromServer> call, retrofit2.Response<FromServer> response) {
-                    int code = response.code();
-                    if (code == 200) {
-                        Log.e("TAG_200", response.body().Status+" " + response.isSuccessful());
-                        Toast.makeText(MainActivity.this, "Error: RESET ROUTES!", Toast.LENGTH_SHORT).show();
+                    FromServer formSever = response.body();
+                    if (formSever.getStatus()==200){
+                        Toast.makeText(MainActivity.this, "Image Uploaded!", Toast.LENGTH_SHORT).show();
+                        SharedPreferences.Editor editor = sp.edit();
+                        editor.putString("image", "1");
+                        editor.apply();
+
                     }else{
-                        Toast.makeText(MainActivity.this, "Slow connection!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, "Error uploading image!", Toast.LENGTH_SHORT).show();
                     }
                 }
 
                 @Override
                 public void onFailure(Call<FromServer> call, Throwable t) {
+                    Toast.makeText(MainActivity.this, "Error uploading image!", Toast.LENGTH_SHORT).show();
                     Log.e("TAG_FAILURE", Log.getStackTraceString(t));
                 }
             });
         }
-
-    void getImages(){
-
-    }
 
 
 //    void sendImage(){

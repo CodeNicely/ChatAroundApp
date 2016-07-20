@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#FFD602</color>
-    <color name="colorPrimaryDark">#FFD602</color>
+    <color name="colorPrimary">#FDA601</color>
+    <color name="colorPrimaryDark">#132753</color>
     <color name="colorAccent">#FF4081</color>
     <color name="gray">#DCDCDC</color>
     <color name="green">#228B22</color>
+    <color name = "chat">#FAF7D1</color>
+
 </resources>

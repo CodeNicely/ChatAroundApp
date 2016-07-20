@@ -1,8 +1,9 @@
 package com.fame.plumbum.chataround;
 
+import com.fame.plumbum.chataround.models.FromServer;
 import com.google.gson.Gson;
 
-import okhttp3.RequestBody;
+import okhttp3.MultipartBody;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -18,9 +19,9 @@ public interface ServerAPI {
 
     @Multipart
     @POST("ImageUpload")//Our Destination PHP Script
-    Call<MainActivity.FromServer> upload(
+    Call<FromServer> upload(
             @Query("UserId") String userId,
-            @Part("file") RequestBody file);
+            @Part MultipartBody.Part file);
 
     Retrofit retrofit =
             new Retrofit.Builder()
