@@ -1,6 +1,6 @@
 package com.fame.plumbum.chataround.models;
 
-public class FromServer {
+public class ImageSendData {
             String Message;
             int Status;
             String filename;

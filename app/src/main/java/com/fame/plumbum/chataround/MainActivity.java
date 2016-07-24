@@ -33,7 +33,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.fame.plumbum.chataround.models.FromServer;
+import com.fame.plumbum.chataround.models.ImageSendData;
+import com.fame.plumbum.chataround.queries.ServerAPI;
 import com.github.clans.fab.FloatingActionButton;
 import com.squareup.picasso.Picasso;
 
@@ -66,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
     TextView phone_text, name_text;
     ImageView user;
     SharedPreferences sp;
+    SharedPreferences.Editor editor;
     Bitmap bitmap;
     File file;
     private static final String IMGUR_CLIENT_ID = "...";
@@ -79,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         sp = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+        editor = sp.edit();
         FloatingActionButton edit_button = (FloatingActionButton) findViewById(R.id.edit_button);
         FloatingActionButton image_button = (FloatingActionButton) findViewById(R.id.add_image);
         phone_text = (TextView) findViewById(R.id.phone_text);
@@ -133,19 +136,17 @@ public class MainActivity extends AppCompatActivity {
         void sendImage_one() {
             ServerAPI api = ServerAPI.retrofit.create(ServerAPI.class);
 
-            //MediaType.parse(file.getName().substring(file.getName().lastIndexOf(".")+1).endsWith("png") ? "image/png" : "image/jpeg"), file)
             RequestBody to_server = RequestBody.create(MediaType.parse("multipart/form-data"), file);
 
             MultipartBody.Part body = MultipartBody.Part.createFormData("file", file.getName(),
                     to_server);
 
-            api.upload(sp.getString("uid", "578b119a7c4ec26dcab64a21"), body).enqueue(new Callback<FromServer>() {
+            api.upload(sp.getString("uid", "578b119a7c4ec26dcab64a21"), body).enqueue(new Callback<ImageSendData>() {
                 @Override
-                public void onResponse(Call<FromServer> call, retrofit2.Response<FromServer> response) {
-                    FromServer formSever = response.body();
+                public void onResponse(Call<ImageSendData> call, retrofit2.Response<ImageSendData> response) {
+                    ImageSendData formSever = response.body();
                     if (formSever.getStatus()==200){
                         Toast.makeText(MainActivity.this, "Image Uploaded!", Toast.LENGTH_SHORT).show();
-                        SharedPreferences.Editor editor = sp.edit();
                         editor.putString("image", "1");
                         editor.apply();
 
@@ -155,7 +156,7 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 @Override
-                public void onFailure(Call<FromServer> call, Throwable t) {
+                public void onFailure(Call<ImageSendData> call, Throwable t) {
                     Toast.makeText(MainActivity.this, "Error uploading image!", Toast.LENGTH_SHORT).show();
                     Log.e("TAG_FAILURE", Log.getStackTraceString(t));
                 }
@@ -285,86 +286,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-//    public void executeMultipartPost() throws Exception {
-//        try {
-//            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-//            bitmap.compress(Bitmap.CompressFormat.JPEG, 75, bos);
-//            byte[] data = bos.toByteArray();
-//            HttpClient httpClient = new DefaultHttpClient();
-//            HttpPost postRequest = new HttpPost(
-//                    "http://10.0.2.2/cfc/iphoneWebservice.cfc?returnformat=json&amp;method=testUpload");
-//            MultipartEntityBuilder builder = MultipartEntityBuilder.create();
-//            builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
-//            builder.addPart("file", new FileBody(file));
-//            HttpEntity entity = builder.build();
-//            HttpResponse response = httpClient.execute(postRequest);
-////            BufferedReader reader = new BufferedReader(new InputStreamReader(
-////                    response.getEntity().getContent(), "UTF-8"));
-////            String sResponse;
-////            StringBuilder s = new StringBuilder();
-////
-////            while ((sResponse = reader.readLine()) != null) {
-////                s = s.append(sResponse);
-////            }
-////            System.out.println("Response: " + s);
-//        } catch (Exception e) {
-//            // handle exception here
-//            Log.e(e.getClass().getName(), e.getMessage());
-//        }
-//    }
-
-//        public void sendImages() throws Exception {
-//            // Use the imgur image upload API as documented at https://api.imgur.com/endpoints/image
-//            RequestBody requestBodnew = new MultipartBuilder()
-//
-//                    .type(MultipartBuilder.FORM)
-//                    .addFormDataPart("file", file.getName(),
-//                            RequestBody.create(MediaType.parse(file.getName().substring(file.getName().lastIndexOf(".")+1).endsWith("png") ? "image/png" : "image/jpeg"), file))
-//                    .build();
-//            Log.e("OKSQUARE", "ONE");
-//            com.squareup.okhttp.Request request = new com.squareup.okhttp.Request.Builder()
-//                    .url("http://ec2-52-66-45-251.ap-south-1.compute.amazonaws.com:8080/ImageUpload")
-//                    .post(requestBodnew)
-//                    .build();
-//
-//            com.squareup.okhttp.Response response = client.newCall(request).execute();
-//            if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
-//
-//            Log.e("RESPONSE", response.body().string());
-//        }
-
-//    public static JSONObject uploadImage(String memberId, String sourceImageFile) {
-//
-//        try {
-//            File sourceFile = new File(sourceImageFile);
-//
-//            Log.d("TAG", "File...::::" + sourceFile + " : " + sourceFile.exists());
-//
-//            final MediaType MEDIA_TYPE_PNG = MediaType.parse("image/png");
-//
-//            RequestBody requestBody = new MultipartBuilder()
-//                    .type(MultipartBuilder.FORM)
-//                    .addFormDataPart("member_id", memberId)
-//                    .addFormDataPart("file", "profile.png", RequestBody.create(MEDIA_TYPE_PNG, sourceFile))
-//                    .build();
-//
-//            Request request = new Request.Builder()
-//                    .url(URL_UPLOAD_IMAGE)
-//                    .post(requestBody)
-//                    .build();
-//
-//            OkHttpClient client = new OkHttpClient();
-//            Response response = client.newCall(request).execute();
-//            return new JSONObject(response.body().string());
-//
-//        } catch (UnknownHostException | UnsupportedEncodingException e) {
-//            Log.e(TAG, "Error: " + e.getLocalizedMessage());
-//        } catch (Exception e) {
-//            Log.e(TAG, "Other Error: " + e.getLocalizedMessage());
-//        }
-//        return null;
-//    }
-
     public Uri getImageUri(Context inContext, Bitmap inImage) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
@@ -414,6 +335,8 @@ public class MainActivity extends AppCompatActivity {
                         try {
                             JSONObject jO = new JSONObject(response);
                             if (jO.getString("Status").contentEquals("200")){
+                                editor.putString("user_name", jO.getString("Name"));
+                                editor.apply();
                                 name_text.setText(jO.getString("Name"));
                                 phone_text.setText(jO.getString("Mobile"));
                             }else if(jO.getString("Status").contentEquals("400")){

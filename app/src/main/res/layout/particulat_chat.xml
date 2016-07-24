@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <ListView
+        android:id="@+id/list_chat"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/rl_bottom"
+        android:paddingBottom="4dp"
+        />
+    <RelativeLayout
+        android:id="@+id/rl_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        >
+        <EditText
+            android:id="@+id/chat_add"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter comment here"
+            android:paddingLeft="6dp"
+            android:layout_toLeftOf="@+id/add_button"
+            />
+        <Button
+            android:id="@+id/add_button"
+            android:layout_width="80dp"
+            android:layout_height="40dp"
+            android:layout_alignParentRight="true"
+            android:text="Send"
+            />
+    </RelativeLayout>
+</RelativeLayout>
