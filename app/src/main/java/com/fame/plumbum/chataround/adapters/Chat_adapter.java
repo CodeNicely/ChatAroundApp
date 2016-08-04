@@ -10,27 +10,29 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.fame.plumbum.chataround.R;
+import com.fame.plumbum.chataround.database.ChatTable;
 import com.squareup.picasso.Picasso;
 
-import org.json.JSONArray;
-import org.json.JSONException;
+import java.util.List;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * Created by pankaj on 24/7/16.
  */
 public class Chat_adapter extends BaseAdapter {
     private Context context;
-    private JSONArray chats;
+    public List<ChatTable> chats;
     int total = 0;
 
-    public Chat_adapter(Context context, JSONArray chats){
+    public Chat_adapter(Context context, List<ChatTable> chats){
         this.context = context;
         this.chats= chats;
-        total = chats.length();
+        total = chats.size();
     }
     @Override
     public int getCount() {
-        return total;
+        return chats.size();
     }
 
     @Override
@@ -43,29 +45,43 @@ public class Chat_adapter extends BaseAdapter {
         return 0;
     }
 
+    public void setChats(ChatTable chat ) {
+        chats.add(chat);
+        notifyDataSetChanged();
+    }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View rowView = inflater.inflate(R.layout.list_post_comments, parent, false);
+        View rowView = inflater.inflate(R.layout.list_chat, parent, false);
         RelativeLayout rl_caht = (RelativeLayout)rowView.findViewById(R.id.rL_chat);
-        ImageView user_img = (ImageView) rowView.findViewById(R.id.image_user);
+        CircleImageView user_img = (CircleImageView) rowView.findViewById(R.id.image_user);
         TextView sender_name = (TextView) rowView.findViewById(R.id.sender_name);
         TextView message = (TextView) rowView.findViewById(R.id.message);
         TextView timestamp = (TextView) rowView.findViewById(R.id.timestamp);
-        try {
-            Picasso.with(context).load(""+chats.getJSONObject(position).getString("image")).into(user_img);
-            sender_name.setText(chats.getJSONObject(position).getString("commentor_name"));
-            message.setText(chats.getJSONObject(position).getString("comment"));
-            timestamp.setText(chats.getJSONObject(position).getString("timestamp"));
-        } catch (JSONException e) {
-            e.printStackTrace();
+        RelativeLayout rl_chat_sent = (RelativeLayout)rowView.findViewById(R.id.rL_chat_sent);
+        ImageView user_img_sent = (ImageView) rowView.findViewById(R.id.image_user_sent);
+        TextView sender_name_sent = (TextView) rowView.findViewById(R.id.sender_name_sent);
+        TextView message_sent = (TextView) rowView.findViewById(R.id.message_sent);
+        TextView timestamp_sent = (TextView) rowView.findViewById(R.id.timestamp_sent);
+        if (chats.get(position).getStatus()==2) {
+            rl_chat_sent.setVisibility(View.GONE);
+            rl_caht.setVisibility(View.VISIBLE);
+//            Picasso.with(context).load(chats.get(position).getStatus()==1?chats.get(position).getId()).into(user_img);
+            sender_name.setText(chats.get(position).getRemote_name());
+            message.setText(chats.get(position).getMessage());
+            timestamp.setText(chats.get(position).getTimestamp());
+            Picasso.with(context).load("http://52.66.45.251:8080/ImageReturn?UserId="+chats.get(position).getRemote_name()).error(R.drawable.user).into(user_img);
+        }else{
+            rl_chat_sent.setVisibility(View.VISIBLE);
+            rl_caht.setVisibility(View.GONE);
+//            Picasso.with(context).load(chats.get(position).getStatus()==1?chats.get(position).getId()).into(user_img_sent);
+            sender_name_sent.setText(chats.get(position).getRemote_name());
+            message_sent.setText(chats.get(position).getMessage());
+            timestamp_sent.setText(chats.get(position).getTimestamp());
+            Picasso.with(context).load("http://52.66.45.251:8080/ImageReturn?UserId="+chats.get(position).getRemote_name()).error(R.drawable.user).into(user_img_sent);
         }
-//        rl_comment.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = new Intent(context, );
-//            }
-//        });
+
         return rowView;
     }
 }

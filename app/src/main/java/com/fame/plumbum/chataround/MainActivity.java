@@ -33,9 +33,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.facebook.login.LoginManager;
 import com.fame.plumbum.chataround.models.ImageSendData;
 import com.fame.plumbum.chataround.queries.ServerAPI;
-import com.github.clans.fab.FloatingActionButton;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
@@ -48,16 +48,12 @@ import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
-
-//import com.squareup.okhttp.MediaType;
-//import com.squareup.okhttp.MultipartBuilder;
-//import com.squareup.okhttp.OkHttpClient;
-//import com.squareup.okhttp.RequestBody;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -65,13 +61,14 @@ public class MainActivity extends AppCompatActivity {
 
     String phone = "", name = "", editing = "0";
     TextView phone_text, name_text;
-    ImageView user;
+    CircleImageView user;
     SharedPreferences sp;
     SharedPreferences.Editor editor;
     Bitmap bitmap;
     File file;
     private static final String IMGUR_CLIENT_ID = "...";
     private static final MediaType MEDIA_TYPE_PNG = MediaType.parse("image/png");
+
 //    final OkHttpClient client = new OkHttpClient();
 
     @Override
@@ -80,13 +77,14 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.app_bar_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         sp = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
         editor = sp.edit();
-        FloatingActionButton edit_button = (FloatingActionButton) findViewById(R.id.edit_button);
-        FloatingActionButton image_button = (FloatingActionButton) findViewById(R.id.add_image);
+        ImageView edit_button = (ImageView) findViewById(R.id.edit_button);
+        ImageView image_button = (ImageView) findViewById(R.id.add_image);
         phone_text = (TextView) findViewById(R.id.phone_text);
         name_text = (TextView) findViewById(R.id.name_text);
-        user = (ImageView) findViewById(R.id.image_user);
+        user = (CircleImageView) findViewById(R.id.image_user);
         image_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -121,16 +119,15 @@ public class MainActivity extends AppCompatActivity {
                 dialogLogout.show();
             }
         });
-        if (sp.contains("edited")) {
-            receiveData();
-        }
+        getImage();
+        receiveData();
+//        if (sp.contains("edited")) {
+//            receiveData();
+//        }
     }
-        //1. What We Need From Server
 
-    private void getImage(){
-        if (sp.contains("image")) {
-            Picasso.with(MainActivity.this).load("http://52.66.45.251:8080/ImageReturn?UserId=" + sp.getString("uid", "578b119a7c4ec26dcab64a21")).resize(512, 512).into(user);
-        }
+    private void getImage() {
+        Picasso.with(MainActivity.this).load("http://52.66.45.251:8080/ImageReturn?UserId=" + sp.getString("uid", "578b119a7c4ec26dcab64a21")).resize(512, 512).error(R.drawable.user).into(user);
     }
         //3. How To Upload
         void sendImage_one() {
@@ -149,7 +146,6 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(MainActivity.this, "Image Uploaded!", Toast.LENGTH_SHORT).show();
                         editor.putString("image", "1");
                         editor.apply();
-
                     }else{
                         Toast.makeText(MainActivity.this, "Error uploading image!", Toast.LENGTH_SHORT).show();
                     }
@@ -162,34 +158,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }
-
-
-//    void sendImage(){
-//        StringRequest myReq = new StringRequest(Request.Method.POST,
-//                "http://52.66.45.251:8080/ImageUpload",
-//                new Response.Listener<String>() {
-//                    @Override
-//                    public void onResponse(String response) {
-//                        Log.e("RESPONSEs", response);
-//                    }
-//                },
-//                new Response.ErrorListener() {
-//                    @Override
-//                    public void onErrorResponse(VolleyError error) {
-//                        Log.e("RESPONSE", "ERROR!");
-//                        Toast.makeText(MainActivity.this, "Simething went wrong", Toast.LENGTH_SHORT).show();
-//                    }
-//                }) {
-//            protected Map<String, String> getParams() throws com.android.volley.AuthFailureError {
-//                Map<String, String> params = new HashMap<String, String>();
-//                params.put("UserId", sp.getString("uid", "17"));
-//                params.put("file", getStringImage(bitmap));
-//                return params;
-//            };
-//        };
-//        RequestQueue requestQueue = Volley.newRequestQueue(this);
-//        requestQueue.add(myReq);
-//    }
 
     public String getStringImage(Bitmap bmp){
         int width = bmp.getWidth();
@@ -266,7 +234,6 @@ public class MainActivity extends AppCompatActivity {
                 c.moveToFirst();
                 int columnIndex = c.getColumnIndex(filePath[0]);
                 String picturePath = c.getString(columnIndex);
-                Log.e("PICTURE", picturePath);
                 c.close();
                 BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
                 bitmapOptions.inJustDecodeBounds = true;
@@ -284,6 +251,12 @@ public class MainActivity extends AppCompatActivity {
                 Log.e("TAG_ActivityResult", Log.getStackTraceString(e));
             }
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
     }
 
     public Uri getImageUri(Context inContext, Bitmap inImage) {
@@ -334,16 +307,19 @@ public class MainActivity extends AppCompatActivity {
                     public void onResponse(String response) {
                         try {
                             JSONObject jO = new JSONObject(response);
+                            Log.e("response", jO.getString("Status"));
                             if (jO.getString("Status").contentEquals("200")){
                                 editor.putString("user_name", jO.getString("Name"));
+                                Log.e("user_name", jO.getString("Name"));
                                 editor.apply();
                                 name_text.setText(jO.getString("Name"));
                                 phone_text.setText(jO.getString("Mobile"));
-                            }else if(jO.getString("Status").contentEquals("400")){
-                                Toast.makeText(MainActivity.this, "Unable to fetch data", Toast.LENGTH_SHORT).show();
+                            }else{
+                                //  if(jO.getString("Status").contentEquals("400")){
+                                Toast.makeText(MainActivity.this, "No data found.", Toast.LENGTH_SHORT).show();
                             }
                         } catch (JSONException e) {
-                            e.printStackTrace();
+                            Log.getStackTraceString(e);
                         }
 
                     }
@@ -351,10 +327,11 @@ public class MainActivity extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Log.e("ERROR_VOLLETY", error.toString());
+                        Log.getStackTraceString(error);
                         Toast.makeText(MainActivity.this, "Something went wrong", Toast.LENGTH_SHORT).show();
                     }
                 }) {
+
             protected Map<String, String> getParams() throws com.android.volley.AuthFailureError {
                 Map<String, String> params = new HashMap<String, String>();
                 SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
@@ -373,18 +350,22 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(String response) {
                         try {
+                            Log.e("addprofile_1", "gotr in repsonse");
                             JSONObject jO = new JSONObject(response);
                             if (jO.getString("Status").contentEquals("200")){
+                                Log.e("ADDPROFILE", jO.getString("Status"));
                                 name_text.setText(name);
                                 phone_text.setText(phone);
                                 SharedPreferences.Editor editor = sp.edit();
                                 editor.putString("edited", "1");
+                                editor.putString("user_name", name);
                                 editor.apply();
+                                Toast.makeText(MainActivity.this, "Data sent!", Toast.LENGTH_SHORT).show();
                             }else if(jO.getString("Status").contentEquals("400")){
-                                Toast.makeText(MainActivity.this, "Something went wrong", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(MainActivity.this, "Couldnt update entries!", Toast.LENGTH_SHORT).show();
                             }
                         } catch (JSONException e) {
-                            e.printStackTrace();
+                            Log.getStackTraceString(e);
                         }
 
                     }
@@ -392,8 +373,8 @@ public class MainActivity extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Log.e("ERROR_VOLLETY", error.toString());
                         Toast.makeText(MainActivity.this, "Something went wrong", Toast.LENGTH_SHORT).show();
+                        Log.getStackTraceString(error);
                     }
                 }) {
             protected Map<String, String> getParams() throws com.android.volley.AuthFailureError {
@@ -401,8 +382,8 @@ public class MainActivity extends AppCompatActivity {
                 SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
                 Log.e("TAG", sp.getString("uid", null)+" "+ phone+" "+ name+" "+ editing);
                 params.put("UserId", sp.getString("uid", null));
-                params.put("Mobile", phone);
-                params.put("Name", name);
+                params.put("Mobile", phone.replace(" ", "%20"));
+                params.put("Name", name.replace(" ", "%20"));
                 params.put("IsEditing", editing);
                 return params;
             };
@@ -426,14 +407,15 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }else if (id == R.id.action_logout){
+        if (id == R.id.action_logout){
             SharedPreferences.Editor editor = sp.edit();
             editor.clear();
             editor.apply();
+            LoginManager.getInstance().logOut();
             Intent intent = new Intent(MainActivity.this, LoginActivity.class);
             startActivity(intent);
+            finish();
+        }else if (id == android.R.id.home){
             finish();
         }
         return super.onOptionsItemSelected(item);

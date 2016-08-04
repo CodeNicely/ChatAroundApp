@@ -47,6 +47,8 @@ dependencies {
     compile 'com.google.firebase:firebase-core:9.2.1'
     compile 'com.google.android.gms:play-services:9.2.1'
     compile 'com.android.support:multidex:1.0.1'
+    compile 'de.hdodenhof:circleimageview:2.1.0'
+
 //    compile group: 'cz.msebera.android' , name: 'httpclient', version: '4.4.1.1'
 //    compile group: 'org.apache.httpcomponents', name: 'httpmime', version: '4.3.1'
 

@@ -5,44 +5,60 @@ package com.fame.plumbum.chataround.database;
  */
 public class ChatTable {
     int id;
-    int post_id;
-    String remote_id;
     int status;
-    String comment;
+    String post_id;
+    String remote_id;
+    String remote_name;
+    String poster_name;
+    String message;
     String timestamp;
 
     public ChatTable(){
-        remote_id = "";
         status = 0;
-        comment = "";
+        post_id = "";
+        poster_name = "";
+        remote_id = "";
+        remote_name = "";
+        message = "";
         timestamp = "";
     }
 
-    public ChatTable(int status, String remote_id, String comment, String timestamp){
-        this.timestamp = timestamp;
-        this.comment = comment;
+    public ChatTable(int status, String post_id, String remote_id, String poster_name, String remote_name, String message, String timestamp){
         this.status = status;
+        this.post_id = post_id;
+        this.poster_name = poster_name;
         this.remote_id = remote_id;
+        this.remote_name = remote_name;
+        this.message = message;
+        this.timestamp = timestamp;
     }
 
     public int getId() {
         return id;
     }
 
-    public int getPost_id() {
+    public int getStatus() {
+        return status;
+    }
+
+    public String getPost_id() {
         return post_id;
+    }
+
+    public String getPoster_name() {
+        return poster_name;
     }
 
     public String getRemote_id() {
         return remote_id;
     }
 
-    public int getStatus() {
-        return status;
+    public String getRemote_name() {
+        return remote_name;
     }
 
-    public String getComment() {
-        return comment;
+    public String getMessage() {
+        return message;
     }
 
     public String getTimestamp() {
@@ -57,16 +73,24 @@ public class ChatTable {
         this.status = status;
     }
 
-    public void setComment(String comment) {
-        this.comment = comment;
+    public void setPoster_name(String poster_name) {
+        this.poster_name = poster_name;
     }
 
-    public void setPost_id(int post_id) {
+    public void setPost_id(String post_id) {
         this.post_id = post_id;
     }
 
-    public void setRemote_id(String remote_id) {
+    public void setRemote_id(String remoter_id) {
         this.remote_id = remote_id;
+    }
+
+    public void setRemote_name(String remote_name) {
+        this.remote_name = remote_name;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     public void setTimestamp(String timestamp) {

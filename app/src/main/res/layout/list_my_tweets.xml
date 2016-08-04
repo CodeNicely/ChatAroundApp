@@ -6,7 +6,7 @@
         android:id="@+id/rL_tweet"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <ImageView
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/image_user_post"
             android:layout_width="50dp"
             android:layout_height="50dp"

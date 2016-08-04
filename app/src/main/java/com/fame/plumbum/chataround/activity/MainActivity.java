@@ -1,4 +1,4 @@
-package com.fame.plumbum.chataround.chat;
+package com.fame.plumbum.chataround.activity;
 
 import android.Manifest;
 import android.app.Dialog;
@@ -35,9 +35,10 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.facebook.login.LoginManager;
 import com.fame.plumbum.chataround.LoginActivity;
-import com.fame.plumbum.chataround.MainActivity;
 import com.fame.plumbum.chataround.MySingleton;
 import com.fame.plumbum.chataround.R;
+import com.fame.plumbum.chataround.chat.World;
+import com.fame.plumbum.chataround.fragments.MyProfile;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -55,23 +56,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by pankaj on 20/7/16.
+ * Created by pankaj on 4/8/16.
  */
-public class MainWindow extends AppCompatActivity implements
+public class MainActivity extends AppCompatActivity implements
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
     GoogleApiClient mGoogleApiClient;
     Location mLastLocation;
     public double lat, lng;
     public boolean needSomethingTweet = false, needSomethingWorld = false;
-    MyTweets tweets;
+    MyProfile profile;
     World world;
-
+    private ViewPager upViewPager;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
         setContentView(R.layout.chat_window);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -103,14 +102,14 @@ public class MainWindow extends AppCompatActivity implements
         super.onStop();
     }
 
-
-    private void setupViewPager(ViewPager viewPager) {
-        tweets = new MyTweets();
+    public void setupViewPager(ViewPager upViewPager) {
+        this.upViewPager = upViewPager;
+        profile = new MyProfile();
         world = new World();
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(tweets, "My Shouts");
+        adapter.addFragment(profile, "My Profile");
         adapter.addFragment(world, "World");
-        viewPager.setAdapter(adapter);
+        upViewPager.setAdapter(adapter);
     }
 
     @Override
@@ -169,7 +168,7 @@ public class MainWindow extends AppCompatActivity implements
                             // Show the dialog by calling startResolutionForResult(),
                             // and check the result in onActivityResult().
                             status.startResolutionForResult(
-                                    MainWindow.this,
+                                    MainActivity.this,
                                     10);
                         } catch (IntentSender.SendIntentException e) {
                             // Ignore the error.
@@ -230,8 +229,8 @@ public class MainWindow extends AppCompatActivity implements
     public void getAllPosts(int counter){
         RequestQueue queue = MySingleton.getInstance(getApplicationContext()).
                 getRequestQueue();
-        Log.e("url_WORLD", "http://52.66.45.251:8080/ShowPost?UserId=" + tweets.uid + "&Counter=" + counter + "&Latitude=" + lat + "&Longitude=" + lng);
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://52.66.45.251:8080/ShowPost?UserId=" + tweets.uid + "&Counter=" + counter + "&Latitude=" + lat + "&Longitude=" + lng,
+        Log.e("url_WORLD", "http://52.66.45.251:8080/ShowPost?UserId=" + profile.uid + "&Counter=" + counter + "&Latitude=" + lat + "&Longitude=" + lng);
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://52.66.45.251:8080/ShowPost?UserId=" + profile.uid + "&Counter=" + counter + "&Latitude=" + lat + "&Longitude=" + lng,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -241,17 +240,17 @@ public class MainWindow extends AppCompatActivity implements
                         }
                         if (needSomethingTweet){
                             needSomethingTweet = false;
-                            tweets.getAllPosts(response);
+                            profile.getAllPosts(response);
                         }
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e("Error", error.toString());
-                Toast.makeText(MainWindow.this, "Error receiving data!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "Error receiving data!", Toast.LENGTH_SHORT).show();
             }
         });
-        MySingleton.getInstance(MainWindow.this).addToRequestQueue(stringRequest);
+        MySingleton.getInstance(MainActivity.this).addToRequestQueue(stringRequest);
     }
 
     class ViewPagerAdapter extends FragmentPagerAdapter {
@@ -299,11 +298,11 @@ public class MainWindow extends AppCompatActivity implements
             editor.clear();
             editor.apply();
             LoginManager.getInstance().logOut();
-            Intent intent = new Intent(MainWindow.this, LoginActivity.class);
+            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
             startActivity(intent);
             finish();
         }else if(id == R.id.action_shout){
-            final Dialog dialog = new Dialog(MainWindow.this);
+            final Dialog dialog = new Dialog(MainActivity.this);
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             dialog.setContentView(R.layout.dialog_create_post);
             final EditText content = (EditText) dialog.findViewById(R.id.post_content);
@@ -314,10 +313,10 @@ public class MainWindow extends AppCompatActivity implements
                     String content_txt = content.getText().toString();
                     Log.e("Location_creta_post", lat + " " + lng);
                     if (lat != 0 && lng != 0) {
-                        RequestQueue queue = MySingleton.getInstance(MainWindow.this.getApplicationContext()).
+                        RequestQueue queue = MySingleton.getInstance(MainActivity.this.getApplicationContext()).
                                 getRequestQueue();
                         content_txt = content_txt.replace("\n", "%0A");
-                        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://52.66.45.251:8080/Post?UserId=" + tweets.uid + "&UserName=" + tweets.user_name + "&Post=" + content_txt.replace(" ", "%20") + "&Latitude=" + lat + "&Longitude=" + lng,
+                        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://52.66.45.251:8080/Post?UserId=" + profile.uid + "&UserName=" + profile.user_name + "&Post=" + content_txt.replace(" ", "%20") + "&Latitude=" + lat + "&Longitude=" + lng,
                                 new Response.Listener<String>() {
                                     @Override
                                     public void onResponse(String response) {
@@ -326,20 +325,20 @@ public class MainWindow extends AppCompatActivity implements
                                 }, new Response.ErrorListener() {
                             @Override
                             public void onErrorResponse(VolleyError error) {
-                                Toast.makeText(MainWindow.this, "Error sending data!", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(MainActivity.this, "Error sending data!", Toast.LENGTH_SHORT).show();
                                 Log.getStackTraceString(error);
                             }
                         });
-                        MySingleton.getInstance(MainWindow.this).addToRequestQueue(stringRequest);
+                        MySingleton.getInstance(MainActivity.this).addToRequestQueue(stringRequest);
                     } else {
-                        Toast.makeText(MainWindow.this, "Location Error", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, "Location Error", Toast.LENGTH_SHORT).show();
                     }
                     dialog.dismiss();
                 }
             });
             dialog.show();
         }else{
-            Intent intent = new Intent(MainWindow.this, MainActivity.class);
+            Intent intent = new Intent(MainActivity.this, com.fame.plumbum.chataround.MainActivity.class);
             startActivity(intent);
         }
         return super.onOptionsItemSelected(item);

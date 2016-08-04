@@ -24,10 +24,10 @@
 
         </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_main"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/app_Bar"
-        />
+        <include layout="@layout/content_main_user"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/app_Bar"
+            />
     </RelativeLayout>
 </android.support.design.widget.CoordinatorLayout>

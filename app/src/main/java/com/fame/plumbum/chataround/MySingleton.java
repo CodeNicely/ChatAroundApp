@@ -19,7 +19,7 @@ public class MySingleton {
         requestQueue = getRequestQueue();
     }
 
-    public static synchronized MySingleton getmInstance(Context context){
+    public static synchronized MySingleton getInstance(Context context){
         if (mInstance == null)
             mInstance = new MySingleton(context);
         return mInstance;

@@ -1,4 +1,4 @@
-package com.fame.plumbum.chataround.chat;
+package com.fame.plumbum.chataround.fragments;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.fame.plumbum.chataround.R;
 import com.fame.plumbum.chataround.adapters.Tweets_adapter;
+import com.fame.plumbum.chataround.chat.MainWindow;
 
 import org.json.JSONArray;
 import org.json.JSONException;

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal" android:layout_width="match_parent"
     android:layout_height="match_parent">
     <RelativeLayout
@@ -28,17 +28,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 >
-            <TextView
-                android:id="@+id/commentor_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Name"
-                android:textAllCaps="true"
-                android:textStyle="bold"
-                android:textColor="#000000"
-                android:maxLines="1"
-                android:layout_toLeftOf="@+id/timestamp"
-                />
+                <TextView
+                    android:id="@+id/commentor_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Name"
+                    android:textAllCaps="true"
+                    android:textStyle="bold"
+                    android:textColor="#000000"
+                    android:maxLines="1"
+                    android:layout_toLeftOf="@+id/timestamp"
+                    />
                 <TextView
                     android:id="@+id/timestamp"
                     android:layout_width="wrap_content"
@@ -50,9 +50,10 @@
             </RelativeLayout>
             <TextView
                 android:id="@+id/comment"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Lorem ipsum"
+                android:maxLength="35"
                 android:textColor="#102040"
                 />
         </LinearLayout>

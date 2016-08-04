@@ -10,7 +10,9 @@
         android:textColor="#000000"
         android:textSize="24sp"
         android:background="#DfFDF4"
+        android:textAllCaps="true"
         android:layout_alignParentTop="true"
+        android:gravity="center"
         android:padding="8dp"
         />
     <ListView
@@ -18,8 +20,28 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/post_title"
-        android:layout_above="@+id/rl_bottom"
+        android:layout_above="@+id/reports_count"
         android:paddingBottom="4dp"
+        />
+    <TextView
+        android:id="@+id/midText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="No comments found!"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_centerInParent="true"
+        android:visibility="gone"
+        />
+    <TextView
+        android:id="@+id/reports_count"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/rl_bottom"
+        android:paddingLeft="8dp"
+        android:text="No one reported this"
+        android:layout_marginBottom="4dp"
+
         />
     <RelativeLayout
         android:id="@+id/rl_bottom"
@@ -31,7 +53,7 @@
             android:id="@+id/chat_button"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:background="@mipmap/ic_launcher"
+            android:background="@drawable/chat"
             android:layout_alignParentLeft="true"
             android:paddingRight="2dp"
             />
@@ -39,9 +61,9 @@
             android:id="@+id/like_button"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:background="@mipmap/ic_launcher"
+            android:background="@drawable/report"
             android:layout_toRightOf="@+id/chat_button"
-            android:paddingLeft="2dp"
+            android:layout_marginLeft="4dp"
             />
         <EditText
             android:id="@+id/comment_add"
@@ -50,13 +72,15 @@
             android:hint="Enter comment here"
             android:layout_toLeftOf="@+id/add_button"
             android:layout_toRightOf="@+id/like_button"
+            android:layout_marginRight="4dp"
             />
-        <Button
+        <ImageButton
             android:id="@+id/add_button"
-            android:layout_width="80dp"
+            android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_alignParentRight="true"
-            android:text="Send"
+            android:background="@drawable/reply"
+            android:layout_marginRight="4dp"
             />
     </RelativeLayout>
 </RelativeLayout>

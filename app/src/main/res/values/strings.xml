@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">OneMile</string>
+    <string name="app_name">1 Mile</string>
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>

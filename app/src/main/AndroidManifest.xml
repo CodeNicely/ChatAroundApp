@@ -10,12 +10,14 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.USE_CREDENTIALS" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/logo"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
@@ -37,33 +39,59 @@
         <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
         <activity
             android:name=".LoginActivity"
-            android:label="@string/app_name">
-            </activity>
-        <activity android:name=".SplashScreen"
-            android:theme="@style/SplashTheme">
-            </activity>
-        <activity
-            android:name=".MainActivity"
-            android:label="@string/title_activity_main"
-            android:theme="@style/AppTheme.NoActionBar"
-            />
-        <activity
-            android:name=".chat.MainWindow"
-            android:label="Tweets"
-            android:theme="@style/MyMaterialTheme"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
             >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             </activity>
+        <activity android:name=".SplashScreen"
+            android:theme="@style/SplashTheme"
+            android:screenOrientation="portrait"
+            >
+            </activity>
+        <activity
+            android:name=".MainActivity"
+            android:label="My Profile"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"
+            />
+        <activity
+            android:name=".chat.MainWindow"
+            android:label="Shouts"
+            android:theme="@style/MyMaterialTheme"
+            android:screenOrientation="portrait"
+            />
         <activity
             android:name=".SignUp"
-            android:label="@string/title_activity_main"
+            android:label="Sign Up"
+            android:screenOrientation="portrait"
+            />
+        <activity
+            android:name=".chat.SelfChatList"
+            android:label="Personal Chat"
+            android:screenOrientation="portrait"
             >
 
         </activity>
-
+        <activity
+            android:name=".ParticularPost"
+            android:label="Comments"
+            android:screenOrientation="portrait"
+            />
+        <activity
+            android:name=".ParticularChat"
+            android:label="Personal Chat"
+            android:screenOrientation="portrait"
+            />
+        <activity
+            android:name=".UserProfile"
+            android:label="User Profile"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"
+            />
         <activity
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|screenLayout|screenSize|orientation"
