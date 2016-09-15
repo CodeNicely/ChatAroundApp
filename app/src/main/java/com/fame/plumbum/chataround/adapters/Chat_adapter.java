@@ -1,21 +1,23 @@
 package com.fame.plumbum.chataround.adapters;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.graphics.Typeface;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.fame.plumbum.chataround.R;
 import com.fame.plumbum.chataround.database.ChatTable;
-import com.squareup.picasso.Picasso;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
-
-import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * Created by pankaj on 24/7/16.
@@ -24,11 +26,14 @@ public class Chat_adapter extends BaseAdapter {
     private Context context;
     public List<ChatTable> chats;
     int total = 0;
+    Typeface typeFace, typeface_light;
 
     public Chat_adapter(Context context, List<ChatTable> chats){
         this.context = context;
         this.chats= chats;
         total = chats.size();
+        typeFace = Typeface.createFromAsset(context.getAssets(),"fonts/roboto_thin.ttf");
+        typeface_light = Typeface.createFromAsset(context.getAssets(),"fonts/roboto_light.ttf");
     }
     @Override
     public int getCount() {
@@ -55,33 +60,83 @@ public class Chat_adapter extends BaseAdapter {
         LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View rowView = inflater.inflate(R.layout.list_chat, parent, false);
         RelativeLayout rl_caht = (RelativeLayout)rowView.findViewById(R.id.rL_chat);
-        CircleImageView user_img = (CircleImageView) rowView.findViewById(R.id.image_user);
         TextView sender_name = (TextView) rowView.findViewById(R.id.sender_name);
         TextView message = (TextView) rowView.findViewById(R.id.message);
         TextView timestamp = (TextView) rowView.findViewById(R.id.timestamp);
         RelativeLayout rl_chat_sent = (RelativeLayout)rowView.findViewById(R.id.rL_chat_sent);
-        ImageView user_img_sent = (ImageView) rowView.findViewById(R.id.image_user_sent);
         TextView sender_name_sent = (TextView) rowView.findViewById(R.id.sender_name_sent);
         TextView message_sent = (TextView) rowView.findViewById(R.id.message_sent);
+        message.setTypeface(typeFace);
+        sender_name_sent.setTypeface(typeface_light);
+        message_sent.setTypeface(typeFace);
+        sender_name.setTypeface(typeface_light);
         TextView timestamp_sent = (TextView) rowView.findViewById(R.id.timestamp_sent);
         if (chats.get(position).getStatus()==2) {
             rl_chat_sent.setVisibility(View.GONE);
             rl_caht.setVisibility(View.VISIBLE);
-//            Picasso.with(context).load(chats.get(position).getStatus()==1?chats.get(position).getId()).into(user_img);
-            sender_name.setText(chats.get(position).getRemote_name());
-            message.setText(chats.get(position).getMessage());
-            timestamp.setText(chats.get(position).getTimestamp());
-            Picasso.with(context).load("http://52.66.45.251:8080/ImageReturn?UserId="+chats.get(position).getRemote_name()).error(R.drawable.user).into(user_img);
+            sender_name.setText(toProperCase(chats.get(position).getRemote_name().replace("%20", " ")));
+            message.setText(chats.get(position).getMessage().replace("%20", " "));
+            SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss yyyy");
+            Date date = null;
+            try {
+                date = sdf.parse(chats.get(position).getTimestamp());
+            } catch (ParseException ignored) {
+            }
+            long millis = date.getTime();
+            long current_millis = (new Date()).getTime();
+            int minutes = (int) ((current_millis - millis)/60000);
+            int hours = (int) (((current_millis - millis)/60000)/60);
+            int days = (int) (((current_millis - millis)/3600000)/24);
+            if (minutes<60){
+                timestamp.setText(minutes + " min ago");
+            }else if (hours<24){
+                timestamp.setText(minutes + " hrs ago");
+            }else{
+                timestamp.setText(days + " days ago");
+            }
+            // timestamp.setText(chats.get(position).getTimestamp());
         }else{
             rl_chat_sent.setVisibility(View.VISIBLE);
             rl_caht.setVisibility(View.GONE);
-//            Picasso.with(context).load(chats.get(position).getStatus()==1?chats.get(position).getId()).into(user_img_sent);
-            sender_name_sent.setText(chats.get(position).getRemote_name());
-            message_sent.setText(chats.get(position).getMessage());
-            timestamp_sent.setText(chats.get(position).getTimestamp());
-            Picasso.with(context).load("http://52.66.45.251:8080/ImageReturn?UserId="+chats.get(position).getRemote_name()).error(R.drawable.user).into(user_img_sent);
+            SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+            sender_name_sent.setText(sp.getString("user_name", "").replace("%20", " "));
+            message_sent.setText(chats.get(position).getMessage().replace("%20", " "));
+            SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss yyyy");
+            Date date = null;
+            try {
+                date = sdf.parse(chats.get(position).getTimestamp());
+            } catch (ParseException ignored) {
+            }
+            long millis = date.getTime();
+            long current_millis = (new Date()).getTime();
+            int minutes = (int) ((current_millis - millis)/60000);
+            int hours = (int) (((current_millis - millis)/60000)/60);
+            int days = (int) (((current_millis - millis)/3600000)/24);
+            if (minutes<60){
+                timestamp_sent.setText(minutes + " min ago");
+            }else if (hours<24){
+                timestamp_sent.setText(minutes + " hrs ago");
+            }else{
+                timestamp_sent.setText(days + " days ago");
+            }
         }
 
         return rowView;
+    }
+
+    private String toProperCase(String name) {
+        name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
+        for (int i =0;;){
+            i = name.indexOf(" ", i+1);
+            if (i<0)
+                break;
+            else {
+                if (i > name.length()-1)
+                    name = name.substring(0, i + 1) + name.substring(i + 1, i + 2).toUpperCase();
+                else
+                    name = name.substring(0, i + 1) + name.substring(i + 1, i + 2).toUpperCase() + name.substring(i+2);
+            }
+        }
+        return name;
     }
 }

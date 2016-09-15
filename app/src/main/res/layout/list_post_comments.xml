@@ -5,40 +5,61 @@
     <RelativeLayout
         android:id="@+id/rL_comment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/image_user"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="18dp"
+        >
+        <RelativeLayout
+            android:id="@+id/image_user_rl"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:layout_margin="4dp"
-            android:src="@mipmap/ic_launcher"
-            />
+            android:layout_margin="4dp">
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/image_user_bound"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:src="#202020"
+                android:layout_centerInParent="true"
+                />
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/image_user_boundary"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:src="#ffffff"
+                android:layout_centerInParent="true"
+                />
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/image_user"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/user"
+                android:layout_centerInParent="true"
+                />
+        </RelativeLayout>
         <LinearLayout
             android:id="@+id/ll_text_post"
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_toRightOf="@+id/image_user"
+            android:layout_toRightOf="@+id/image_user_rl"
             android:layout_margin="4dp"
             >
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 >
-            <TextView
-                android:id="@+id/commentor_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Name"
-                android:textAllCaps="true"
-                android:textStyle="bold"
-                android:textColor="#000000"
-                android:maxLines="1"
-                android:layout_toLeftOf="@+id/timestamp"
-                />
+                <TextView
+                    android:id="@+id/commentor_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Name"
+                    android:textSize="12sp"
+                    android:textColor="#102040"
+                    android:maxLines="1"
+                    android:layout_toLeftOf="@+id/timestamp"
+                    />
                 <TextView
                     android:id="@+id/timestamp"
                     android:layout_width="wrap_content"
@@ -52,8 +73,7 @@
                 android:id="@+id/comment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Lorem ipsum"
-                android:textColor="#102040"
+                android:textColor="#000000"
                 />
         </LinearLayout>
     </RelativeLayout>

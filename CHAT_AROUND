@@ -1,0 +1,347 @@
+578b119a7c4ec26dcab64a21
+
+1) SIGNUP:
+
+INPUT:
+
+http://ec2-52-66-45-251.ap-south-1.compute.amazonaws.com:8080/CreateUser?Email=email@gmail.com&Password=password&LoginFlag=0
+
+OUTPUT:
+CORRECT:
+{
+  "Authenticated": "0",
+  "Message": "Registration Successful",
+  "ProfileFlag": "0",
+  "Status": 200,
+  "UserId": "57815c747c4ec23d4f497127"
+}
+IF EXISTS:
+{
+  "Message": "User Exists",
+  "Status": 400,
+  "UserId": "null"
+}
+
+
+2) CREARE PROFILE:
+
+INPUT:
+
+http://ec2-52-66-45-251.ap-south-1.compute.amazonaws.com:8080/AddProfile?UserId=57815c747c4ec23d4f497127&Mobile=9643531782&Name=Pankaj&IsEditing=0
+
+OUTPUT:
+
+CORRECT:
+{
+  "Message": "Profile Created",
+  "Status": 200
+}
+INCORRECT:
+{
+  "Message": "Values cannot be NULL",
+  "Status": 404
+}
+
+3) GET PROFILE:
+
+INPUT:
+
+http://ec2-52-66-45-251.ap-south-1.compute.amazonaws.com:8080/GetProfile?UserId=57815c747c4ec23d4f497127
+
+OUTPUT:
+CORRECT USER_ID:
+
+{n  "Authenticated": 0,
+  "Mobile": "9643531782",
+  "Name": "Pankaj",
+  "Status": 200,
+  "UserId": "57815c747c4ec23d4f497127"
+}
+WRONG USER_ID:
+null
+
+4) IMAGE RETURN:
+
+INPUT: 
+(GET REQUEST) http://ec2-52-66-45-251.ap-south-1.compute.amazonaws.com:8080/ImageReturn?UserId=57815c747c4ec23d4f497127
+
+OUTPUT:
+IF NO IMAGE:
+{
+  "error": "'Profile Image'"
+}
+
+IF IMAGE PRESENT:
+
+
+5) IMAGE UPLOAD:
+
+INPUT: 
+http://ec2-52-66-45-251.ap-south-1.compute.amazonaws.com:8080/ImageUpload?UserId=57815c747c4ec23d4f497127
+with file = *Image*
+
+OUTPUT:
+IF EVERYTHING WENT RIGHT:
+{
+  "Message": "Successful",
+  "Status": 200,
+  "filename": "57815c747c4ec23d4f497127.png"
+}
+
+IF NO IMAGE SENT:
+{
+  "error": "400: Bad Request"
+}
+
+
+
+
+
+
+
+---------------NEW CONTENT------------------------
+
+GET:
+1) base_url/POST?UserId&UserName&Post&Latitude&Longitude
+
+Return:
+Status = 200
+Message = Posted
+PostId = 
+
+
+Null values:
+Status = 404
+
+Exception:
+error
+
+EXAMPLE:
+http://ec2-52-66-45-251.ap-south-1.compute.amazonaws.com:8080/Post?UserId=578b119a7c4ec26dcab64a21&UserName=pankaj&Post=Hello%20world&Latitude=28&Longitude=76
+
+RESULT:
+
+{
+  "Message": "Posted",
+  "PostId": "57935ab17c4ec225faa923ed",
+  "Status": 200
+}
+
+{
+  "CommunityPostId": "null",
+  "Message": "Values cannot be NULL",
+  "Status": 404
+}
+
+
+2) base/GetPostDetailed?UserId&UserName&PostId
+Status 
+PosterId = UserId of poster
+PosterName = 
+Post = 
+TimeStamp = 
+Comments = [{},{}]
+Likes = [{},{}]
+
+JSONObject:
+CommentorId
+CommentorName
+Comment
+TimeStamp
+---x---
+JSONObject:
+LikerId
+LikerName
+TimeEpoch
+---x---
+PostId = 
+LikeFlag = if user liked(1) or not(0)
+NoOfLikes = 
+
+
+
+EXAMPLE:
+http://ec2-52-66-45-251.ap-south-1.compute.amazonaws.com:8080/GetPostDetailed?UserId=578b119a7c4ec26dcab64a21&UserName=pankaj&PostId=57935ab17c4ec225faa923ed
+
+RESULT:
+{
+  "Comments": [],
+  "Like": [],
+  "LikeFlag": "0",
+  "Message": "Success",
+  "NoOfLikes": 0,
+  "Post": "Hello world",
+  "PostId": "57935ab17c4ec225faa923ed",
+  "PosterId": "578b119a7c4ec26dcab64a21",
+  "PosterName": "pankaj",
+  "Status": 200,
+  "TimeStamp": "Sat Jul 23 11:53:21 2016"
+}
+
+{
+  "error": "u'57935ab17c4ec225faa923es' is not a valid ObjectId, it must be a 12-byte input or a 24-character hex string"
+}
+
+{
+  "Message": "Values cannot be NULL",
+  "Post": "null",
+  "Status": 404
+}
+
+
+3) ShowPost?UserId&Counter (Counter means index of iTH 15 posts starting from 0.)&Latitude&Longitude
+
+RETURN:
+Posts array.
+Status
+Message
+
+
+4) Comment?UserId&PostId&UserName&Comment&Latitude&Longitude
+RETURN:
+If perfect:
+Status = 200
+Message = Comment Added!
+If out of range:
+Status = 200
+Message = You are not in range to comment
+If wrong details:
+Status = 400
+Message = Post not found!
+If null values:
+Status = 404
+
+
+5) Like?UserId&UserName&PostId&Latitude&Longitude
+RETURN:
+Status = 200
+Message = Liked or Unliked
+
+
+6) Single Chat:
+PosterId, SenderId
+Still in TODO
+---x---
+
+7) GetFCMToken?UserId&Token
+
+Sanjeev e9GH4bA8CJ0:APA91bEAtx6PhCvNYj7pxppjSd9nKOsu_pthfsuwieWbl_Pt2iJRNoYCb4qN_8IfckF_giJYgmX7NX7FbNb5LZwGNzQ6_cqu1HCef9b3iRBHzZ3vfTut1Sj0XhmauufWi378W4tIWTC-
+
+
+
+
+
+
+
+{
+  "Status": 200,
+  "Message": "Success",
+  "Posts": [
+    {
+      "NoOfLikes": 0,
+      "Like": [],
+      "TimeStamp": "Tue Aug 16 18:02:56 2016",
+      "Comments": [],
+      "NLike": 0,
+      "PosterName": "pankaj bar",
+      "Longitude": 77.2141761,
+      "Latitude": 28.6911727,
+      "NComment": 0,
+      "PosterId": "57b3027e7c4ec22a2eddf596",
+      "LikeFlag": "0",
+      "Post": "gshs😈😕😈😆😉😆😉😆😉",
+      "PostId": "57b307f87c4ec22a2eddf5ad"
+    },
+    {
+      "NoOfLikes": 0,
+      "Like": [],
+      "TimeStamp": "Tue Aug 16 17:50:46 2016",
+      "Comments": [],
+      "NLike": 0,
+      "PosterName": "Moni Sharma",
+      "Longitude": 77.2141676,
+      "Latitude": 28.6911085,
+      "NComment": 0,
+      "PosterId": "57b2c28b7c4ec22a2eddf58d",
+      "LikeFlag": "0",
+      "Post": "gdjdk",
+      "PostId": "57b3051e7c4ec22a2eddf5a8"
+    },
+    {
+      "NoOfLikes": 0,
+      "Like": [],
+      "TimeStamp": "Tue Aug 16 17:49:57 2016",
+      "Comments": [],
+      "NLike": 0,
+      "PosterName": "Moni Sharma",
+      "Longitude": 77.2141643,
+      "Latitude": 28.6910745,
+      "NComment": 0,
+      "PosterId": "57b2c28b7c4ec22a2eddf58d",
+      "LikeFlag": "0",
+      "Post": "gdkdkdk",
+      "PostId": "57b304ed7c4ec22a2eddf5a3"
+    },
+    {
+      "NoOfLikes": 0,
+      "Like": [],
+      "TimeStamp": "Tue Aug 16 17:43:56 2016",
+      "Comments": [],
+      "NLike": 0,
+      "PosterName": "pankaj bar",
+      "Longitude": 77.2141685,
+      "Latitude": 28.6911084,
+      "NComment": 0,
+      "PosterId": "57b3027e7c4ec22a2eddf596",
+      "LikeFlag": "0",
+      "Post": "this is my post",
+      "PostId": "57b303847c4ec22a2eddf59a"
+    },
+    {
+      "NoOfLikes": 0,
+      "Like": [],
+      "TimeStamp": "Tue Aug 16 17:07:39 2016",
+      "Comments": [],
+      "NLike": 0,
+      "PosterName": "Moni Sharma",
+      "Longitude": 77.2141611,
+      "Latitude": 28.6911221,
+      "NComment": 0,
+      "PosterId": "57b2c28b7c4ec22a2eddf58d",
+      "LikeFlag": "0",
+      "Post": "gdjdjj",
+      "PostId": "57b2fb037c4ec22a2eddf592"
+    },
+    {
+      "NoOfLikes": 0,
+      "Like": [],
+      "TimeStamp": "Tue Aug 16 15:44:39 2016",
+      "Comments": [],
+      "NLike": 0,
+      "PosterName": "null",
+      "Longitude": 77.2141613,
+      "Latitude": 28.6911094,
+      "NComment": 0,
+      "PosterId": "57b2c28b7c4ec22a2eddf58d",
+      "LikeFlag": "0",
+      "Post": "साजन ! होली आई है !\nयौवन की जय !\nजीवन की लय!\nगूँज रहा है मोहक मधुमय\nउड़ते रं",
+      "PostId": "57b2e78f7c4ec22a2eddf591"
+    }
+  ]
+}
+
+
+
+
+
+
+{
+  "Status": 200,
+  "Message": "OTP verified"
+}
+
+
+
+
+
+

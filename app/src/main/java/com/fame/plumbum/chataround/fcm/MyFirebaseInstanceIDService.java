@@ -2,7 +2,6 @@ package com.fame.plumbum.chataround.fcm;
 
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
@@ -24,12 +23,6 @@ public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
         SharedPreferences.Editor editor = sp.edit();
         editor.putString("token", refreshedToken);
         editor.apply();
-        Log.e(TAG, "Refreshed token: " + refreshedToken);
-
-    }
-
-    private void sendRegistrationToServer(String token) {
-        //You can implement this method to store the token on your server
-        //Not required for current project
+//        final Intent intent = new Intent("tokenReceiver");
     }
 }

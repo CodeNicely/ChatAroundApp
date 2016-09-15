@@ -81,7 +81,7 @@ public class ChatTable {
         this.post_id = post_id;
     }
 
-    public void setRemote_id(String remoter_id) {
+    public void setRemote_id(String remote_id) {
         this.remote_id = remote_id;
     }
 

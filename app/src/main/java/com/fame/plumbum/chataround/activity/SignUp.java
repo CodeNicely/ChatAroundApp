@@ -1,4 +1,4 @@
-package com.fame.plumbum.chataround;
+package com.fame.plumbum.chataround.activity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -12,15 +12,16 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.fame.plumbum.chataround.R;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -54,9 +55,10 @@ public class SignUp extends AppCompatActivity{
                         Toast.makeText(SignUp.this, "Invalid ID", Toast.LENGTH_SHORT).show();
                     else if (password.length() < 5)
                         Toast.makeText(SignUp.this, "Password too short", Toast.LENGTH_SHORT).show();
-                    else {
+                    else if (email.indexOf("@")>1 && email.indexOf(".", email.indexOf("@"))>email.indexOf("@") && email.indexOf("@", email.indexOf("@"))>0){
                         registerUser();
-                    }
+                    }else
+                        Toast.makeText(SignUp.this, "Invalid Email ID", Toast.LENGTH_SHORT).show();
                 }
             });
             signin.setOnClickListener(new View.OnClickListener() {
@@ -85,35 +87,27 @@ public class SignUp extends AppCompatActivity{
         return true;
     }
 
-    private void sendData(String email, String password, String s) {
-        this.email = email;
-        this.password = password;
-        loginFlag = s;
-        registerUser();
-    }
-
     void registerUser(){
         StringRequest myReq = new StringRequest(Request.Method.POST,
-                "http://52.66.45.251:8080/CreateUser",
+                "http://52.66.45.251/CreateUser",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         try {
                             JSONObject jO = new JSONObject(response);
-                            Log.e("REPONS_SIGNUP", response);
                             if (jO.getString("Status").contentEquals("200")){
                                 SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(SignUp.this);
                                 SharedPreferences.Editor editor = sp.edit();
+                                Log.e("UID", jO.getString("UserId"));
                                 editor.putString("uid", jO.getString("UserId"));
                                 editor.apply();
-                                Intent intent = new Intent(SignUp.this, MainActivity.class);
+                                Intent intent = new Intent(SignUp.this, GetProfileDetails.class);
                                 startActivity(intent);
                                 finish();
                             }else if(jO.getString("Status").contentEquals("400")){
                                 Toast.makeText(SignUp.this, "Email  already registered", Toast.LENGTH_SHORT).show();
                             }
-                        } catch (JSONException e) {
-                            Log.getStackTraceString(e);
+                        } catch (JSONException ignored) {
                         }
 
                     }
@@ -122,7 +116,6 @@ public class SignUp extends AppCompatActivity{
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(SignUp.this, "Something went wrong", Toast.LENGTH_SHORT).show();
-                        Log.getStackTraceString(error);
                     }
                 }) {
             protected Map<String, String> getParams() throws com.android.volley.AuthFailureError {
@@ -133,6 +126,7 @@ public class SignUp extends AppCompatActivity{
                 return params;
             };
         };
+        myReq.setRetryPolicy(new DefaultRetryPolicy(5000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(myReq);
     }
@@ -149,46 +143,5 @@ public class SignUp extends AppCompatActivity{
         Intent intent = new Intent(SignUp.this, LoginActivity.class);
         startActivity(intent);
         finish();
-    }
-
-    private void sendFCM(String uid){
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-        if (sp.contains("token")) {
-            RequestQueue queue = MySingleton.getInstance(getApplicationContext()).
-                    getRequestQueue();
-            StringRequest stringRequest = new StringRequest(Request.Method.GET,"http://52.66.45.251:8080/GetFCMToken/UserId="+uid+"&Token="+ sp.getString("token", null),
-                    new Response.Listener<String>() {
-                        @Override
-                        public void onResponse(String response) {
-
-                        }
-                    }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Toast.makeText(SignUp.this, "Error sending data!", Toast.LENGTH_SHORT).show();
-                    Log.getStackTraceString(error);
-                }
-            });
-            MySingleton.getInstance(SignUp.this).addToRequestQueue(stringRequest);
-        }
-        else {
-            Log.e("FIREBIRDTOKEN", FirebaseInstanceId.getInstance().getToken());
-            RequestQueue queue = MySingleton.getInstance(getApplicationContext()).
-                    getRequestQueue();
-            StringRequest stringRequest = new StringRequest(Request.Method.GET,"http://52.66.45.251:8080/Post?UserId="+uid+"&Token="+FirebaseInstanceId.getInstance().getToken(),
-                    new Response.Listener<String>() {
-                        @Override
-                        public void onResponse(String response) {
-                            Toast.makeText(SignUp.this, "Posted", Toast.LENGTH_SHORT).show();
-                        }
-                    }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Toast.makeText(SignUp.this, "Error sending data!", Toast.LENGTH_SHORT).show();
-                    Log.getStackTraceString(error);
-                }
-            });
-            MySingleton.getInstance(SignUp.this).addToRequestQueue(stringRequest);
-        }
     }
 }

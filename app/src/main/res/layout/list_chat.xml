@@ -1,59 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    >
     <RelativeLayout
         android:id="@+id/rL_chat"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginRight="50dp"
+        android:layout_marginLeft="@dimen/activity_vertical_margin"
+        android:background="@drawable/border_chat_receive"
         >
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/image_user"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:layout_margin="4dp"
-            android:src="@mipmap/ic_launcher"
-            />
         <LinearLayout
             android:id="@+id/ll_text_chat"
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_toRightOf="@+id/image_user"
-            android:layout_toLeftOf="@+id/timestamp"
             android:layout_margin="4dp"
             >
-            <TextView
-                android:id="@+id/sender_name"
-                android:layout_width="wrap_content"
+            <RelativeLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Name"
-                android:textAllCaps="true"
-                android:textStyle="bold"
-                android:textColor="#000000"
-                />
+                android:layout_margin="4dp">
+                <TextView
+                    android:id="@+id/sender_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Name"
+                    android:textSize="12sp"
+                    android:textColor="#202020"
+                    />
+                <TextView
+                    android:id="@+id/timestamp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="time"
+                    android:textColor="#202020"
+                    android:layout_alignParentRight="true"
+                    />
+            </RelativeLayout>
             <TextView
                 android:id="@+id/message"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Lorem ipsum"
-                android:textColor="#102040"
+                android:textColor="#000000"
+                android:layout_marginLeft="4dp"
                 />
         </LinearLayout>
-        <TextView
-            android:id="@+id/timestamp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="time"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_margin="4dp"
-
-            />
     </RelativeLayout>
 
     <RelativeLayout
@@ -61,53 +56,48 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginLeft="50dp"
+        android:layout_marginRight="@dimen/activity_vertical_margin"
         android:visibility="gone"
+        android:background="@drawable/border_chat_receive"
         >
-        <ImageView
-            android:id="@+id/image_user_sent"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:layout_margin="4dp"
-            android:src="@mipmap/ic_launcher"
-            />
         <LinearLayout
             android:id="@+id/ll_text_chat_sent"
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_toRightOf="@+id/image_user_sent"
-            android:layout_toLeftOf="@+id/timestamp_sent"
             android:layout_margin="4dp"
             >
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp">
             <TextView
                 android:id="@+id/sender_name_sent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Name"
-                android:textAllCaps="true"
-                android:textStyle="bold"
-                android:textColor="#000000"
+                android:textSize="12sp"
+                android:textColor="#202020"
                 />
             <TextView
-                android:id="@+id/message_sent"
+                android:id="@+id/timestamp_sent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Lorem ipsum"
-                android:textColor="#102040"
+                android:text="time"
+                android:textColor="#202020"
+                android:layout_alignParentRight="true"
                 />
-        </LinearLayout>
+        </RelativeLayout>
         <TextView
-            android:id="@+id/timestamp_sent"
+            android:id="@+id/message_sent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="time"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_margin="4dp"
+            android:text="Lorem ipsum"
+            android:textColor="#000000"
+            android:layout_marginLeft="4dp"
             />
+        </LinearLayout>
     </RelativeLayout>
 
 </RelativeLayout>

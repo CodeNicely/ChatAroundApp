@@ -1,47 +1,121 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#ffffff"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    >
+    <RelativeLayout
+        android:id="@+id/heading_rl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <RelativeLayout
+            android:id="@+id/image_user_rl"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_margin="8dp">
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/image_user_bound"
+                android:layout_width="58dp"
+                android:layout_height="58dp"
+                android:src="#202020"
+                android:layout_centerInParent="true"
+                />
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/image_user_boundary"
+                android:layout_width="54dp"
+                android:layout_height="54dp"
+                android:src="#ffffff"
+                android:layout_centerInParent="true"
+                />
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/image_user"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/user"
+                android:layout_centerInParent="true"
+                />
+        </RelativeLayout>
+        <TextView
+            android:id="@+id/poster_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#000000"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:layout_toRightOf="@+id/image_user_rl"
+            android:layout_marginLeft="@dimen/activity_vertical_margin"
+            android:layout_marginTop="18dp"
+
+            />
+        <TextView
+            android:id="@+id/post_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#202020"
+            android:textSize="16sp"
+            android:background="#ffffff"
+            android:padding="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_below="@+id/image_user_rl"
+            />
+    </RelativeLayout>
     <TextView
-        android:id="@+id/post_title"
+        android:id="@+id/reports_count"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Lorem ipsum dolor sit amet, consecteteur"
-        android:textColor="#000000"
-        android:textSize="24sp"
-        android:background="#DfFDF4"
-        android:textAllCaps="true"
-        android:layout_alignParentTop="true"
-        android:gravity="center"
-        android:padding="8dp"
+        android:layout_below="@+id/heading_rl"
+        android:paddingLeft="8dp"
+        android:text="No one reported this"
+        android:layout_marginBottom="4dp"
+        android:layout_marginTop="4dp"
+        />
+    <View
+        android:id="@+id/extra_view1"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#12320F"
+        android:layout_below="@+id/reports_count"
+        />
+    <TextView
+        android:id="@+id/notif_heading"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Comments"
+        android:layout_below="@+id/extra_view1"
+        android:layout_marginLeft="@dimen/activity_vertical_margin"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp"
+        />
+    <View
+        android:id="@+id/extra_view2"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#12320F"
+        android:layout_below="@+id/notif_heading"
         />
     <ListView
         android:id="@+id/list_comments_post"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/post_title"
-        android:layout_above="@+id/reports_count"
+        android:layout_below="@+id/extra_view2"
+        android:layout_above="@+id/rl_bottom"
         android:paddingBottom="4dp"
         />
     <TextView
         android:id="@+id/midText"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="No comments found!"
         android:textSize="18sp"
         android:textStyle="bold"
-        android:layout_centerInParent="true"
-        android:visibility="gone"
-        />
-    <TextView
-        android:id="@+id/reports_count"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_below="@+id/extra_view2"
         android:layout_above="@+id/rl_bottom"
-        android:paddingLeft="8dp"
-        android:text="No one reported this"
-        android:layout_marginBottom="4dp"
-
+        android:visibility="gone"
         />
     <RelativeLayout
         android:id="@+id/rl_bottom"
@@ -49,38 +123,70 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         >
-        <ImageButton
-            android:id="@+id/chat_button"
+        <LinearLayout
+            android:id="@+id/ll_one"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:background="@drawable/chat"
-            android:layout_alignParentLeft="true"
-            android:paddingRight="2dp"
-            />
+            android:gravity="bottom|center_horizontal"
+            >
+            <ImageButton
+                android:id="@+id/chat_button"
+                android:layout_width="33dp"
+                android:layout_height="33dp"
+                android:background="@drawable/chat"
+                android:paddingRight="2dp"
+                android:layout_gravity="bottom"
+                />
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/ll_two"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:gravity="bottom|center_horizontal"
+            android:layout_toRightOf="@+id/ll_one"
+
+            >
         <ImageButton
             android:id="@+id/like_button"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:background="@drawable/report"
-            android:layout_toRightOf="@+id/chat_button"
-            android:layout_marginLeft="4dp"
+            android:layout_gravity="bottom"
             />
+        </LinearLayout>
         <EditText
             android:id="@+id/comment_add"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Enter comment here"
+            android:hint="Comment"
             android:layout_toLeftOf="@+id/add_button"
-            android:layout_toRightOf="@+id/like_button"
-            android:layout_marginRight="4dp"
+            android:layout_toRightOf="@+id/ll_two"
             />
-        <ImageButton
+        <ImageView
             android:id="@+id/add_button"
             android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_height="30dp"
             android:layout_alignParentRight="true"
-            android:background="@drawable/reply"
-            android:layout_marginRight="4dp"
+            android:layout_alignBottom="@+id/comment_add"
+            android:layout_marginBottom="4dp"
+            android:src="@drawable/back"
+            />
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/rl_progress"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#bbffffff"
+        android:visibility="gone"
+        >
+        <com.rey.material.widget.ProgressView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            app:pv_autostart="true"
+            app:pv_circular="true"
+            app:pv_progressStyle="@style/Material.Drawable.CircularProgress"
+            app:pv_progressMode="indeterminate"
+            android:layout_centerInParent="true"
             />
     </RelativeLayout>
 </RelativeLayout>

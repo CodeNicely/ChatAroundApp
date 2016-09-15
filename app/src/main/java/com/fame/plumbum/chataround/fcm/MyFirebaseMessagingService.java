@@ -9,8 +9,8 @@ import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
-import com.fame.plumbum.chataround.ParticularChat;
 import com.fame.plumbum.chataround.R;
+import com.fame.plumbum.chataround.activity.ParticularChat;
 import com.fame.plumbum.chataround.database.ChatTable;
 import com.fame.plumbum.chataround.database.DBHandler;
 import com.google.firebase.messaging.FirebaseMessagingService;
@@ -27,11 +27,22 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
-        Log.e("DATA", remoteMessage.getData().toString());
-        Log.e(TAG, "From: " + remoteMessage.getFrom());
-        //Log.e(TAG, "Notification Message Body: " + remoteMessage.getNotification().getBody());
+
+        Log.e("Timestamp", remoteMessage.getData().get("CreatedAt"));
+
         sendNotification(remoteMessage.getData());
+        Intent intents=new Intent();
+        intents.setAction("MyReceiver");
+        intents.putExtra("PostId", remoteMessage.getData().get("PostId"));
+        intents.putExtra("SenderId", remoteMessage.getData().get("SenderId"));
+        intents.putExtra("SenderName", remoteMessage.getData().get("SenderName"));
+        intents.putExtra("PosterName", remoteMessage.getData().get("PosterName"));
+        intents.putExtra("Message", remoteMessage.getData().get("Message"));
+        intents.putExtra("CreatedAt", remoteMessage.getData().get("CreatedAt"));
+        getBaseContext().sendBroadcast(intents);
     }
+
+
 
     private void sendNotification(Map<String, String> messageBody) {
         Intent intent = new Intent(this, ParticularChat.class);
@@ -41,6 +52,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         intent.putExtra("uid_r", messageBody.get("SenderId"));
         intent.putExtra("remote_name", messageBody.get("SenderName"));
         intent.putExtra("poster_name", messageBody.get("PosterName"));
+
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent,
                 PendingIntent.FLAG_ONE_SHOT);
