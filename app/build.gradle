@@ -51,7 +51,6 @@ dependencies {
     compile 'com.github.rey5137:material:1.2.4'
     compile 'com.google.firebase:firebase-core:9.4.0'
     compile 'com.google.firebase:firebase-messaging:9.4.0'
-
     compile 'com.squareup.okhttp3:logging-interceptor:3.3.1'
     compile 'co.devcenter.square:android-ui-library:0.1'
     compile 'com.github.florent37:materialtextfield:1.0.5'

@@ -104,8 +104,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         if(!isNetworkAvailable(this)) {
             Toast.makeText(this,"No Internet connection",Toast.LENGTH_SHORT).show();
             finish();
-        }
-        callNec();
+        }else
+            callNec();
     }
 
     private void callNec() {
@@ -166,22 +166,23 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     private void init(){
         if (!isGooglePlayServicesAvailable()) {
             finish();
-        }
-        Intent intent_service = new Intent(LoginActivity.this, LocationService.class);
-        startService(intent_service);
-        sp = PreferenceManager.getDefaultSharedPreferences(this);
-        if (sp.contains("otp_verified")){
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
-            finish();
-        }else if (sp.contains("edited")){
-            Intent intent = new Intent(this, OTP.class);
-            startActivity(intent);
-            finish();
-        }else if (sp.contains("uid")){
-            Intent intent = new Intent(this, GetProfileDetails.class);
-            startActivity(intent);
-            finish();
+        }else {
+            Intent intent_service = new Intent(LoginActivity.this, LocationService.class);
+            startService(intent_service);
+            sp = PreferenceManager.getDefaultSharedPreferences(this);
+            if (sp.contains("otp_verified")) {
+                Intent intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
+                finish();
+            } else if (sp.contains("edited")) {
+                Intent intent = new Intent(this, OTP.class);
+                startActivity(intent);
+                finish();
+            } else if (sp.contains("uid")) {
+                Intent intent = new Intent(this, GetProfileDetails.class);
+                startActivity(intent);
+                finish();
+            }
         }
         rl_progress = (RelativeLayout)findViewById(R.id.progress_imageLoading);
         pass_edit = (EditText) findViewById(R.id.pass_edit);
@@ -698,10 +699,10 @@ When the request is completed, a callback is called to handle the success condit
 //
 //    }
 
-    public void show(String str)
-    {
-        Toast.makeText(this, str, Toast.LENGTH_LONG).show();
-    }
+//    public void show(String str)
+//    {
+//        Toast.makeText(this, str, Toast.LENGTH_LONG).show();
+//    }
 
     @Override
     protected void onResume() {
@@ -715,6 +716,7 @@ When the request is completed, a callback is called to handle the success condit
     protected void onPause() {
         super.onPause();
         AppEventsLogger.deactivateApp(this);
+        mGoogleApiClient.disconnect();
     }
 
     private String toProperCase(String name) {

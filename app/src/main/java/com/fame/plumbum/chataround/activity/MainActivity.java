@@ -40,6 +40,9 @@ import com.fame.plumbum.chataround.fragments.MyProfile;
 import com.fame.plumbum.chataround.fragments.World;
 import com.google.firebase.iid.FirebaseInstanceId;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -55,8 +58,7 @@ public class MainActivity extends AppCompatActivity{
     World world;
     BroadcastReceiver receiver;
     SharedPreferences sp;
-
-    boolean canSendToken = false;
+    public int count = 0;
     String token;
 
     @Override
@@ -77,7 +79,7 @@ public class MainActivity extends AppCompatActivity{
                         if (needSomethingTweet || needSomethingWorld) {
                             needSomethingWorld = false;
                             needSomethingTweet = false;
-                            getAllPosts(0);
+                            getAllPosts(count);
                         }
                     }
                 }
@@ -132,13 +134,26 @@ public class MainActivity extends AppCompatActivity{
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        if (world!=null && world.swipeRefreshLayout!=null) {
-                            world.swipeRefreshLayout.setRefreshing(false);
-                            world.getAllPosts(response);
-                        }
-                        if (profile!=null && profile.swipeRefreshLayout!=null) {
-                            profile.swipeRefreshLayout.setRefreshing(false);
-                            profile.getAllPosts(response);
+                        Log.e("Getting response", response);
+                        try {
+                            JSONObject jo = new JSONObject(response);
+                            if (jo.getJSONArray("Posts").length()>0) {
+                                if (world != null && world.swipeRefreshLayout != null) {
+                                    world.swipeRefreshLayout.setRefreshing(false);
+                                    world.getAllPosts(response, count);
+                                }
+                                if (profile != null && profile.swipeRefreshLayout != null) {
+                                    profile.swipeRefreshLayout.setRefreshing(false);
+                                    profile.getAllPosts(response, count);
+                                }
+                            }else{
+                                Toast.makeText(MainActivity.this, "No more posts found!", Toast.LENGTH_SHORT).show();
+                                needSomethingTweet = false;
+                                needSomethingWorld = false;
+                                count -= 1;
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
                     }
                 }, new Response.ErrorListener() {
@@ -265,7 +280,7 @@ public class MainActivity extends AppCompatActivity{
                         if (needSomethingTweet || needSomethingWorld) {
                             needSomethingWorld = false;
                             needSomethingTweet = false;
-                            getAllPosts(0);
+                            getAllPosts(count);
                         }
                     }
                 }

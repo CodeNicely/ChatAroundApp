@@ -51,8 +51,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
  */
 public class Tweets_adapter extends BaseAdapter {
     private Context context;
-    private JSONArray posts;
-    int total = 0;
+    public JSONArray posts;
+    public int total = 0;
     DBHandler db;
     Typeface typeFace, typeface_light;
     double lat, lng;
@@ -288,24 +288,27 @@ public class Tweets_adapter extends BaseAdapter {
     }
 
     private String toProperCase(String name) {
-        name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
-        for (int i =0;;){
-            Log.e("NAME", name);
-            i = name.indexOf(" ", i+1);
-            if (i<0)
-                break;
-            else {
-                if (i >= name.length()) {
-                    name = name.substring(0, i + 1);
+        if (name != null && name.length()>0) {
+            name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
+            for (int i = 0; ; ) {
+                Log.e("NAME", name);
+                i = name.indexOf(" ", i + 1);
+                if (i < 0)
                     break;
-                }
                 else {
-                    name = name.substring(0, i + 1) + name.substring(i + 1, i + 2).toUpperCase() + name.substring(i + 2);
+                    if (i >= name.length()) {
+                        name = name.substring(0, i + 1);
+                        break;
+                    } else {
+                        name = name.substring(0, i + 1) + name.substring(i + 1, i + 2).toUpperCase() + name.substring(i + 2);
+                    }
                 }
             }
+            Log.e("NAME", name);
+            return name;
+        }else{
+            return name;
         }
-        Log.e("NAME", name);
-        return name;
     }
 
     public void refresh(JSONArray posts) {

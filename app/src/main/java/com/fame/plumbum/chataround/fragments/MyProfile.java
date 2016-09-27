@@ -336,8 +336,7 @@ public class MyProfile extends Fragment implements SwipeRefreshLayout.OnRefreshL
         activity.needSomethingTweet = true;
     }
 
-    public void getAllPosts(String response) {
-        Log.e("response", response);
+    public void getAllPosts(String response, int count) {
         try {
             JSONObject jO = new JSONObject(response);
             JSONArray mine = new JSONArray();
@@ -368,10 +367,22 @@ public class MyProfile extends Fragment implements SwipeRefreshLayout.OnRefreshL
             }
             TextView midText = (TextView) rootView.findViewById(R.id.midText);
             if (mine.length() > 0) {
-                midText.setVisibility(View.GONE);
-                adapter = new Notifs(getContext(), mine);
-                listView.setAdapter(adapter);
-                listView.setVisibility(View.VISIBLE);
+                if (count==0) {
+                    midText.setVisibility(View.GONE);
+                    adapter = new Notifs(getContext(), mine);
+                    listView.setAdapter(adapter);
+                    listView.setVisibility(View.VISIBLE);
+                }else{
+                    for (int i = 0; i<mine.length(); i++)
+                        adapter.posts.put(mine.getJSONObject(i));
+                    adapter.total = adapter.total + mine.length();
+                    int index = listView.getFirstVisiblePosition();
+                    View v = listView.getChildAt(0);
+                    int top = (v == null) ? 0 : v.getTop();
+
+                    adapter.notifyDataSetChanged();
+                    listView.setSelectionFromTop(index, top);
+                }
             } else {
                 listView.setVisibility(View.INVISIBLE);
                 midText.setVisibility(View.VISIBLE);

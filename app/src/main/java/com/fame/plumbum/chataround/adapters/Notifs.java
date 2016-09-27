@@ -28,8 +28,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
  */
 public class Notifs extends BaseAdapter {
     private Context context;
-    private JSONArray posts;
-    int total = 0;
+    public JSONArray posts;
+    public int total = 0;
     DBHandler db;
     Typeface typeFace, typeface_light;
 
