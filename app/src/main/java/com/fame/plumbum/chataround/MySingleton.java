@@ -14,27 +14,25 @@ public class MySingleton {
     private RequestQueue requestQueue;
     private static Context context;
 
-    private MySingleton(Context context){
-        this.context = context;
+    private MySingleton(Context context) {
+        MySingleton.context = context;
         requestQueue = getRequestQueue();
     }
 
-    public static synchronized MySingleton getInstance(Context context){
+    public static synchronized MySingleton getInstance(Context context) {
         if (mInstance == null)
             mInstance = new MySingleton(context);
         return mInstance;
     }
 
-    public RequestQueue getRequestQueue(){
+    public RequestQueue getRequestQueue() {
         if (requestQueue == null)
             requestQueue = Volley.newRequestQueue(context.getApplicationContext());
 
         return requestQueue;
     }
 
-    public void addToRequestQueue(Request req){
+    public void addToRequestQueue(Request req) {
         getRequestQueue().add(req);
     }
-
-
 }

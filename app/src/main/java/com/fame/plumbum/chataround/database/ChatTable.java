@@ -13,15 +13,6 @@ public class ChatTable {
     String message;
     String timestamp;
 
-    public ChatTable(){
-        status = 0;
-        post_id = "";
-        poster_name = "";
-        remote_id = "";
-        remote_name = "";
-        message = "";
-        timestamp = "";
-    }
 
     public ChatTable(int status, String post_id, String remote_id, String poster_name, String remote_name, String message, String timestamp){
         this.status = status;

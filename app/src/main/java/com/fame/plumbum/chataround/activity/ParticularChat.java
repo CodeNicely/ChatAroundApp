@@ -132,7 +132,6 @@ public class ParticularChat extends AppCompatActivity implements SwipeRefreshLay
         getImage(sp.getString("uid", ""), true, user_img_self);
         getImage(uid_r, false, user_img_remote);
         adapter = new Chat_adapter(this, chatTables);
-        //adapter.chats.add(new ChatTable());
         db.close();
         chat_list.setAdapter(adapter);
     }

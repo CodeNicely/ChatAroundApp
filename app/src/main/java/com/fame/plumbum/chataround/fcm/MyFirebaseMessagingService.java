@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
 
 import com.fame.plumbum.chataround.R;
 import com.fame.plumbum.chataround.activity.ParticularChat;
@@ -27,8 +26,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
-
-        Log.e("Timestamp", remoteMessage.getData().get("CreatedAt"));
 
         sendNotification(remoteMessage.getData());
         Intent intents=new Intent();

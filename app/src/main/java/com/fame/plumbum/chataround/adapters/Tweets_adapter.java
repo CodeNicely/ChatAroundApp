@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -82,7 +81,6 @@ public class Tweets_adapter extends BaseAdapter {
         CircleImageView chat_dot = (CircleImageView) rowView.findViewById(R.id.chat_dot);
         final LinearLayout report = (LinearLayout) rowView.findViewById(R.id.report);
         final TextView num_post = (TextView) rowView.findViewById(R.id.num_post);
-        final boolean[] clicked = {false};
         final ImageView report_image = (ImageView) rowView.findViewById(R.id.report_image);
         RelativeLayout rl_tweet = (RelativeLayout) rowView.findViewById(R.id.rL_tweet);
         CircleImageView user_img = (CircleImageView) rowView.findViewById(R.id.image_user_post);
@@ -288,27 +286,23 @@ public class Tweets_adapter extends BaseAdapter {
     }
 
     private String toProperCase(String name) {
-        if (name != null && name.length()>0) {
+        if (name!=null && name.length()>0) {
             name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
             for (int i = 0; ; ) {
-                Log.e("NAME", name);
                 i = name.indexOf(" ", i + 1);
                 if (i < 0)
                     break;
                 else {
-                    if (i >= name.length()) {
-                        name = name.substring(0, i + 1);
-                        break;
-                    } else {
+                    if (i < name.length()-2)
                         name = name.substring(0, i + 1) + name.substring(i + 1, i + 2).toUpperCase() + name.substring(i + 2);
+                    else if (i == name.length()-2) {
+                        name = name.substring(0, i + 1) + name.substring(i + 1, i + 2).toUpperCase();
+                        break;
                     }
                 }
             }
-            Log.e("NAME", name);
-            return name;
-        }else{
-            return name;
         }
+        return name;
     }
 
     public void refresh(JSONArray posts) {

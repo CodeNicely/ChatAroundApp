@@ -7,10 +7,6 @@ public class NotifTable {
     String id, post_id;
     int NComment, NLike;
 
-    public NotifTable(){
-
-    }
-
     public NotifTable(String post_id, int NComment, int NLike){
         this.post_id = post_id;
         this.NComment = NComment;

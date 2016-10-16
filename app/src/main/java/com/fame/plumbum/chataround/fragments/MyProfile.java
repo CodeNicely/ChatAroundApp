@@ -17,7 +17,6 @@ import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -84,9 +83,6 @@ public class MyProfile extends Fragment implements SwipeRefreshLayout.OnRefreshL
     Uri mCropImageUri;
     CropImageView mCropImageView;
     public SwipeRefreshLayout swipeRefreshLayout;
-
-//    URL image_value= new URL("http://graph.facebook.com/" + userName + "/pictures" );
-//    Bitmap profPict= BitmapFactory.decodeStream(image_value.openConnection().getInputStream());
 
     @Override
     public void onRefresh() {
@@ -355,7 +351,6 @@ public class MyProfile extends Fragment implements SwipeRefreshLayout.OnRefreshL
             }
 
             db.deleteNotif();
-            List<NotifTable> notifTables_one = db.getNotifs();
 
             for (int i = 0; i < currentListOfPost.length(); i++) {
                 if (currentListOfPost.getJSONObject(i).getString("PosterId").contentEquals(uid)) {
@@ -387,8 +382,7 @@ public class MyProfile extends Fragment implements SwipeRefreshLayout.OnRefreshL
                 listView.setVisibility(View.INVISIBLE);
                 midText.setVisibility(View.VISIBLE);
             }
-        } catch (JSONException sdfgh) {
-            Log.e("Error", "ertre");
+        } catch (JSONException ignored) {
         }
     }
 }

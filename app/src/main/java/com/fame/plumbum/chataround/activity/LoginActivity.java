@@ -21,7 +21,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -80,8 +79,7 @@ import retrofit2.Callback;
 
 public class LoginActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     EditText pass_edit, email_edit;
-    private static final String TAG = MainActivity.class.getSimpleName();
-    String password, email="", loginFlag = "0", name = "", photoUrl = "";
+    String password, email="", loginFlag = "0", photoUrl = "";
     SharedPreferences sp;
     RelativeLayout rl_progress;
     File file;
@@ -278,16 +276,15 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                                 editor.apply();
                                 getDetails();
                             }
-                        } catch (JSONException e) {
-                            Log.getStackTraceString(e);
+                        } catch (JSONException ignored) {
+
                         }
 
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.getStackTraceString(error);
+                    public void onErrorResponse(VolleyError ignored) {
                         Toast.makeText(LoginActivity.this, "Something went wrong", Toast.LENGTH_SHORT).show();
                     }
                 }) {
@@ -295,7 +292,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             protected Map<String, String> getParams() throws com.android.volley.AuthFailureError {
                 Map<String, String> params = new HashMap<String, String>();
                 SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(LoginActivity.this);
-                Log.e("UID", sp.getString("uid", ""));
                 params.put("UserId", sp.getString("uid", ""));
                 return params;
             };
@@ -331,7 +327,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                             }
                         } catch (JSONException e) {
                             rl_progress.setVisibility(View.GONE);
-                            Log.getStackTraceString(e);
                         }
                     }
                 },
@@ -339,7 +334,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         rl_progress.setVisibility(View.GONE);
-                        Log.e("ERROR_SIGNIN", Log.getStackTraceString(error));
                         Toast.makeText(LoginActivity.this, "Something went wrong", Toast.LENGTH_SHORT).show();
                     }
                 }) {
@@ -364,7 +358,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                     public void onResponse(String response) {
                         try {
                             rl_progress.setVisibility(View.GONE);
-                            Log.e("RESPONSE_login", response);
                             JSONObject jO = new JSONObject(response);
                             if (jO.getString("Status").contentEquals("200")){
                                 SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(LoginActivity.this);
@@ -387,8 +380,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                             }else{
                                 Toast.makeText(LoginActivity.this, "API ERROR", Toast.LENGTH_SHORT).show();
                             }
-                        } catch (JSONException e) {
-                            Log.getStackTraceString(e);
+                        } catch (JSONException ignored) {
                         }
 
                     }
@@ -431,74 +423,9 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(intent);
                 handleSignInResult(result);
                 break;
-            //default:
-                //callbackManager.onActivityResult(requestCode, responseCode, intent);
         }
     }
 
-    /*
-Initialize the facebook sdk.
-And then callback manager will handle the login responses.
-*/
-//    protected void facebookSDKInitialize() {
-//        FacebookSdk.sdkInitialize(getApplicationContext());
-//        AppEventsLogger.activateApp(this);
-//        callbackManager = CallbackManager.Factory.create();
-//    }
-
-     /*
-  Register a callback function with LoginButton to respond to the login result.
- */
-
-//    protected void getLoginDetails(LoginButton login_button){
-//
-//        // Callback registration
-//        login_button.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-//            @Override
-//            public void onSuccess(LoginResult login_result) {
-//                getUserInfo(login_result);
-//
-//            }
-//
-//            @Override
-//            public void onCancel() {
-//
-//            }
-//
-//            @Override
-//            public void onError(FacebookException exception) {
-//                Toast.makeText(LoginActivity.this, "Error connecting to FB!", Toast.LENGTH_SHORT).show();
-//                Log.e("ERROR", exception.getMessage());
-//            }
-//        });
-//    }
-
-
-
-//    public void getFacebookProfilePicture(String userID){
-//        Log.e("URL_IMAGE_FB", "https://graph.facebook.com/" + userID + "/picture?type=normal");
-//        HttpURLConnection.setFollowRedirects(true);
-//        Picasso.with(LoginActivity.this).load("https://graph.facebook.com/" + userID + "/picture?type=normal").resize(512, 512).into(new Target() {
-//            @Override
-//            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-//                Log.e("PICASSO", "loaded");
-//                savebitmap(bitmap);
-//                sendImage_one();
-//            }
-//
-//            @Override
-//            public void onBitmapFailed(Drawable errorDrawable) {
-//                Log.e("PICASSO", "bitmap failed");
-//                Toast.makeText(LoginActivity.this, "Error retrieving Profile", Toast.LENGTH_SHORT).show();
-////                sendData(email, "ChatAroundWithPankaj", "1");
-//            }
-//
-//            @Override
-//            public void onPrepareLoad(Drawable placeHolderDrawable) {
-//                Log.e("PICASSO", "preparing loading");
-//            }
-//        });
-//    }
 
     private void handleSignInResult(GoogleSignInResult result) {
         if (result.isSuccess()) {
@@ -515,21 +442,18 @@ And then callback manager will handle the login responses.
                             Target target = new Target(){
                                 @Override
                                 public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                                    Log.e("PICASSO", "loaded");
                                     savebitmap(bitmap);
                                     sendDataWithPhoto(email, "ChatAroundWithPankaj", "1");
                                 }
 
                                 @Override
                                 public void onBitmapFailed(Drawable errorDrawable) {
-                                    Log.e("PICASSO", "bitmap failed");
                                     Toast.makeText(LoginActivity.this, "Error retrieving Profile picture", Toast.LENGTH_SHORT).show();
                                     sendData(email, "ChatAroundWithPankaj", "1");
                                 }
 
                                 @Override
                                 public void onPrepareLoad(Drawable placeHolderDrawable) {
-                                    Log.e("PICASSO", "preparing loading");
                                 }
                             };
                             img = new ImageView(this);
@@ -553,7 +477,6 @@ And then callback manager will handle the login responses.
                     @Override
                     public void onResponse(String response) {
                         try {
-                            Log.e("RESPONSE_login", response);
                             JSONObject jO = new JSONObject(response);
                             if (jO.getString("Status").contentEquals("200")){
                                 SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(LoginActivity.this);
@@ -581,7 +504,6 @@ And then callback manager will handle the login responses.
                             }
                         } catch (JSONException e) {
                             rl_progress.setVisibility(View.GONE);
-                            Log.getStackTraceString(e);
                         }
                     }
                 },
@@ -618,7 +540,6 @@ And then callback manager will handle the login responses.
         api.upload(sp.getString("uid", ""), body).enqueue(new Callback<ImageSendData>() {
             @Override
             public void onResponse(Call<ImageSendData> call, retrofit2.Response<ImageSendData> response) {
-                Log.e("RESPONSE_Image", response.body().getStatus()+"");
                 ImageSendData formSever = response.body();
                 if (formSever.getStatus()==200){
                     Toast.makeText(LoginActivity.this, "Image Uploaded!", Toast.LENGTH_SHORT).show();
@@ -638,7 +559,7 @@ And then callback manager will handle the login responses.
     }
 
     private void savebitmap(Bitmap bitmap) {
-        FileOutputStream fOut = null;
+        FileOutputStream fOut;
         try {
             file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "pickImageResult.jpg");
             fOut = new FileOutputStream(file);
@@ -650,59 +571,6 @@ And then callback manager will handle the login responses.
         }
 
     }
-
-    /*
-To get the facebook user's own profile information via  creating a new request.
-When the request is completed, a callback is called to handle the success condition.
-*/
-//    protected void getUserInfo(LoginResult login_result){
-//
-//        GraphRequest data_request = GraphRequest.newMeRequest(
-//                login_result.getAccessToken(),
-//                new GraphRequest.GraphJSONObjectCallback() {
-//                    @Override
-//                    public void onCompleted(
-//                            JSONObject json_object,
-//                            GraphResponse response) {
-//                        try {
-//                            String id = "";
-//                            for (int i = 0; i < json_object.names().length(); i++) {
-//                                if (json_object.names().getString(i).contentEquals("name")) {
-//                                    name = toProperCase(json_object.getString("name"));
-//                                    name = name.substring(0, 1).toUpperCase() + name.substring(1);
-//                                }else if (json_object.names().getString(i).contentEquals("email")){
-//                                    email =json_object.getString("email");
-//                                }else if (json_object.names().getString(i).contentEquals("id")){
-//                                    id = json_object.names().getString(i);
-//                                }
-//                            }
-//
-//                            if (email.length()==0)
-//                                Toast.makeText(LoginActivity.this, "Email not found!", Toast.LENGTH_SHORT).show();
-//                            else {
-////                                if (id.length() > 0) {
-////                                    getFacebookProfilePicture(json_object.getString(id));
-////                                } else {
-//                                        sendData(email, "ChatAroundWithPankaj", "1");
-////                                    }
-//                            }
-//                        } catch (JSONException e) {
-//                            Log.getStackTraceString(e);
-//                        }
-//                    }
-//                });
-//
-//        Bundle permission_param = new Bundle();
-//        permission_param.putString("fields","id,name,email,picture.width(120).height(120)");
-//        data_request.setParameters(permission_param);
-//        data_request.executeAsync();
-//
-//    }
-
-//    public void show(String str)
-//    {
-//        Toast.makeText(this, str, Toast.LENGTH_LONG).show();
-//    }
 
     @Override
     protected void onResume() {
@@ -720,16 +588,20 @@ When the request is completed, a callback is called to handle the success condit
     }
 
     private String toProperCase(String name) {
-        name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
-        for (int i =0;;){
-            i = name.indexOf(" ", i+1);
-            if (i<0)
-                break;
-            else {
-                if (i > name.length()-1)
-                    name = name.substring(0, i + 1) + name.substring(i + 1, i + 2).toUpperCase();
-                else
-                    name = name.substring(0, i + 1) + name.substring(i + 1, i + 2).toUpperCase() + name.substring(i+2);
+        if (name!=null && name.length()>0) {
+            name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
+            for (int i = 0; ; ) {
+                i = name.indexOf(" ", i + 1);
+                if (i < 0)
+                    break;
+                else {
+                    if (i < name.length()-2)
+                        name = name.substring(0, i + 1) + name.substring(i + 1, i + 2).toUpperCase() + name.substring(i + 2);
+                    else if (i == name.length()-2) {
+                        name = name.substring(0, i + 1) + name.substring(i + 1, i + 2).toUpperCase();
+                        break;
+                    }
+                }
             }
         }
         return name;
@@ -747,8 +619,6 @@ When the request is completed, a callback is called to handle the success condit
             permissionsNeeded.add("WRITE EXTERNAL STORAGE");
         if (!addPermission(permissionsList, Manifest.permission.CAMERA))
             permissionsNeeded.add("CAMERA");
-//        if (!addPermission(permissionsList, Manifest.permission.READ_EXTERNAL_STORAGE))
-//            permissionsNeeded.add("READ EXTERNAL STORAGE");
 
         if (permissionsList.size() > 0) {
             if (permissionsNeeded.size() > 0) {

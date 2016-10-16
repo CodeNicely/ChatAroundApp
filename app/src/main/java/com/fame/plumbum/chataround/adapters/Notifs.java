@@ -3,7 +3,6 @@ package com.fame.plumbum.chataround.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,12 +13,9 @@ import android.widget.TextView;
 import com.fame.plumbum.chataround.R;
 import com.fame.plumbum.chataround.activity.ParticularPost;
 import com.fame.plumbum.chataround.database.DBHandler;
-import com.fame.plumbum.chataround.database.NotifTable;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-
-import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -77,18 +73,13 @@ public class Notifs extends BaseAdapter {
         rl_tweet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {;
-                Log.e("Clicked", "RLEATIVE LATOUT");
                 try {
                     DBHandler db = new DBHandler(context);
                     db.deleteNotif(posts.getJSONObject(position).getString("PostId"));
-                    Log.e("Posts", posts.getJSONObject(position).getString("PostId"));
-                    List<NotifTable> notifTables = db.getNotifs();
-                    Log.e("SIZEINADAPTER", notifTables.size()+"");
                     Intent intent = new Intent(context, ParticularPost.class);
                     intent.putExtra("post_id", posts.getJSONObject(position).getString("PostId"));
                     context.startActivity(intent);
-                } catch (JSONException e) {
-                    Log.e("Error", e.getMessage());
+                } catch (JSONException ignored) {
                 }
             }
         });

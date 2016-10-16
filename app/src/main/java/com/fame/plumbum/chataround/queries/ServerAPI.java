@@ -8,7 +8,6 @@ import java.util.concurrent.TimeUnit;
 
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
-import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -24,7 +23,8 @@ import retrofit2.http.Query;
 public interface ServerAPI {
     // Query 1:
     @Multipart
-    @POST("ImageUpload")    // ImageUpload is the function name in PHP.
+    @POST("ImageUpload")
+    // ImageUpload is the function name in PHP.
     Call<ImageSendData> upload(
             @Query("UserId") String userId,
             @Part MultipartBody.Part file);
@@ -32,7 +32,7 @@ public interface ServerAPI {
 
     // This is another query:
     @GET("POST")
-            Call<PostData> postData(
+    Call<PostData> postData(
             @Query("UserId") String userId,
             @Query("UserName") String userName,
             @Query("Post") String post,
@@ -40,16 +40,11 @@ public interface ServerAPI {
             @Query("Longitude") String lon
     );
 
-// No need of the above two variables. They are just for logging purposes.
-    HttpLoggingInterceptor logging = new HttpLoggingInterceptor()
-            .setLevel(HttpLoggingInterceptor.Level.BODY);
-
     OkHttpClient.Builder httpClient = new OkHttpClient.Builder()
-            .addInterceptor(logging)
             .readTimeout(60, TimeUnit.SECONDS)
             .connectTimeout(60, TimeUnit.SECONDS);
 
-// This is the main variable. In base url, write location of your server, without the function in php file as that is defined above.
+    // This is the main variable. In base url, write location of your server, without the function in php file as that is defined above.
 // And in client, just create a new client instead of using the above one. That is just for loggnig purposes.            
     Retrofit retrofit =
             new Retrofit.Builder()

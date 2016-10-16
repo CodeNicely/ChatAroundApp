@@ -88,10 +88,8 @@ public class World extends Fragment implements SwipeRefreshLayout.OnRefreshListe
             JSONObject jO = new JSONObject(response);
             JSONArray mine = new JSONArray();
             currentListOfPost[0] = jO.getJSONArray("Posts");
-            for (int i = 0; i < currentListOfPost[0].length(); i++) {
-//                if (!currentListOfPost[0].getJSONObject(i).getString("PosterId").contentEquals(uid))
+            for (int i = 0; i < currentListOfPost[0].length(); i++)
                 mine.put(currentListOfPost[0].getJSONObject(i));
-            }
             TextView midText = (TextView) rootView.findViewById(R.id.midText);
             if (mine.length() > 0) {
                 if (count==0) {

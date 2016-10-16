@@ -17,7 +17,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -114,7 +113,6 @@ public class MainActivity extends AppCompatActivity{
             }
         }else {
             sendFCM(sp.getString("uid", ""));
-            Log.e("token:", sp.getString("token", ""));
         }
     }
 
@@ -134,33 +132,47 @@ public class MainActivity extends AppCompatActivity{
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Log.e("Getting response", response);
                         try {
-                            JSONObject jo = new JSONObject(response);
-                            if (jo.getJSONArray("Posts").length()>0) {
+                            if (response!=null && response.length()>0) {
+                                JSONObject jo = new JSONObject(response);
                                 if (world != null && world.swipeRefreshLayout != null) {
                                     world.swipeRefreshLayout.setRefreshing(false);
-                                    world.getAllPosts(response, count);
                                 }
                                 if (profile != null && profile.swipeRefreshLayout != null) {
                                     profile.swipeRefreshLayout.setRefreshing(false);
-                                    profile.getAllPosts(response, count);
                                 }
-                            }else{
-                                Toast.makeText(MainActivity.this, "No more posts found!", Toast.LENGTH_SHORT).show();
-                                needSomethingTweet = false;
-                                needSomethingWorld = false;
-                                count -= 1;
+                                if (jo.getJSONArray("Posts").length() > 0) {
+                                    if (world != null && world.swipeRefreshLayout != null) {
+                                        world.getAllPosts(response, count);
+                                    }
+                                    if (profile != null && profile.swipeRefreshLayout != null) {
+                                        profile.getAllPosts(response, count);
+                                    }
+                                } else {
+                                    Toast.makeText(MainActivity.this, "No more posts found!", Toast.LENGTH_SHORT).show();
+                                    needSomethingTweet = false;
+                                    needSomethingWorld = false;
+                                    if (count>0) count -= 1;
+                                }
                             }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                        } catch (JSONException ignored) {
+                            if (world != null && world.swipeRefreshLayout != null) {
+                                world.swipeRefreshLayout.setRefreshing(false);
+                            }
+                            if (profile != null && profile.swipeRefreshLayout != null) {
+                                profile.swipeRefreshLayout.setRefreshing(false);
+                            }
                         }
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                world.swipeRefreshLayout.setRefreshing(false);
-                profile.swipeRefreshLayout.setRefreshing(false);
+                if (world != null && world.swipeRefreshLayout != null) {
+                    world.swipeRefreshLayout.setRefreshing(false);
+                }
+                if (profile != null && profile.swipeRefreshLayout != null) {
+                    profile.swipeRefreshLayout.setRefreshing(false);
+                }
                 Toast.makeText(MainActivity.this, "Error receiving data!", Toast.LENGTH_SHORT).show();
             }
         });

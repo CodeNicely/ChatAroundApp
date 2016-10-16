@@ -94,7 +94,6 @@ public class Chat_adapter extends BaseAdapter {
             }else{
                 timestamp.setText(days + " days ago");
             }
-            // timestamp.setText(chats.get(position).getTimestamp());
         }else{
             rl_chat_sent.setVisibility(View.VISIBLE);
             rl_caht.setVisibility(View.GONE);
@@ -125,16 +124,20 @@ public class Chat_adapter extends BaseAdapter {
     }
 
     private String toProperCase(String name) {
-        name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
-        for (int i =0;;){
-            i = name.indexOf(" ", i+1);
-            if (i<0)
-                break;
-            else {
-                if (i > name.length()-1)
-                    name = name.substring(0, i + 1) + name.substring(i + 1, i + 2).toUpperCase();
-                else
-                    name = name.substring(0, i + 1) + name.substring(i + 1, i + 2).toUpperCase() + name.substring(i+2);
+        if (name!=null && name.length()>0) {
+            name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
+            for (int i = 0; ; ) {
+                i = name.indexOf(" ", i + 1);
+                if (i < 0)
+                    break;
+                else {
+                    if (i < name.length()-2)
+                        name = name.substring(0, i + 1) + name.substring(i + 1, i + 2).toUpperCase() + name.substring(i + 2);
+                    else if (i == name.length()-2) {
+                        name = name.substring(0, i + 1) + name.substring(i + 1, i + 2).toUpperCase();
+                        break;
+                    }
+                }
             }
         }
         return name;

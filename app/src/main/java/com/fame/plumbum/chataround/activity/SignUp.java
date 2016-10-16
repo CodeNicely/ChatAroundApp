@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -98,7 +97,6 @@ public class SignUp extends AppCompatActivity{
                             if (jO.getString("Status").contentEquals("200")){
                                 SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(SignUp.this);
                                 SharedPreferences.Editor editor = sp.edit();
-                                Log.e("UID", jO.getString("UserId"));
                                 editor.putString("uid", jO.getString("UserId"));
                                 editor.apply();
                                 Intent intent = new Intent(SignUp.this, GetProfileDetails.class);

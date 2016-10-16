@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -50,14 +49,12 @@ public class OTP extends AppCompatActivity {
     private void sendOTP(String s, String uid) {
         RequestQueue queue = MySingleton.getInstance(getApplicationContext()).
                 getRequestQueue();
-        Log.e("URL_OTP", "http://52.66.45.251/NumberVerify?UserId=" + uid + "&OTP="+s);
         StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://52.66.45.251/NumberVerify?UserId=" + uid + "&OTP="+s,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        JSONObject jO = null;
+                        JSONObject jO;
                         try {
-                            Log.e("RESPONSE_OTP", response);
                             jO = new JSONObject(response);
                         if (jO.getString("Status").contentEquals("200")) {
                             SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(OTP.this);

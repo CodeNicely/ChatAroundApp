@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -21,7 +20,6 @@ import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
@@ -87,7 +85,7 @@ public class ParticularPost extends AppCompatActivity implements View.OnClickLis
                 }
                 break;
             case R.id.like_button:
-                RequestQueue queue = MySingleton.getInstance(getApplicationContext()).
+                MySingleton.getInstance(getApplicationContext()).
                         getRequestQueue();
                 StringRequest stringRequest = new StringRequest(Request.Method.GET,"http://52.66.45.251/Like?UserId="+uid+"&PostId="+post_id+"&UserName="+user_name.replace(" ", "%20")+"&Latitude="+lat+"&Longitude="+lng,
                         new Response.Listener<String>() {
@@ -116,7 +114,7 @@ public class ParticularPost extends AppCompatActivity implements View.OnClickLis
     }
 
     private void sendComment(String s) {
-        RequestQueue queue = MySingleton.getInstance(getApplicationContext()).
+        MySingleton.getInstance(getApplicationContext()).
                 getRequestQueue();
         StringRequest stringRequest = new StringRequest(Request.Method.GET,"http://52.66.45.251/Comment?UserId="+uid+"&PostId="+post_id+"&UserName="+user_name.replace(" ", "%20")+"&Comment="+s.replace(" ", "%20")+"&Latitude="+lat+"&Longitude="+lng,
                 new Response.Listener<String>() {
@@ -141,7 +139,7 @@ public class ParticularPost extends AppCompatActivity implements View.OnClickLis
     }
 
     private void refresh() {
-        RequestQueue queue = MySingleton.getInstance(getApplicationContext()).
+        MySingleton.getInstance(getApplicationContext()).
                 getRequestQueue();
         StringRequest stringRequest = new StringRequest(Request.Method.GET,"http://52.66.45.251/GetPostDetailed?UserId="+uid+"&PostId="+post_id+"&UserName="+user_name.replace(" ", "%20"),
                 new Response.Listener<String>() {
@@ -178,18 +176,12 @@ public class ParticularPost extends AppCompatActivity implements View.OnClickLis
             post_title.setText(postDetails.getString("Post"));
             if (!postDetails.getString("NoOfLikes").contentEquals("0")){
                 if (postDetails.getString("NoOfLikes").contentEquals("1")){
-//                    post_title.setTextColor(0xffd42f2f);
-//                    report.setBackgroundResource(R.drawable.report_red);
                     report_count.setText("1 person reported this.");
                 }
                 else{
-//                    report.setBackgroundResource(R.drawable.report_red);
-//                    post_title.setTextColor(0xffd42f2f);
                     report_count.setText(postDetails.getString("NoOfLikes") + " people reported this.");
                 }
             }else{
-//                report.setBackgroundResource(R.drawable.report);
-//                post_title.setTextColor(0xFFF3D203);
                 report_count.setText("No one reported this.");
             }
             DBHandler db = new DBHandler(this);
@@ -268,20 +260,11 @@ public class ParticularPost extends AppCompatActivity implements View.OnClickLis
         post_id = getIntent().getExtras().getString("post_id");
         rl_progress = (RelativeLayout) findViewById(R.id.rl_progress);
         comments_list = (ListView) findViewById(R.id.list_comments_post);
-//        rl_progress.setOnTouchListener(new View.OnTouchListener() {
-//            @Override
-//            public boolean onTouch(View v, MotionEvent event) {
-//                Log.e("OnTouch", String.valueOf(event.getSize()));
-//            }
-//        });
         image_user = (CircleImageView) findViewById(R.id.image_user);
         poster_name_txt = (TextView) findViewById(R.id.poster_name);
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         uid = sharedPreferences.getString("uid", "");
         user_name = sharedPreferences.getString("user_name", "");
-        if (user_name == null){
-            user_name = "";
-        }
         add_comment = (EditText) findViewById(R.id.comment_add);
         post_title = (TextView) findViewById(R.id.post_title);
         ImageView sendComment = (ImageView) findViewById(R.id.add_button);
@@ -342,7 +325,6 @@ public class ParticularPost extends AppCompatActivity implements View.OnClickLis
     @Override
     protected void onPause() {
         super.onPause();
-        Log.e("POST", "onPause");
         if (receiver!=null) {
             unregisterReceiver(receiver);
             receiver = null;
