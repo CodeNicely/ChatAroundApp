@@ -37,6 +37,7 @@ import com.fame.plumbum.chataround.MySingleton;
 import com.fame.plumbum.chataround.R;
 import com.fame.plumbum.chataround.fragments.MyProfile;
 import com.fame.plumbum.chataround.fragments.World;
+import com.fame.plumbum.chataround.helper.Urls;
 import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.json.JSONException;
@@ -128,7 +129,7 @@ public class MainActivity extends AppCompatActivity{
     public void getAllPosts(int counter){
         RequestQueue queue = MySingleton.getInstance(getApplicationContext()).
                 getRequestQueue();
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://52.66.45.251/ShowPost?UserId=" + profile.uid + "&Counter=" + counter + "&Latitude=" + lat + "&Longitude=" + lng,
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, Urls.BASE_URL+"ShowPost?UserId=" + profile.uid + "&Counter=" + counter + "&Latitude=" + lat + "&Longitude=" + lng,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -249,7 +250,7 @@ public class MainActivity extends AppCompatActivity{
                         RequestQueue queue = MySingleton.getInstance(MainActivity.this.getApplicationContext()).
                                 getRequestQueue();
                         content_txt = content_txt.replace("\n", "%0A");
-                        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://52.66.45.251/Post?UserId=" + profile.uid + "&UserName=" + profile.name + "&Post=" + content_txt.replace(" ", "%20") + "&Latitude=" + lat + "&Longitude=" + lng,
+                        StringRequest stringRequest = new StringRequest(Request.Method.GET, Urls.BASE_URL+"Post?UserId=" + profile.uid + "&UserName=" + profile.name + "&Post=" + content_txt.replace(" ", "%20") + "&Latitude=" + lat + "&Longitude=" + lng,
                                 new Response.Listener<String>() {
                                     @Override
                                     public void onResponse(String response) {
@@ -304,7 +305,7 @@ public class MainActivity extends AppCompatActivity{
     private void sendFCM(final String uid){
             RequestQueue queue = MySingleton.getInstance(getApplicationContext()).
                     getRequestQueue();
-            StringRequest stringRequest = new StringRequest(Request.Method.POST,"http://52.66.45.251/GetFCMToken",
+            StringRequest stringRequest = new StringRequest(Request.Method.POST,Urls.BASE_URL+"GetFCMToken",
                     new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {

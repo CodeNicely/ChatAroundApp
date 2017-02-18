@@ -30,6 +30,7 @@ import com.fame.plumbum.chataround.R;
 import com.fame.plumbum.chataround.adapters.Chat_adapter;
 import com.fame.plumbum.chataround.database.ChatTable;
 import com.fame.plumbum.chataround.database.DBHandler;
+import com.fame.plumbum.chataround.helper.Urls;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
@@ -140,7 +141,7 @@ public class ParticularChat extends AppCompatActivity implements SwipeRefreshLay
         final String[] image_name = new String[1];
         MySingleton.getInstance(getApplicationContext()).
                 getRequestQueue();
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://52.66.45.251/ImageName?UserId=" + uid,
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, Urls.BASE_URL+"ImageName?UserId=" + uid,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {

@@ -30,6 +30,7 @@ import com.fame.plumbum.chataround.activity.ParticularChat;
 import com.fame.plumbum.chataround.activity.ParticularPost;
 import com.fame.plumbum.chataround.activity.SelfChatList;
 import com.fame.plumbum.chataround.database.DBHandler;
+import com.fame.plumbum.chataround.helper.Urls;
 import com.rey.material.widget.Button;
 import com.squareup.picasso.Picasso;
 
@@ -190,7 +191,7 @@ public class Tweets_adapter extends BaseAdapter {
                     RequestQueue queue = MySingleton.getInstance(context.getApplicationContext()).
                             getRequestQueue();
                     SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-                    StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://52.66.45.251/Like?UserId=" + sp.getString("uid", "") + "&PostId=" + posts.getJSONObject(position).getString("PostId") + "&UserName=" + sp.getString("user_name", "").replace(" ", "%20") + "&Latitude=" + lat + "&Longitude=" + lng,
+                    StringRequest stringRequest = new StringRequest(Request.Method.GET, Urls.BASE_URL+"/Like?UserId=" + sp.getString("uid", "") + "&PostId=" + posts.getJSONObject(position).getString("PostId") + "&UserName=" + sp.getString("user_name", "").replace(" ", "%20") + "&Latitude=" + lat + "&Longitude=" + lng,
                             new Response.Listener<String>() {
                                 @Override
                                 public void onResponse(String response) {
@@ -251,7 +252,7 @@ public class Tweets_adapter extends BaseAdapter {
         final String[] image_name = new String[1];
         MySingleton.getInstance(context.getApplicationContext()).
                 getRequestQueue();
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://52.66.45.251/ImageName?UserId=" + uid,
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, Urls.BASE_URL+"ImageName?UserId=" + uid,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -278,11 +279,11 @@ public class Tweets_adapter extends BaseAdapter {
     }
 
     private void picassoSmall(String s, CircleImageView user_img) {
-        Picasso.with(context).load("http://52.66.45.251/ImageReturn?ImageName=" + s).resize(256, 256).error(R.drawable.user).into(user_img);
+        Picasso.with(context).load(Urls.BASE_URL+"ImageReturn?ImageName=" + s).resize(256, 256).error(R.drawable.user).into(user_img);
     }
 
     private void picassoBig(String s, CircleImageView user_img) {
-        Picasso.with(context).load("http://52.66.45.251/ImageReturn?ImageName=" + s).resize(512, 512).error(R.drawable.user_big).into(user_img);
+        Picasso.with(context).load(Urls.BASE_URL+"ImageReturn?ImageName=" + s).resize(512, 512).error(R.drawable.user_big).into(user_img);
     }
 
     private String toProperCase(String name) {
@@ -323,7 +324,7 @@ public class Tweets_adapter extends BaseAdapter {
 
     private void receiveData(final String uid, final TextView name, final TextView phone) {
         StringRequest myReq = new StringRequest(Request.Method.POST,
-                "http://52.66.45.251/GetProfile",
+                Urls.BASE_URL+"GetProfile",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {

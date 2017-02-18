@@ -19,6 +19,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.fame.plumbum.chataround.MySingleton;
 import com.fame.plumbum.chataround.R;
+import com.fame.plumbum.chataround.helper.Urls;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -49,7 +50,7 @@ public class OTP extends AppCompatActivity {
     private void sendOTP(String s, String uid) {
         RequestQueue queue = MySingleton.getInstance(getApplicationContext()).
                 getRequestQueue();
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://52.66.45.251/NumberVerify?UserId=" + uid + "&OTP="+s,
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, Urls.BASE_URL+"NumberVerify?UserId=" + uid + "&OTP="+s,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {

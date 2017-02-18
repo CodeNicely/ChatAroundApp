@@ -19,6 +19,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.fame.plumbum.chataround.R;
+import com.fame.plumbum.chataround.helper.Urls;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 
@@ -88,7 +89,7 @@ public class SignUp extends AppCompatActivity{
 
     void registerUser(){
         StringRequest myReq = new StringRequest(Request.Method.POST,
-                "http://52.66.45.251/CreateUser",
+                Urls.BASE_URL+"CreateUser",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {

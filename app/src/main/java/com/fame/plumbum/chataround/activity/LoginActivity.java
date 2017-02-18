@@ -38,6 +38,7 @@ import com.android.volley.toolbox.Volley;
 import com.facebook.appevents.AppEventsLogger;
 import com.fame.plumbum.chataround.LocationService;
 import com.fame.plumbum.chataround.R;
+import com.fame.plumbum.chataround.helper.Urls;
 import com.fame.plumbum.chataround.models.ImageSendData;
 import com.fame.plumbum.chataround.queries.ServerAPI;
 import com.google.android.gms.auth.api.Auth;
@@ -261,7 +262,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
     private void receiveData() {
         StringRequest myReq = new StringRequest(Request.Method.POST,
-                "http://52.66.45.251/GetProfile",
+                Urls.BASE_URL+"GetProfile",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -302,7 +303,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
     void registerUser(){
         StringRequest myReq = new StringRequest(Request.Method.POST,
-                "http://52.66.45.251/AuthenticateUser",
+                Urls.BASE_URL+"AuthenticateUser",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -352,7 +353,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
     void registerUserWithFb(){
         StringRequest myReq = new StringRequest(Request.Method.POST,
-                "http://52.66.45.251/CreateUser",
+                Urls.BASE_URL+"CreateUser",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -472,7 +473,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
     private void sendDataWithPhoto(final String email, final String password, final String loginFlag) {
         StringRequest myReq = new StringRequest(Request.Method.POST,
-                "http://52.66.45.251/CreateUser",
+                Urls.BASE_URL+"CreateUser",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {

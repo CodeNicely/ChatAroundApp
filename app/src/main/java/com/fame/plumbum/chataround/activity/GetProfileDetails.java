@@ -19,6 +19,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.fame.plumbum.chataround.R;
+import com.fame.plumbum.chataround.helper.Urls;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -76,7 +77,7 @@ public class GetProfileDetails extends AppCompatActivity {
 
     private void sendData(final String name, final String phone) {
         StringRequest myReq = new StringRequest(Request.Method.POST,
-                "http://52.66.45.251/AddProfile",
+                Urls.BASE_URL+"AddProfile",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {

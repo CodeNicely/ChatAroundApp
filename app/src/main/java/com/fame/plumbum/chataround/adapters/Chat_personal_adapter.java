@@ -22,6 +22,7 @@ import com.fame.plumbum.chataround.MySingleton;
 import com.fame.plumbum.chataround.R;
 import com.fame.plumbum.chataround.activity.ParticularChat;
 import com.fame.plumbum.chataround.database.ChatTable;
+import com.fame.plumbum.chataround.helper.Urls;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
@@ -118,7 +119,7 @@ public class Chat_personal_adapter extends BaseAdapter {
         final String[] image_name = new String[1];
         MySingleton.getInstance(context.getApplicationContext()).
                 getRequestQueue();
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://52.66.45.251/ImageName?UserId=" + uid,
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, Urls.BASE_URL+"ImageName?UserId=" + uid,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -145,11 +146,11 @@ public class Chat_personal_adapter extends BaseAdapter {
     }
 
     private void picassoGlobal(String s, CircleImageView user_img) {
-        Picasso.with(context).load("http://52.66.45.251/ImageReturn?ImageName=" + s).error(R.drawable.user).into(user_img);
+        Picasso.with(context).load(Urls.BASE_URL+"ImageReturn?ImageName=" + s).error(R.drawable.user).into(user_img);
     }
 
     private void picassoLocal(String s, CircleImageView user_img) {
-        Picasso.with(context).load("http://52.66.45.251/ImageReturn?ImageName=" + s).error(R.drawable.user).into(user_img);
+        Picasso.with(context).load(Urls.BASE_URL+"ImageReturn?ImageName=" + s).error(R.drawable.user).into(user_img);
     }
 
     private String toProperCase(String name) {

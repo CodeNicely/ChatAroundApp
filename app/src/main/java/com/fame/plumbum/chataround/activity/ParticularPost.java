@@ -27,6 +27,7 @@ import com.fame.plumbum.chataround.MySingleton;
 import com.fame.plumbum.chataround.R;
 import com.fame.plumbum.chataround.adapters.Comments_adapter;
 import com.fame.plumbum.chataround.database.DBHandler;
+import com.fame.plumbum.chataround.helper.Urls;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
@@ -87,7 +88,7 @@ public class ParticularPost extends AppCompatActivity implements View.OnClickLis
             case R.id.like_button:
                 MySingleton.getInstance(getApplicationContext()).
                         getRequestQueue();
-                StringRequest stringRequest = new StringRequest(Request.Method.GET,"http://52.66.45.251/Like?UserId="+uid+"&PostId="+post_id+"&UserName="+user_name.replace(" ", "%20")+"&Latitude="+lat+"&Longitude="+lng,
+                StringRequest stringRequest = new StringRequest(Request.Method.GET, Urls.BASE_URL+"Like?UserId="+uid+"&PostId="+post_id+"&UserName="+user_name.replace(" ", "%20")+"&Latitude="+lat+"&Longitude="+lng,
                         new Response.Listener<String>() {
                             @Override
                             public void onResponse(String response) {

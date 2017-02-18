@@ -38,6 +38,7 @@ import com.fame.plumbum.chataround.activity.MainActivity;
 import com.fame.plumbum.chataround.adapters.Notifs;
 import com.fame.plumbum.chataround.database.DBHandler;
 import com.fame.plumbum.chataround.database.NotifTable;
+import com.fame.plumbum.chataround.helper.Urls;
 import com.fame.plumbum.chataround.models.ImageSendData;
 import com.fame.plumbum.chataround.queries.ServerAPI;
 import com.squareup.picasso.Picasso;
@@ -155,7 +156,7 @@ public class MyProfile extends Fragment implements SwipeRefreshLayout.OnRefreshL
         final String[] image_name = new String[1];
         MySingleton.getInstance(getContext().getApplicationContext()).
                 getRequestQueue();
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://52.66.45.251/ImageName?UserId=" + sharedPreferences.getString("uid", "578b119a7c4ec26dcab64a21"),
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, Urls.BASE_URL+"ImageName?UserId=" + sharedPreferences.getString("uid", "578b119a7c4ec26dcab64a21"),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -163,7 +164,7 @@ public class MyProfile extends Fragment implements SwipeRefreshLayout.OnRefreshL
                             JSONObject json = new JSONObject(response);
                             if (!response.contains("Profile Image")) {
                                 image_name[0] = json.getString("ImageName");
-                                Picasso.with(getContext()).load("http://52.66.45.251/ImageReturn?ImageName=" + image_name[0])
+                                Picasso.with(getContext()).load(Urls.BASE_URL+"ImageReturn?ImageName=" + image_name[0])
                                         .resize(512, 512).error(R.drawable.user).into(user_image);
                             }
                         } catch (JSONException e) {
