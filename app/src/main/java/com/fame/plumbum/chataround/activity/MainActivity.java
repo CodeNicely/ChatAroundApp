@@ -38,6 +38,7 @@ import com.fame.plumbum.chataround.R;
 import com.fame.plumbum.chataround.fragments.MyProfile;
 import com.fame.plumbum.chataround.fragments.World;
 import com.fame.plumbum.chataround.helper.Urls;
+import com.fame.plumbum.chataround.restroom.view.RestroomFragment;
 import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.json.JSONException;
@@ -97,6 +98,7 @@ public class MainActivity extends AppCompatActivity{
         tabLayout.setupWithViewPager(viewPager);
         tabLayout.getTabAt(0).setIcon(R.drawable.user);
         tabLayout.getTabAt(1).setIcon(R.drawable.world);
+        tabLayout.getTabAt(2).setIcon(R.drawable.restroom);
 
         viewPager.setCurrentItem(1);
     }
@@ -120,9 +122,11 @@ public class MainActivity extends AppCompatActivity{
     public void setupViewPager(ViewPager upViewPager) {
         profile = new MyProfile();
         world = new World();
+        RestroomFragment restroomFragment=new RestroomFragment();
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(profile, "My Profile");
         adapter.addFragment(world, "World");
+        adapter.addFragment(restroomFragment,"RestRoomFragment");
         upViewPager.setAdapter(adapter);
     }
 

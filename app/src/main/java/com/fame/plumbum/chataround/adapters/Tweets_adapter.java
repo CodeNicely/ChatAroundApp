@@ -124,7 +124,7 @@ public class Tweets_adapter extends BaseAdapter {
         });
 
         try {
-            if (db.getPeronalChats(posts.getJSONObject(position).getString("PostId")).size()>0)
+            if (db.getPeronalChats(posts.getJSONObject(position).getString("PostId")).size() > 0)
                 chat_dot.setVisibility(View.VISIBLE);
             else
                 chat_dot.setVisibility(View.GONE);
@@ -191,7 +191,7 @@ public class Tweets_adapter extends BaseAdapter {
                     RequestQueue queue = MySingleton.getInstance(context.getApplicationContext()).
                             getRequestQueue();
                     SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-                    StringRequest stringRequest = new StringRequest(Request.Method.GET, Urls.BASE_URL+"/Like?UserId=" + sp.getString("uid", "") + "&PostId=" + posts.getJSONObject(position).getString("PostId") + "&UserName=" + sp.getString("user_name", "").replace(" ", "%20") + "&Latitude=" + lat + "&Longitude=" + lng,
+                    StringRequest stringRequest = new StringRequest(Request.Method.GET, Urls.BASE_URL + "/Like?UserId=" + sp.getString("uid", "") + "&PostId=" + posts.getJSONObject(position).getString("PostId") + "&UserName=" + sp.getString("user_name", "").replace(" ", "%20") + "&Latitude=" + lat + "&Longitude=" + lng,
                             new Response.Listener<String>() {
                                 @Override
                                 public void onResponse(String response) {
@@ -252,7 +252,7 @@ public class Tweets_adapter extends BaseAdapter {
         final String[] image_name = new String[1];
         MySingleton.getInstance(context.getApplicationContext()).
                 getRequestQueue();
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, Urls.BASE_URL+"ImageName?UserId=" + uid,
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, Urls.BASE_URL + "ImageName?UserId=" + uid,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -260,7 +260,7 @@ public class Tweets_adapter extends BaseAdapter {
                             JSONObject json = new JSONObject(response);
                             image_name[0] = json.getString("ImageName");
                             if (big)
-                            picassoBig(image_name[0], user_img);
+                                picassoBig(image_name[0], user_img);
                             else
                                 picassoSmall(image_name[0], user_img);
                         } catch (JSONException e) {
@@ -279,24 +279,24 @@ public class Tweets_adapter extends BaseAdapter {
     }
 
     private void picassoSmall(String s, CircleImageView user_img) {
-        Picasso.with(context).load(Urls.BASE_URL+"ImageReturn?ImageName=" + s).resize(256, 256).error(R.drawable.user).into(user_img);
+        Picasso.with(context).load(Urls.BASE_URL + "ImageReturn?ImageName=" + s).resize(256, 256).error(R.drawable.user).into(user_img);
     }
 
     private void picassoBig(String s, CircleImageView user_img) {
-        Picasso.with(context).load(Urls.BASE_URL+"ImageReturn?ImageName=" + s).resize(512, 512).error(R.drawable.user_big).into(user_img);
+        Picasso.with(context).load(Urls.BASE_URL + "ImageReturn?ImageName=" + s).resize(512, 512).error(R.drawable.user_big).into(user_img);
     }
 
     private String toProperCase(String name) {
-        if (name!=null && name.length()>0) {
+        if (name != null && name.length() > 0) {
             name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
             for (int i = 0; ; ) {
                 i = name.indexOf(" ", i + 1);
                 if (i < 0)
                     break;
                 else {
-                    if (i < name.length()-2)
+                    if (i < name.length() - 2)
                         name = name.substring(0, i + 1) + name.substring(i + 1, i + 2).toUpperCase() + name.substring(i + 2);
-                    else if (i == name.length()-2) {
+                    else if (i == name.length() - 2) {
                         name = name.substring(0, i + 1) + name.substring(i + 1, i + 2).toUpperCase();
                         break;
                     }
@@ -324,7 +324,7 @@ public class Tweets_adapter extends BaseAdapter {
 
     private void receiveData(final String uid, final TextView name, final TextView phone) {
         StringRequest myReq = new StringRequest(Request.Method.POST,
-                Urls.BASE_URL+"GetProfile",
+                Urls.BASE_URL + "GetProfile",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
