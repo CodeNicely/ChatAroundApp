@@ -6,7 +6,7 @@ package com.fame.plumbum.chataround.restroom.presenter;
 
 public interface RestRoomPresenter {
 
-    void requestRestRooms(Float latitude, Float langitude);
+    void requestRestRooms(Double latitude, Double langitude);
 
 
 }

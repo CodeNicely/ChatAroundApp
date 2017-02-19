@@ -8,7 +8,7 @@ import com.fame.plumbum.chataround.restroom.OnRestRoomApiResponse;
 
 public interface RestRoomProvider {
 
-    void requestRestRooms(Float latitude, Float langitude, OnRestRoomApiResponse onRestRoomApiResponse);
+    void requestRestRooms(Double latitude, Double langitude, OnRestRoomApiResponse onRestRoomApiResponse);
 
 
 }
