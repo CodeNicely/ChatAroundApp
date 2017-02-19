@@ -214,7 +214,6 @@ public class RestroomFragment extends Fragment implements RestRoomView, OnMapRea
     @Override
     public void onLocationChanged(Location location) {
 
-        googleMap.
     }
 
     /**
