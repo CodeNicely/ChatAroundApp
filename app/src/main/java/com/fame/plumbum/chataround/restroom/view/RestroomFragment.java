@@ -3,7 +3,6 @@ package com.fame.plumbum.chataround.restroom.view;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
@@ -11,7 +10,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,16 +21,14 @@ import com.fame.plumbum.chataround.R;
 import com.fame.plumbum.chataround.restroom.model.RestRoomData;
 import com.fame.plumbum.chataround.restroom.presenter.RestRoomPresenter;
 import com.fame.plumbum.chataround.restroom.presenter.RestRoomPresenterImpl;
-import com.fame.plumbum.chataround.restroom.provider.RestRoomProviderImpl;
+import com.fame.plumbum.chataround.restroom.provider.RetrofitRestRoomProvider;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.List;
@@ -106,7 +102,7 @@ public class RestroomFragment extends Fragment implements RestRoomView, OnMapRea
         View view = inflater.inflate(R.layout.fragment_restroom, container, false);
 
 
-        restRoomPresenter = new RestRoomPresenterImpl(this, new RestRoomProviderImpl());
+        restRoomPresenter = new RestRoomPresenterImpl(this, new RetrofitRestRoomProvider());
         ButterKnife.bind(this, view);
         LocationManager lm = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {

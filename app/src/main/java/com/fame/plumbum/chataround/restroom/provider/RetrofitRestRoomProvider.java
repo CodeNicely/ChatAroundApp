@@ -17,11 +17,11 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * Created by meghal on 19/2/17.
  */
 
-public class RestRoomProviderImpl implements RestRoomProvider {
+public class RetrofitRestRoomProvider implements RestRoomProvider {
 
     private Retrofit retrofit;
 
-    public RestRoomProviderImpl() {
+    public RetrofitRestRoomProvider() {
         retrofit = new Retrofit.Builder()
                 .baseUrl(Urls.BASE_URL_RESTROOM)
                 .addConverterFactory(GsonConverterFactory.create())
