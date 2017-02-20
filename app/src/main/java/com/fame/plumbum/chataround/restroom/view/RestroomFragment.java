@@ -17,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.fame.plumbum.chataround.R;
 import com.fame.plumbum.chataround.restroom.model.RestRoomData;
@@ -47,7 +48,7 @@ import butterknife.ButterKnife;
  * Use the {@link RestroomFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class RestroomFragment extends Fragment implements RestRoomView, OnMapReadyCallback , LocationListener {
+public class RestroomFragment extends Fragment implements RestRoomView, OnMapReadyCallback, LocationListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -118,11 +119,11 @@ public class RestroomFragment extends Fragment implements RestRoomView, OnMapRea
             // for ActivityCompat#requestPermissions for more details.
             return view;
         }
-        Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        double longitude = location.getLongitude();
-        double latitude = location.getLatitude();
-        latitude = 28.567522;
-        longitude = 77.218951;
+//        Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+//        double longitude = location.getLongitude();
+//        double latitude = location.getLatitude();
+        double latitude = 28.567522;
+        double longitude = 77.218951;
         restRoomPresenter.requestRestRooms(latitude, longitude);
         return view;
     }
@@ -165,6 +166,8 @@ public class RestroomFragment extends Fragment implements RestRoomView, OnMapRea
     @Override
     public void showMessage(String message) {
 
+        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+
     }
 
     @Override
@@ -191,7 +194,7 @@ public class RestroomFragment extends Fragment implements RestRoomView, OnMapRea
  */
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        this.googleMap=googleMap;
+        this.googleMap = googleMap;
         double latitude = 28.567522;
         double longitude = 77.218951;
 
@@ -199,16 +202,24 @@ public class RestroomFragment extends Fragment implements RestRoomView, OnMapRea
 
         for (int i = 0; i < restRoomDataList.size(); i++) {
             googleMap.addMarker(new MarkerOptions()
-                            .position(new LatLng(restRoomDataList.get(i).getLatitude(),
-                                    restRoomDataList.get(i).getLongitude()))
-                            .anchor(0.5f, 0.5f)
-                            .title(restRoomDataList.get(i).getName())
-                            .snippet(restRoomDataList.get(i).getComment())
-//                .icon(BitmapDescriptorFactory.fromResource(R.drawable.back))
+                    .position(new LatLng(restRoomDataList.get(i).getLatitude(),
+                            restRoomDataList.get(i).getLongitude()))
+                    .anchor(0.5f, 0.5f)
+                    .title(restRoomDataList.get(i).getName())
+                    .snippet(restRoomDataList.get(i).getComment())
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.pin1))
             );
         }
+
+        googleMap.addMarker(new MarkerOptions()
+                        .position(delhi)
+                        .anchor(0.5f, 0.5f)
+                        .title("You")
+                        .snippet("Your Current Location")
+//                .icon(BitmapDescriptorFactory.fromResource(R.drawable.location1))
+        );
 //        googleMap.moveCamera(CameraUpdateFactory.newLatLng(delhi));
-        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(delhi, 12.0f));
+        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(delhi, 8.0f));
     }
 
     @Override
