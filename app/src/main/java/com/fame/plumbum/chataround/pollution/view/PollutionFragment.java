@@ -1,17 +1,17 @@
 package com.fame.plumbum.chataround.pollution.view;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-import android.widget.TextView;
+import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.fame.plumbum.chataround.R;
@@ -20,26 +20,13 @@ import com.fame.plumbum.chataround.pollution.model.air_model.AirPollutionIndivid
 import com.fame.plumbum.chataround.pollution.model.air_model.AirPollutionIndividualValue;
 import com.fame.plumbum.chataround.pollution.presenter.PollutionPresenterImpl;
 import com.fame.plumbum.chataround.pollution.provider.RetrofitPollutionProvider;
-import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.charts.HorizontalBarChart;
-import com.github.mikephil.charting.data.BarData;
-import com.github.mikephil.charting.data.BarDataSet;
-import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.data.Entry;
 import com.github.pavlospt.CircleView;
-import com.ldoublem.ringPregressLibrary.OnSelectRing;
-import com.ldoublem.ringPregressLibrary.Ring;
-import com.ldoublem.ringPregressLibrary.RingProgress;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-import static android.R.attr.endColor;
-import static android.R.attr.startColor;
-import static android.R.id.progress;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -58,26 +45,16 @@ public class PollutionFragment extends Fragment implements PollutionView {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-
+    private PollutuionAqiAdapter pollutuionAqiAdapter;
     private OnFragmentInteractionListener mListener;
 
-    @BindView(R.id.aqi)
-    TextView aqi;
 
-    @BindView(R.id.cardView)
-    CardView cardView;
+    @BindView(R.id.scrollView)
+    ScrollView scrollView;
 
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
 
-    @BindView(R.id.ring_progress)
-    RingProgress mRingProgress;
-
-    @BindView(R.id.barChart)
-    BarChart barChart;
-
-    @BindView(R.id.horizontalBarChart)
-    HorizontalBarChart horizontalBarChart;
 
     @BindView(R.id.circleView)
     CircleView circleView;
@@ -129,6 +106,9 @@ public class PollutionFragment extends Fragment implements PollutionView {
 
         new PollutionPresenterImpl(this, new RetrofitPollutionProvider()).requestAirPollution(latitude, longitude);
 
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(linearLayoutManager);
+
 
         return view;
     }
@@ -157,10 +137,10 @@ public class PollutionFragment extends Fragment implements PollutionView {
     public void showLoader(boolean show) {
         if (show) {
             progressBar.setVisibility(View.VISIBLE);
-            cardView.setVisibility(View.GONE);
+            scrollView.setVisibility(View.GONE);
         } else {
             progressBar.setVisibility(View.GONE);
-            cardView.setVisibility(View.VISIBLE);
+            scrollView.setVisibility(View.VISIBLE);
         }
     }
 
@@ -174,62 +154,16 @@ public class PollutionFragment extends Fragment implements PollutionView {
     @Override
     public void setData(AirPollutionDetails airPollutionDetails) {
 
-        aqi.setText("Aqi Index : ");
-        aqi.append(String.valueOf(airPollutionDetails.getData().getAqi()));
-
-        ////////////////////////////////////////////////////
 
         circleView.setTitleText(String.valueOf(airPollutionDetails.getData().getAqi()) + "\n" + "AQI");
 
+        pollutuionAqiAdapter = new
+                PollutuionAqiAdapter(getContext(),
+                getIndividualAqiList(airPollutionDetails.getData().getIaqi()));
 
-        List<AirPollutionIndividualValue> airPollutionIndividualValueList
-                = getIndividualAqiList(airPollutionDetails.getData().getIaqi());
+        recyclerView.setAdapter(pollutuionAqiAdapter);
+        pollutuionAqiAdapter.notifyDataSetChanged();
 
-
-
-        ////////////////////////////////////////////////////
-
-        List<BarEntry> barEntryList = new ArrayList<BarEntry>();
-
-        BarEntry barEntry = new BarEntry(12, 12, "This is Label");
-
-        BarEntry barEntry1 = new BarEntry(30, 120);
-
-        barEntryList.add(barEntry);
-        barEntryList.add(barEntry1);
-
-
-        BarDataSet barDataSet = new BarDataSet(barEntryList, "Label");
-        barDataSet.setColor(R.color.colorAccent);
-        barDataSet.setValueTextColor(R.color.colorPrimary);
-
-        BarData barData = new BarData(barDataSet);
-
-        horizontalBarChart.setData(barData);
-        horizontalBarChart.invalidate();
-
-        barChart.setData(barData);
-        barChart.invalidate();
-
-
-        /////////////////////////////////////////////////////
-
-        mRingProgress.setSweepAngle(360);
-        mRingProgress.setDrawBg(true, Color.rgb(168, 168, 168));
-//        mRingProgress.setDrawBgShadow(true, Color.argb(100, 235, 79, 56));
-        mRingProgress.setCorner(true);
-        mRingProgress.setOnSelectRing(new OnSelectRing() {
-            @Override
-            public void Selected(Ring r) {
-
-            }
-        });
-        Ring r = new Ring(10, "Aqi Index : " + String.valueOf(54), "Title", R.color.colorAccent, R.color.colorPrimary);
-
-        List<Ring> mlistRing = new ArrayList<>();
-        mlistRing.add(r);
-
-        mRingProgress.setData(mlistRing, 1000);// if >0 animation ==0 null
 
     }
 
