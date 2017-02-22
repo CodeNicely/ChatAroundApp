@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/ChatAroundApp.iml" filepath="$PROJECT_DIR$/ChatAroundApp.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ringprogresslibrary/ringprogresslibrary.iml" filepath="$PROJECT_DIR$/ringprogresslibrary/ringprogresslibrary.iml" />
     </modules>
   </component>
 </project>
