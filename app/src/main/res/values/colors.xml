@@ -8,11 +8,19 @@
     <color name="colorAccentBlue">#4F7CAC</color>
     <color name="colorAccentRed">#E3170A</color>
 
+    <color name="transparent">#00000000</color>
+
+    <color name="good">#BB00E400</color>
+    <color name="moderate">#BBFFFF00</color>
+    <color name="sensitive">#BBFF7E00</color>
+    <color name="unhealthy">#BBFF0000</color>
+    <color name="very_unhealthy">#BB8F3F97</color>
+    <color name="hazardous">#BB7E0023</color>
 
 
     <color name="gray">#DCDCDC</color>
     <color name="green">#228B22</color>
-    <color name = "chat">#FAF7D1</color>
+    <color name="chat">#FAF7D1</color>
     <color name="textColorPrimary">#FFFFFF</color>
     <color name="windowBackground">#FFFFFF</color>
     <color name="navigationBarColor">#000000</color>

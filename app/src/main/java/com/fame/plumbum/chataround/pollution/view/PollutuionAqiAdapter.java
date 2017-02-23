@@ -1,11 +1,13 @@
 package com.fame.plumbum.chataround.pollution.view;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.fame.plumbum.chataround.R;
 import com.fame.plumbum.chataround.pollution.model.air_model.AirPollutionIndividualValue;
@@ -25,10 +27,12 @@ public class PollutuionAqiAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     private List<AirPollutionIndividualValue> valueList = new ArrayList<>();
     private LayoutInflater layoutInflater;
+    private Context context;
 
     PollutuionAqiAdapter(Context context, List<AirPollutionIndividualValue> valueList) {
         this.valueList = valueList;
         layoutInflater = LayoutInflater.from(context);
+        this.context=context;
     }
 
 
@@ -45,14 +49,31 @@ public class PollutuionAqiAdapter extends RecyclerView.Adapter<RecyclerView.View
         IndividualAqiViewHolder individualAqiViewHolder = (IndividualAqiViewHolder) holder;
         AirPollutionIndividualValue value = valueList.get(position);
 
-        individualAqiViewHolder.circleView.setTitleText(String.valueOf(value.getV()));
-        individualAqiViewHolder.title.setText(value.getName());
+
+        // Setting Color
+        individualAqiViewHolder.title.setBackgroundColor(value.getColor());
+        individualAqiViewHolder.circleView.setFillColor(value.getColor());
+        individualAqiViewHolder.circleView.setBackgroundColor(value.getColor());
+
+        // Setting Up Values
+        if(value.getV()!=-9999) {
+            individualAqiViewHolder.circleView.setTitleText(String.valueOf(value.getV()));
+            individualAqiViewHolder.title.setText(value.getName());
+        }else{
+            individualAqiViewHolder.circleView.setTitleText("NA");
+            individualAqiViewHolder.title.setText(value.getName());
+
+        }
+
 
 
     }
 
     @Override
     public int getItemCount() {
+
+
+        Toast.makeText(context, String.valueOf(valueList.size()), Toast.LENGTH_SHORT).show();
         return valueList.size();
     }
 

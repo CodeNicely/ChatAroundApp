@@ -8,10 +8,12 @@ public class AirPollutionIndividualValue {
 
     private double v;
     private String name;
+    private int color;
 
-    public AirPollutionIndividualValue(double v, String name) {
+    public AirPollutionIndividualValue(double v, String name, int color) {
         this.v = v;
         this.name = name;
+        this.color = color;
     }
 
     public String getName() {
@@ -24,5 +26,13 @@ public class AirPollutionIndividualValue {
 
     public double getV() {
         return v;
+    }
+
+    public void setColor(int color) {
+        this.color = color;
+    }
+
+    public int getColor() {
+        return color;
     }
 }

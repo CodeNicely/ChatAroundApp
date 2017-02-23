@@ -1,19 +1,26 @@
 package com.fame.plumbum.chataround.pollution.view;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.net.Uri;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.amulyakhare.textdrawable.TextDrawable;
 import com.fame.plumbum.chataround.R;
 import com.fame.plumbum.chataround.pollution.model.air_model.AirPollutionDetails;
 import com.fame.plumbum.chataround.pollution.model.air_model.AirPollutionIndividualAqi;
@@ -27,6 +34,8 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.facebook.login.widget.ProfilePictureView.TAG;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -62,6 +71,14 @@ public class PollutionFragment extends Fragment implements PollutionView {
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
 
+    @BindView(R.id.aqi_health_notice)
+    TextView aqi_health_notice;
+
+    @BindView(R.id.humidity)
+    TextView humidity;
+
+    @BindView(R.id.wind)
+    TextView wind;
 
     public PollutionFragment() {
         // Required empty public constructor
@@ -154,9 +171,62 @@ public class PollutionFragment extends Fragment implements PollutionView {
     @Override
     public void setData(AirPollutionDetails airPollutionDetails) {
 
+        double aqi = airPollutionDetails.getData().getAqi();
+        String healthStatement = "";
+        if (aqi < 50) {
+
+            circleView.setFillColor(ContextCompat.getColor(getContext(), R.color.good));
+            healthStatement = "Air quality is considered satisfactory,and air pollution poses " +
+                    "little or no risk";
+
+        } else if (aqi > 50 && aqi <= 100) {
+
+            circleView.setFillColor(ContextCompat.getColor(getContext(), R.color.moderate));
+            healthStatement = "Air quality is acceptable; however, for some pollutants there may be a " +
+                    "moderate health concern for a very small number of people who are unusually " +
+                    "sensitive to air pollution.";
+
+        } else if (aqi > 100 && aqi <= 150) {
+
+            circleView.setFillColor(ContextCompat.getColor(getContext(), R.color.sensitive));
+            healthStatement = "Members of sensitive groups may experience health effects. The " +
+                    "general public is not likely to be affected.";
+
+        } else if (aqi > 150 && aqi <= 200) {
+
+            circleView.setFillColor(ContextCompat.getColor(getContext(), R.color.unhealthy));
+            healthStatement = "Everyone may begin to experience health effects; members of sensitive " +
+                    "groups may experience more serious health effects.";
+
+        } else if (aqi > 200 && aqi <= 300) {
+
+            circleView.setFillColor(ContextCompat.getColor(getContext(), R.color.very_unhealthy));
+            healthStatement = "Health warnings of emergency conditions. The entire population is " +
+                    "more likely to be affected.";
+
+        } else if (aqi > 300 && aqi <= 300) {
+
+            circleView.setFillColor(ContextCompat.getColor(getContext(), R.color.hazardous));
+            healthStatement = "Health alert: everyone may experience more serious health effects";
+
+        }
+
+
+        try {
+            humidity.setText("Humidity - " + String.valueOf(airPollutionDetails.getData().getIaqi().getH().getV()));
+        }catch (Exception e){
+            Log.e(TAG,e.getMessage());
+
+        }
+
+        try {
+            wind.setText("Wind Speed - " + String.valueOf(airPollutionDetails.getData().getIaqi().getWd().getV()));
+        }catch (Exception e){
+            Log.e(TAG,e.getMessage());
+        }
 
         circleView.setTitleText(String.valueOf(airPollutionDetails.getData().getAqi()) + "\n" + "AQI");
-
+        aqi_health_notice.setText(healthStatement);
         pollutuionAqiAdapter = new
                 PollutuionAqiAdapter(getContext(),
                 getIndividualAqiList(airPollutionDetails.getData().getIaqi()));
@@ -172,9 +242,280 @@ public class PollutionFragment extends Fragment implements PollutionView {
 
         List<AirPollutionIndividualValue> airPollutionIndividualValueList = new ArrayList<>();
 
-        if (airPollutionIndividualAqi.getCo() != null) {
+
+        if (airPollutionIndividualAqi.getPm25() != null) {
+
+            double aqi = airPollutionIndividualAqi.getPm25().getV();
+            int color = ContextCompat.getColor(getContext(), R.color.white);
+            if (aqi < 30) {
+
+                color = ContextCompat.getColor(getContext(), R.color.good);
+
+            } else if (aqi > 30 && aqi <= 60) {
+
+                color = ContextCompat.getColor(getContext(), R.color.moderate);
+
+
+            } else if (aqi > 60 && aqi <= 90) {
+
+                color = ContextCompat.getColor(getContext(), R.color.sensitive);
+
+            } else if (aqi > 90 && aqi <= 120) {
+
+                color = ContextCompat.getColor(getContext(), R.color.unhealthy);
+
+            } else if (aqi > 120 && aqi <= 250) {
+
+                color = ContextCompat.getColor(getContext(), R.color.very_unhealthy);
+
+            } else if (aqi > 250) {
+
+                color = ContextCompat.getColor(getContext(), R.color.hazardous);
+
+            }
+
+
             airPollutionIndividualValueList.add(new AirPollutionIndividualValue(
-                    airPollutionIndividualAqi.getCo().getV(), "CO"));
+                    airPollutionIndividualAqi.getPm25().getV(), "PM 2.5", color));
+
+        }else {
+
+            int color=R.color.black;
+            airPollutionIndividualValueList.add(new AirPollutionIndividualValue(
+                    -9999, "PM 2.5", color));
+        }
+
+        if (airPollutionIndividualAqi.getPm10() != null) {
+
+            double aqi = airPollutionIndividualAqi.getPm10().getV();
+            int color = ContextCompat.getColor(getContext(), R.color.white);
+            if (aqi < 50) {
+
+                color = ContextCompat.getColor(getContext(), R.color.good);
+
+            } else if (aqi > 50 && aqi <= 100) {
+
+                color = ContextCompat.getColor(getContext(), R.color.moderate);
+
+
+            } else if (aqi > 100 && aqi <= 250) {
+
+                color = ContextCompat.getColor(getContext(), R.color.sensitive);
+
+            } else if (aqi > 250 && aqi <= 350) {
+
+                color = ContextCompat.getColor(getContext(), R.color.unhealthy);
+
+            } else if (aqi > 350 && aqi <= 430) {
+
+                color = ContextCompat.getColor(getContext(), R.color.very_unhealthy);
+
+            } else if (aqi > 430) {
+
+                color = ContextCompat.getColor(getContext(), R.color.hazardous);
+
+            }
+
+            airPollutionIndividualValueList.add(new AirPollutionIndividualValue(
+                    airPollutionIndividualAqi.getPm10().getV(), "PM 10", color));
+
+        }else {
+
+            int color=R.color.black;
+            airPollutionIndividualValueList.add(new AirPollutionIndividualValue(
+                    -9999, "PM 10", color));
+        }
+
+
+        if (airPollutionIndividualAqi.getO3() != null) {
+
+            double aqi = airPollutionIndividualAqi.getO3().getV();
+            int color = ContextCompat.getColor(getContext(), R.color.white);
+            if (aqi < 50) {
+
+                color = ContextCompat.getColor(getContext(), R.color.good);
+
+            } else if (aqi > 50 && aqi <= 100) {
+
+                color = ContextCompat.getColor(getContext(), R.color.moderate);
+
+
+            } else if (aqi > 100 && aqi <= 168) {
+
+                color = ContextCompat.getColor(getContext(), R.color.sensitive);
+
+            } else if (aqi > 168 && aqi <= 208) {
+
+                color = ContextCompat.getColor(getContext(), R.color.unhealthy);
+
+            } else if (aqi > 208 && aqi <= 748) {
+
+                color = ContextCompat.getColor(getContext(), R.color.very_unhealthy);
+
+            } else if (aqi > 748) {
+
+                color = ContextCompat.getColor(getContext(), R.color.hazardous);
+
+            }
+
+
+            airPollutionIndividualValueList.add(new AirPollutionIndividualValue(
+                    airPollutionIndividualAqi.getO3().getV(), "o3", color));
+
+        }else {
+
+            int color=R.color.black;
+            airPollutionIndividualValueList.add(new AirPollutionIndividualValue(
+                    -9999, "o3", color));
+        }
+
+
+        if (airPollutionIndividualAqi.getNo2() != null) {
+
+            double aqi = airPollutionIndividualAqi.getNo2().getV();
+            int color = ContextCompat.getColor(getContext(), R.color.white);
+            if (aqi < 40) {
+
+                color = ContextCompat.getColor(getContext(), R.color.good);
+
+            } else if (aqi > 40 && aqi <= 80) {
+
+                color = ContextCompat.getColor(getContext(), R.color.moderate);
+
+
+            } else if (aqi > 80 && aqi <= 180) {
+
+                color = ContextCompat.getColor(getContext(), R.color.sensitive);
+
+            } else if (aqi > 180 && aqi <= 280) {
+
+                color = ContextCompat.getColor(getContext(), R.color.unhealthy);
+
+            } else if (aqi > 280 && aqi <= 400) {
+
+                color = ContextCompat.getColor(getContext(), R.color.very_unhealthy);
+
+            } else if (aqi > 400) {
+
+                color = ContextCompat.getColor(getContext(), R.color.hazardous);
+
+            }
+
+
+            airPollutionIndividualValueList.add(new AirPollutionIndividualValue(
+                    airPollutionIndividualAqi.getNo2().getV(), "No2", color));
+        }else {
+
+            int color=R.color.black;
+            airPollutionIndividualValueList.add(new AirPollutionIndividualValue(
+                    -9999, "No2", color));
+        }
+
+
+        if (airPollutionIndividualAqi.getS02() != null) {
+
+            double aqi = airPollutionIndividualAqi.getS02().getV();
+            int color = ContextCompat.getColor(getContext(), R.color.white);
+            if (aqi < 40) {
+
+                color = ContextCompat.getColor(getContext(), R.color.good);
+
+            } else if (aqi > 40 && aqi <= 80) {
+
+                color = ContextCompat.getColor(getContext(), R.color.moderate);
+
+
+            } else if (aqi > 80 && aqi <= 380) {
+
+                color = ContextCompat.getColor(getContext(), R.color.sensitive);
+
+            } else if (aqi > 380 && aqi <= 800) {
+
+                color = ContextCompat.getColor(getContext(), R.color.unhealthy);
+
+            } else if (aqi > 800 && aqi <= 1600) {
+
+                color = ContextCompat.getColor(getContext(), R.color.very_unhealthy);
+
+            } else if (aqi > 1600) {
+
+                color = ContextCompat.getColor(getContext(), R.color.hazardous);
+
+            }
+
+
+            airPollutionIndividualValueList.add(new AirPollutionIndividualValue(
+                    airPollutionIndividualAqi.getS02().getV(), "SO2", color));
+        }else {
+
+            int color=R.color.black;
+            airPollutionIndividualValueList.add(new AirPollutionIndividualValue(
+                    -9999, "So2", color));
+        }
+
+        if (airPollutionIndividualAqi.getCo() != null) {
+
+            double aqi = airPollutionIndividualAqi.getCo().getV();
+            int color = ContextCompat.getColor(getContext(), R.color.white);
+            if (aqi < 1.0) {
+
+                color = ContextCompat.getColor(getContext(), R.color.good);
+
+            } else if (aqi > 1.0 && aqi <= 2.0) {
+
+                color = ContextCompat.getColor(getContext(), R.color.moderate);
+
+
+            } else if (aqi > 2.0 && aqi <= 10) {
+
+                color = ContextCompat.getColor(getContext(), R.color.sensitive);
+
+            } else if (aqi > 10 && aqi <= 17) {
+
+                color = ContextCompat.getColor(getContext(), R.color.unhealthy);
+
+            } else if (aqi > 17 && aqi <= 34) {
+
+                color = ContextCompat.getColor(getContext(), R.color.very_unhealthy);
+
+            } else if (aqi > 34) {
+
+                color = ContextCompat.getColor(getContext(), R.color.hazardous);
+
+            }
+
+
+            airPollutionIndividualValueList.add(new AirPollutionIndividualValue(
+                    airPollutionIndividualAqi.getCo().getV(), "CO", color));
+        }else {
+
+            int color=R.color.black;
+            airPollutionIndividualValueList.add(new AirPollutionIndividualValue(
+                    -9999, "Co", color));
+        }
+/*
+    This Method is for Temperature that we are not going to use.
+    Only Gases Will be Showin in Recycler View .
+
+
+        if (airPollutionIndividualAqi.getT() != null) {
+
+            airPollutionIndividualValueList.add(new AirPollutionIndividualValue(
+                    airPollutionIndividualAqi.getT().getV(), "T"));
+
+        }
+
+
+         if (airPollutionIndividualAqi.getW() != null) {
+
+            airPollutionIndividualValueList.add(new AirPollutionIndividualValue(
+                    airPollutionIndividualAqi.getW().getV(), "W"));
+
+        }
+        if (airPollutionIndividualAqi.getWd() != null) {
+
+            airPollutionIndividualValueList.add(new AirPollutionIndividualValue(
+                    airPollutionIndividualAqi.getWd().getV(), "WD"));
         }
 
         if (airPollutionIndividualAqi.getD() != null) {
@@ -187,59 +528,17 @@ public class PollutionFragment extends Fragment implements PollutionView {
 
             airPollutionIndividualValueList.add(new AirPollutionIndividualValue(
                     airPollutionIndividualAqi.getH().getV(), "H"));
-        }
+        }*/
+/*
+This Method is for Pressure that we are not going to use.
 
-
-        if (airPollutionIndividualAqi.getNo2() != null) {
-
-            airPollutionIndividualValueList.add(new AirPollutionIndividualValue(
-                    airPollutionIndividualAqi.getNo2().getV(), "NO2"));
-        }
-        if (airPollutionIndividualAqi.getO3() != null) {
-
-            airPollutionIndividualValueList.add(new AirPollutionIndividualValue(
-                    airPollutionIndividualAqi.getO3().getV(), "O3"));
-
-        }
         if (airPollutionIndividualAqi.getP() != null) {
 
             airPollutionIndividualValueList.add(new AirPollutionIndividualValue(
                     airPollutionIndividualAqi.getP().getV(), "P"));
 
         }
-        if (airPollutionIndividualAqi.getPm10() != null) {
-
-            airPollutionIndividualValueList.add(new AirPollutionIndividualValue(
-                    airPollutionIndividualAqi.getPm10().getV(), "PM10"));
-
-        }
-        if (airPollutionIndividualAqi.getPm25() != null) {
-
-            airPollutionIndividualValueList.add(new AirPollutionIndividualValue(
-                    airPollutionIndividualAqi.getPm25().getV(), "PM25"));
-
-        }
-        if (airPollutionIndividualAqi.getS02() != null) {
-
-            airPollutionIndividualValueList.add(new AirPollutionIndividualValue(
-                    airPollutionIndividualAqi.getS02().getV(), "SO2"));
-        }
-        if (airPollutionIndividualAqi.getT() != null) {
-
-            airPollutionIndividualValueList.add(new AirPollutionIndividualValue(airPollutionIndividualAqi.getT().getV(), "T"));
-
-        }
-        if (airPollutionIndividualAqi.getW() != null) {
-
-            airPollutionIndividualValueList.add(new AirPollutionIndividualValue(
-                    airPollutionIndividualAqi.getW().getV(), "W"));
-
-        }
-        if (airPollutionIndividualAqi.getWd() != null) {
-
-            airPollutionIndividualValueList.add(new AirPollutionIndividualValue(
-                    airPollutionIndividualAqi.getWd().getV(), "WD"));
-        }
+*/
 
         return airPollutionIndividualValueList;
 

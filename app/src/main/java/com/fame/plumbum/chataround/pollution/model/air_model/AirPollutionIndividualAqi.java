@@ -7,17 +7,22 @@ package com.fame.plumbum.chataround.pollution.model.air_model;
 public class AirPollutionIndividualAqi {
 
 
-    private AirPollutionIndividualValue co;
-    private AirPollutionIndividualValue d;
-    private AirPollutionIndividualValue h;
-    private AirPollutionIndividualValue no2;
-    private AirPollutionIndividualValue o3;
-    private AirPollutionIndividualValue p;
     private AirPollutionIndividualValue pm10;
     private AirPollutionIndividualValue pm25;
+    private AirPollutionIndividualValue no2;
+    private AirPollutionIndividualValue o3;
+    private AirPollutionIndividualValue co;
     private AirPollutionIndividualValue s02;
+
+
+    private AirPollutionIndividualValue d;
+
     private AirPollutionIndividualValue t;
+    private AirPollutionIndividualValue p;
+
+    private AirPollutionIndividualValue h;
     private AirPollutionIndividualValue w;
+
     private AirPollutionIndividualValue wd;
 
 
