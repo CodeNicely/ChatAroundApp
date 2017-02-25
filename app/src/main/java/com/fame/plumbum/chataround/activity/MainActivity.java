@@ -38,6 +38,7 @@ import com.fame.plumbum.chataround.R;
 import com.fame.plumbum.chataround.fragments.MyProfile;
 import com.fame.plumbum.chataround.fragments.World;
 import com.fame.plumbum.chataround.helper.Urls;
+import com.fame.plumbum.chataround.news.view.NewsFragment;
 import com.fame.plumbum.chataround.pollution.view.PollutionFragment;
 import com.fame.plumbum.chataround.restroom.view.RestroomFragment;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -53,7 +54,7 @@ import java.util.Map;
 /**
  * Created by pankaj on 4/8/16.
  */
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity {
     public double lat, lng;
     public boolean needSomethingTweet = false, needSomethingWorld = false;
     MyProfile profile;
@@ -68,7 +69,7 @@ public class MainActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.chat_window);
 
-        if (receiver==null) {
+        if (receiver == null) {
             IntentFilter filter = new IntentFilter("Hello World");
             receiver = new BroadcastReceiver() {
                 @Override
@@ -106,9 +107,9 @@ public class MainActivity extends AppCompatActivity{
     }
 
     private void initFCM() {
-        if (!sp.contains("token")){
+        if (!sp.contains("token")) {
             SharedPreferences.Editor editor = sp.edit();
-            if (FirebaseInstanceId.getInstance()!=null){
+            if (FirebaseInstanceId.getInstance() != null) {
                 token = FirebaseInstanceId.getInstance().getToken();
                 if (token != null) {
                     editor.putString("token", token);
@@ -116,7 +117,7 @@ public class MainActivity extends AppCompatActivity{
                     sendFCM(sp.getString("uid", ""));
                 }
             }
-        }else {
+        } else {
             sendFCM(sp.getString("uid", ""));
         }
     }
@@ -124,28 +125,29 @@ public class MainActivity extends AppCompatActivity{
     public void setupViewPager(ViewPager upViewPager) {
         profile = new MyProfile();
         world = new World();
-        RestroomFragment restroomFragment=new RestroomFragment();
-        PollutionFragment pollutionFragment=new PollutionFragment();
-
+        RestroomFragment restroomFragment = new RestroomFragment();
+        PollutionFragment pollutionFragment = new PollutionFragment();
+        NewsFragment newsFragment = new NewsFragment();
 
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(profile, "My Profile");
         adapter.addFragment(world, "World");
-        adapter.addFragment(restroomFragment,"RestRoomFragment");
-        adapter.addFragment(pollutionFragment,"PollutionFragment");
+        adapter.addFragment(restroomFragment, "RestRoomFragment");
+        adapter.addFragment(pollutionFragment, "PollutionFragment");
+        adapter.addFragment(newsFragment, "NewsFragment");
 
         upViewPager.setAdapter(adapter);
     }
 
-    public void getAllPosts(int counter){
+    public void getAllPosts(int counter) {
         RequestQueue queue = MySingleton.getInstance(getApplicationContext()).
                 getRequestQueue();
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, Urls.BASE_URL+"ShowPost?UserId=" + profile.uid + "&Counter=" + counter + "&Latitude=" + lat + "&Longitude=" + lng,
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, Urls.BASE_URL + "ShowPost?UserId=" + profile.uid + "&Counter=" + counter + "&Latitude=" + lat + "&Longitude=" + lng,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         try {
-                            if (response!=null && response.length()>0) {
+                            if (response != null && response.length() > 0) {
                                 JSONObject jo = new JSONObject(response);
                                 if (world != null && world.swipeRefreshLayout != null) {
                                     world.swipeRefreshLayout.setRefreshing(false);
@@ -164,7 +166,7 @@ public class MainActivity extends AppCompatActivity{
                                     Toast.makeText(MainActivity.this, "No more posts found!", Toast.LENGTH_SHORT).show();
                                     needSomethingTweet = false;
                                     needSomethingWorld = false;
-                                    if (count>0) count -= 1;
+                                    if (count > 0) count -= 1;
                                 }
                             }
                         } catch (JSONException ignored) {
@@ -231,7 +233,7 @@ public class MainActivity extends AppCompatActivity{
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if(id == R.id.action_shout){
+        if (id == R.id.action_shout) {
             final Dialog dialog = new Dialog(MainActivity.this);
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             dialog.setContentView(R.layout.dialog_create_post);
@@ -243,7 +245,7 @@ public class MainActivity extends AppCompatActivity{
 
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
                     //This sets a textview to the current length
-                    mTextView.setText(String.valueOf(140-s.length())+"/140");
+                    mTextView.setText(String.valueOf(140 - s.length()) + "/140");
                 }
 
                 public void afterTextChanged(Editable s) {
@@ -261,7 +263,7 @@ public class MainActivity extends AppCompatActivity{
                         RequestQueue queue = MySingleton.getInstance(MainActivity.this.getApplicationContext()).
                                 getRequestQueue();
                         content_txt = content_txt.replace("\n", "%0A");
-                        StringRequest stringRequest = new StringRequest(Request.Method.GET, Urls.BASE_URL+"Post?UserId=" + profile.uid + "&UserName=" + profile.name + "&Post=" + content_txt.replace(" ", "%20") + "&Latitude=" + lat + "&Longitude=" + lng,
+                        StringRequest stringRequest = new StringRequest(Request.Method.GET, Urls.BASE_URL + "Post?UserId=" + profile.uid + "&UserName=" + profile.name + "&Post=" + content_txt.replace(" ", "%20") + "&Latitude=" + lat + "&Longitude=" + lng,
                                 new Response.Listener<String>() {
                                     @Override
                                     public void onResponse(String response) {
@@ -282,7 +284,7 @@ public class MainActivity extends AppCompatActivity{
                 }
             });
             dialog.show();
-        }else{
+        } else {
             finish();
         }
         return super.onOptionsItemSelected(item);
@@ -291,7 +293,7 @@ public class MainActivity extends AppCompatActivity{
     @Override
     protected void onResume() {
         super.onResume();
-        if (receiver==null) {
+        if (receiver == null) {
             IntentFilter filter = new IntentFilter("Hello World");
             receiver = new BroadcastReceiver() {
                 @Override
@@ -313,36 +315,36 @@ public class MainActivity extends AppCompatActivity{
         }
     }
 
-    private void sendFCM(final String uid){
-            RequestQueue queue = MySingleton.getInstance(getApplicationContext()).
-                    getRequestQueue();
-            StringRequest stringRequest = new StringRequest(Request.Method.POST,Urls.BASE_URL+"GetFCMToken",
-                    new Response.Listener<String>() {
-                        @Override
-                        public void onResponse(String response) {
+    private void sendFCM(final String uid) {
+        RequestQueue queue = MySingleton.getInstance(getApplicationContext()).
+                getRequestQueue();
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, Urls.BASE_URL + "GetFCMToken",
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
 
-                        }
-                    }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Toast.makeText(MainActivity.this, "Notifications not working!", Toast.LENGTH_SHORT).show();
-                }
-            }){
-                @Override
-                protected Map<String, String> getParams() throws AuthFailureError {
-                    Map<String, String> params = new HashMap<String, String>();
-                    params.put("UserId", uid);
-                    params.put("Token", sp.getString("token", ""));
-                    return params;
-                }
-            };
-            MySingleton.getInstance(MainActivity.this).addToRequestQueue(stringRequest);
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(MainActivity.this, "Notifications not working!", Toast.LENGTH_SHORT).show();
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("UserId", uid);
+                params.put("Token", sp.getString("token", ""));
+                return params;
+            }
+        };
+        MySingleton.getInstance(MainActivity.this).addToRequestQueue(stringRequest);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        if (receiver!=null) {
+        if (receiver != null) {
             unregisterReceiver(receiver);
             receiver = null;
         }

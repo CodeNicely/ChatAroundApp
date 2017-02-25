@@ -203,7 +203,7 @@ public class RestroomFragment extends Fragment implements RestRoomView, OnMapRea
                     .anchor(0.5f, 0.5f)
                     .title(restRoomDataList.get(i).getName())
                     .snippet(restRoomDataList.get(i).getComment())
-                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.pin1))
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.restroom_both))
             );
         }
 
