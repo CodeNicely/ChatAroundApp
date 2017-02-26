@@ -18,7 +18,8 @@
             app:tabMaxWidth="0dp"
             app:tabGravity="fill"
             android:background="@color/colorPrimaryDark"
-            app:tabIndicatorColor="@color/colorPrimary"
+            app:tabIndicatorColor="@color/colorAccentBlue"
+            app:tabIndicatorHeight="4dp"
             />
 
     <android.support.v4.view.ViewPager

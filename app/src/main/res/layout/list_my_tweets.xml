@@ -132,7 +132,7 @@
                     android:id="@+id/report_image"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:background="@drawable/report" />
+                    android:background="@drawable/thumbs_down_accent" />
             </LinearLayout>
 
             <LinearLayout

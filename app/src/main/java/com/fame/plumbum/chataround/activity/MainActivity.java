@@ -98,10 +98,11 @@ public class MainActivity extends AppCompatActivity {
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
-        tabLayout.getTabAt(0).setIcon(R.drawable.user);
+        tabLayout.getTabAt(0).setIcon(R.drawable.profile_512);
         tabLayout.getTabAt(1).setIcon(R.drawable.world);
-        tabLayout.getTabAt(2).setIcon(R.drawable.restroom);
-        tabLayout.getTabAt(3).setIcon(R.drawable.pollution_icon);
+        tabLayout.getTabAt(2).setIcon(R.drawable.restroom1);
+        tabLayout.getTabAt(3).setIcon(R.drawable.pollution1);
+        tabLayout.getTabAt(4).setIcon(R.drawable.newspaper);
 
         viewPager.setCurrentItem(1);
     }
@@ -132,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(profile, "My Profile");
         adapter.addFragment(world, "World");
-        adapter.addFragment(restroomFragment, "RestRoomFragment");
+        adapter.addFragment(new RestroomFragment().newInstance("",""), "RestRoomFragment");
         adapter.addFragment(pollutionFragment, "PollutionFragment");
         adapter.addFragment(newsFragment, "NewsFragment");
 

@@ -191,9 +191,9 @@ public class ParticularPost extends AppCompatActivity implements View.OnClickLis
             }
             db.close();
             if (postDetails.getString("LikeFlag").contentEquals("0"))
-                report.setBackgroundResource(R.drawable.report);
+                report.setBackgroundResource(R.drawable.thumbs_down_accent);
             else
-                report.setBackgroundResource(R.drawable.report_red);
+                report.setBackgroundResource(R.drawable.thumbs_down_red);
             if (ca == null) {
                 if (postDetails.getJSONArray("Comments").length()>0) {
                     comments_list.setVisibility(View.VISIBLE);

@@ -78,7 +78,7 @@ public class Tweets_adapter extends BaseAdapter {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View rowView = inflater.inflate(R.layout.list_my_tweets, parent, false);
         LinearLayout chat = (LinearLayout) rowView.findViewById(R.id.chat);
-//        final LinearLayout comment = (LinearLayout)rowView.findViewById(R.id.comment);
+//        final LinearLayout reply = (LinearLayout)rowView.findViewById(R.id.reply);
         CircleImageView chat_dot = (CircleImageView) rowView.findViewById(R.id.chat_dot);
         final LinearLayout report = (LinearLayout) rowView.findViewById(R.id.report);
         final TextView num_post = (TextView) rowView.findViewById(R.id.num_post);
@@ -149,9 +149,9 @@ public class Tweets_adapter extends BaseAdapter {
         num_post.setVisibility(View.VISIBLE);
         try {
             if (posts.getJSONObject(position).getString("LikeFlag").contentEquals("0"))
-                report_image.setBackgroundResource(R.drawable.report);
+                report_image.setBackgroundResource(R.drawable.thumbs_down_accent);
             else
-                report_image.setBackgroundResource(R.drawable.report_red);
+                report_image.setBackgroundResource(R.drawable.thumbs_down_red);
             getImage(posts.getJSONObject(position).getString("PosterId"), false, user_img);
             poster_name.setText(toProperCase(posts.getJSONObject(position).getString("PosterName").replace("%20", " ")));
             message.setText(posts.getJSONObject(position).getString("Post").replace("%20", " "));
@@ -182,10 +182,10 @@ public class Tweets_adapter extends BaseAdapter {
                 try {
                     if (posts.getJSONObject(position).getString("LikeFlag").contentEquals("0")) {
                         posts.getJSONObject(position).put("LikeFlag", "1");
-                        report_image.setBackgroundResource(R.drawable.report_red);
+                        report_image.setBackgroundResource(R.drawable.thumbs_down_red);
                     } else {
                         posts.getJSONObject(position).put("LikeFlag", "0");
-                        report_image.setBackgroundResource(R.drawable.report);
+                        report_image.setBackgroundResource(R.drawable.thumbs_down_accent);
                     }
 
                     RequestQueue queue = MySingleton.getInstance(context.getApplicationContext()).

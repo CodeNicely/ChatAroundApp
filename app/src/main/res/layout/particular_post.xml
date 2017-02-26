@@ -150,7 +150,7 @@
             android:id="@+id/like_button"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:background="@drawable/report"
+            android:background="@drawable/thumbs_down_accent"
             android:layout_gravity="bottom"
             />
         </LinearLayout>

@@ -12,6 +12,8 @@ import android.view.ViewGroup;
 import com.fame.plumbum.chataround.R;
 import com.ibm.watson.developer_cloud.alchemy.v1.AlchemyDataNews;
 import com.ibm.watson.developer_cloud.alchemy.v1.model.DocumentsResult;
+import com.ibm.watson.developer_cloud.http.ServiceCall;
+import com.ibm.watson.developer_cloud.http.ServiceCallback;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -74,19 +76,37 @@ public class NewsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_news, container, false);
 
         AlchemyDataNews service = new AlchemyDataNews();
-        service.setApiKey("{apikey}");
+        service.setApiKey("fe73d3a184e506e8149199a2dfc2205e03e86665");
 
         Map<String, Object> params = new HashMap<>();
 
-        String fields = "enriched.url.title";
+        String fields = "enriched.url.title,enriched.url.author";
+//        fields = "q.enriched.url.enrichedTitle.entities.entity";
         params.put(AlchemyDataNews.RETURN, fields);
         params.put(AlchemyDataNews.START, "now-1d");
         params.put(AlchemyDataNews.END, "now");
-        params.put(AlchemyDataNews.COUNT, 10);
+        params.put(AlchemyDataNews.COUNT, 1);
+        params.put("q.enriched.url.enrichedTitle.entities.entity.type","Company");
+
+//        params.put("q.enriched.url.enrichedTitle.keywords.keyword.text","Company");
 
 //        DocumentsResult result = service.getNewsDocuments(params);
-        Log.d("NewsFragment",String.valueOf(service.getNewsDocuments(params)));
+        ServiceCall result=service.getNewsDocuments(params);
+      /*  result.enqueue(new ServiceCallback() {
+            @Override
+            public void onResponse(Object response) {
 
+                Log.d("NewsFragment",response.toString());
+
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+
+                e.printStackTrace();
+            }
+        });
+*/
         return view;
 
     }

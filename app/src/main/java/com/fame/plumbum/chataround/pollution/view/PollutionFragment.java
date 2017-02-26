@@ -176,7 +176,7 @@ public class PollutionFragment extends Fragment implements PollutionView {
         if (aqi < 50) {
 
             circleView.setFillColor(ContextCompat.getColor(getContext(), R.color.good));
-            healthStatement = "Air quality is considered satisfactory,and air pollution poses " +
+            healthStatement = "Air quality is considered satisfactory,and air pollution1 poses " +
                     "little or no risk";
 
         } else if (aqi > 50 && aqi <= 100) {
@@ -184,7 +184,7 @@ public class PollutionFragment extends Fragment implements PollutionView {
             circleView.setFillColor(ContextCompat.getColor(getContext(), R.color.moderate));
             healthStatement = "Air quality is acceptable; however, for some pollutants there may be a " +
                     "moderate health concern for a very small number of people who are unusually " +
-                    "sensitive to air pollution.";
+                    "sensitive to air pollution1.";
 
         } else if (aqi > 100 && aqi <= 150) {
 
