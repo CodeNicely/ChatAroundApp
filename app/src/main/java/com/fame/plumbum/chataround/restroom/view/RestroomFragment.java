@@ -11,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,6 +50,8 @@ public class RestroomFragment extends Fragment implements RestRoomView, OnMapRea
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+
+    private static View view;
 
     private List<RestRoomData> restRoomDataList;
     private RestRoomPresenter restRoomPresenter;
@@ -99,8 +102,17 @@ public class RestroomFragment extends Fragment implements RestRoomView, OnMapRea
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_restroom, container, false);
 
+        if (view != null) {
+            ViewGroup parent = (ViewGroup) view.getParent();
+            if (parent != null)
+                parent.removeView(view);
+        }
+        try {
+            view = inflater.inflate(R.layout.fragment_restroom, container, false);
+        } catch (InflateException e) {
+        /* map is already there, just return view as it is */
+        }
 
         restRoomPresenter = new RestRoomPresenterImpl(this, new RetrofitRestRoomProvider());
         ButterKnife.bind(this, view);
@@ -199,11 +211,11 @@ public class RestroomFragment extends Fragment implements RestRoomView, OnMapRea
 
         for (int i = 0; i < restRoomDataList.size(); i++) {
             googleMap.addMarker(new MarkerOptions()
-                    .position(new LatLng(restRoomDataList.get(i).getLatitude(),
-                            restRoomDataList.get(i).getLongitude()))
-                    .anchor(0.5f, 0.5f)
-                    .title(restRoomDataList.get(i).getName())
-                    .snippet(restRoomDataList.get(i).getComment())
+                            .position(new LatLng(restRoomDataList.get(i).getLatitude(),
+                                    restRoomDataList.get(i).getLongitude()))
+                            .anchor(0.5f, 0.5f)
+                            .title(restRoomDataList.get(i).getName())
+                            .snippet(restRoomDataList.get(i).getComment())
 //                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.restroom_both))
             );
         }

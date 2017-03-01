@@ -3,6 +3,7 @@ package com.fame.plumbum.chataround.pollution.view;
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.facebook.login.widget.ProfilePictureView.TAG;
+
 /**
  * Created by meghal on 23/2/17.
  */
@@ -31,8 +34,17 @@ public class PollutuionAqiAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     PollutuionAqiAdapter(Context context, List<AirPollutionIndividualValue> valueList) {
         this.valueList = valueList;
+
+        for (int i = 0; i < valueList.size(); i++) {
+
+            Log.d("PollutionFragment", String.valueOf(valueList.get(i).getName()));
+            Log.d("PollutionFragment", String.valueOf(valueList.get(i).getV()));
+
+        }
+
+
         layoutInflater = LayoutInflater.from(context);
-        this.context=context;
+        this.context = context;
     }
 
 
@@ -51,20 +63,28 @@ public class PollutuionAqiAdapter extends RecyclerView.Adapter<RecyclerView.View
 
 
         // Setting Color
-        individualAqiViewHolder.title.setBackgroundColor(value.getColor());
-        individualAqiViewHolder.circleView.setFillColor(value.getColor());
-        individualAqiViewHolder.circleView.setBackgroundColor(value.getColor());
+
+        Log.i("Adapter", value.getName() + "  " + String.valueOf(value.getV()));
+
 
         // Setting Up Values
-        if(value.getV()!=-9999) {
+        if (valueList.get(position).getV() != -9999) {
             individualAqiViewHolder.circleView.setTitleText(String.valueOf(value.getV()));
             individualAqiViewHolder.title.setText(value.getName());
-        }else{
+
+            individualAqiViewHolder.circleView.setFillColor(value.getColor());
+            individualAqiViewHolder.circleView.setBackgroundColor(value.getColor());
+            individualAqiViewHolder.title.setBackgroundColor(value.getColor());
+
+        } else {
             individualAqiViewHolder.circleView.setTitleText("NA");
             individualAqiViewHolder.title.setText(value.getName());
 
-        }
+            individualAqiViewHolder.circleView.setFillColor(ContextCompat.getColor(context, R.color.accentGray));
+            individualAqiViewHolder.circleView.setBackgroundColor(ContextCompat.getColor(context, R.color.accentGray));
+            individualAqiViewHolder.title.setBackgroundColor(ContextCompat.getColor(context, R.color.accentGray));
 
+        }
 
 
     }

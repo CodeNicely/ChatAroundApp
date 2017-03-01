@@ -7,6 +7,7 @@ import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -59,11 +60,10 @@ public class PollutionFragment extends Fragment implements PollutionView {
 
 
     @BindView(R.id.scrollView)
-    ScrollView scrollView;
+    NestedScrollView scrollView;
 
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
-
 
     @BindView(R.id.circleView)
     CircleView circleView;
@@ -214,29 +214,32 @@ public class PollutionFragment extends Fragment implements PollutionView {
 
         try {
             humidity.setText("Humidity - " + String.valueOf(airPollutionDetails.getData().getIaqi().getH().getV()));
-        }catch (Exception e){
-            Log.e(TAG,e.getMessage());
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage());
 
         }
 
         try {
             wind.setText("Wind Speed - " + String.valueOf(airPollutionDetails.getData().getIaqi().getWd().getV()));
-        }catch (Exception e){
-            Log.e(TAG,e.getMessage());
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage());
         }
 
         circleView.setTitleText(String.valueOf(airPollutionDetails.getData().getAqi()) + "\n" + "AQI");
         aqi_health_notice.setText(healthStatement);
+
+
         pollutuionAqiAdapter = new
                 PollutuionAqiAdapter(getContext(),
                 getIndividualAqiList(airPollutionDetails.getData().getIaqi()));
 
+        List<AirPollutionIndividualValue> list = getIndividualAqiList(airPollutionDetails.
+                getData().getIaqi());
+
+
         recyclerView.setAdapter(pollutuionAqiAdapter);
         pollutuionAqiAdapter.notifyDataSetChanged();
-
-
     }
-
 
     List<AirPollutionIndividualValue> getIndividualAqiList(AirPollutionIndividualAqi airPollutionIndividualAqi) {
 
@@ -278,11 +281,12 @@ public class PollutionFragment extends Fragment implements PollutionView {
             airPollutionIndividualValueList.add(new AirPollutionIndividualValue(
                     airPollutionIndividualAqi.getPm25().getV(), "PM 2.5", color));
 
-        }else {
+        } else {
 
-            int color=R.color.black;
+            int color = R.color.accentGray;
             airPollutionIndividualValueList.add(new AirPollutionIndividualValue(
                     -9999, "PM 2.5", color));
+
         }
 
         if (airPollutionIndividualAqi.getPm10() != null) {
@@ -319,9 +323,9 @@ public class PollutionFragment extends Fragment implements PollutionView {
             airPollutionIndividualValueList.add(new AirPollutionIndividualValue(
                     airPollutionIndividualAqi.getPm10().getV(), "PM 10", color));
 
-        }else {
+        } else {
 
-            int color=R.color.black;
+            int color = R.color.accentGray;
             airPollutionIndividualValueList.add(new AirPollutionIndividualValue(
                     -9999, "PM 10", color));
         }
@@ -362,9 +366,9 @@ public class PollutionFragment extends Fragment implements PollutionView {
             airPollutionIndividualValueList.add(new AirPollutionIndividualValue(
                     airPollutionIndividualAqi.getO3().getV(), "o3", color));
 
-        }else {
+        } else {
 
-            int color=R.color.black;
+            int color = R.color.accentGray;
             airPollutionIndividualValueList.add(new AirPollutionIndividualValue(
                     -9999, "o3", color));
         }
@@ -404,54 +408,13 @@ public class PollutionFragment extends Fragment implements PollutionView {
 
             airPollutionIndividualValueList.add(new AirPollutionIndividualValue(
                     airPollutionIndividualAqi.getNo2().getV(), "No2", color));
-        }else {
+        } else {
 
-            int color=R.color.black;
+            int color = R.color.accentGray;
             airPollutionIndividualValueList.add(new AirPollutionIndividualValue(
                     -9999, "No2", color));
         }
 
-
-        if (airPollutionIndividualAqi.getS02() != null) {
-
-            double aqi = airPollutionIndividualAqi.getS02().getV();
-            int color = ContextCompat.getColor(getContext(), R.color.white);
-            if (aqi < 40) {
-
-                color = ContextCompat.getColor(getContext(), R.color.good);
-
-            } else if (aqi > 40 && aqi <= 80) {
-
-                color = ContextCompat.getColor(getContext(), R.color.moderate);
-
-
-            } else if (aqi > 80 && aqi <= 380) {
-
-                color = ContextCompat.getColor(getContext(), R.color.sensitive);
-
-            } else if (aqi > 380 && aqi <= 800) {
-
-                color = ContextCompat.getColor(getContext(), R.color.unhealthy);
-
-            } else if (aqi > 800 && aqi <= 1600) {
-
-                color = ContextCompat.getColor(getContext(), R.color.very_unhealthy);
-
-            } else if (aqi > 1600) {
-
-                color = ContextCompat.getColor(getContext(), R.color.hazardous);
-
-            }
-
-
-            airPollutionIndividualValueList.add(new AirPollutionIndividualValue(
-                    airPollutionIndividualAqi.getS02().getV(), "SO2", color));
-        }else {
-
-            int color=R.color.black;
-            airPollutionIndividualValueList.add(new AirPollutionIndividualValue(
-                    -9999, "So2", color));
-        }
 
         if (airPollutionIndividualAqi.getCo() != null) {
 
@@ -487,12 +450,69 @@ public class PollutionFragment extends Fragment implements PollutionView {
 
             airPollutionIndividualValueList.add(new AirPollutionIndividualValue(
                     airPollutionIndividualAqi.getCo().getV(), "CO", color));
-        }else {
 
-            int color=R.color.black;
+            Log.d(TAG, "CO Present " + String.valueOf(airPollutionIndividualAqi.getCo().getV()));
+
+
+        } else {
+
+            int color = R.color.white;
             airPollutionIndividualValueList.add(new AirPollutionIndividualValue(
                     -9999, "Co", color));
+
+            Log.d(TAG, "CO Not Present");
+
         }
+
+        if (airPollutionIndividualAqi.getS02() != null) {
+
+            double aqi = airPollutionIndividualAqi.getS02().getV();
+            int color = ContextCompat.getColor(getContext(), R.color.white);
+            if (aqi < 40) {
+
+                color = ContextCompat.getColor(getContext(), R.color.good);
+
+            } else if (aqi > 40 && aqi <= 80) {
+
+                color = ContextCompat.getColor(getContext(), R.color.moderate);
+
+
+            } else if (aqi > 80 && aqi <= 380) {
+
+                color = ContextCompat.getColor(getContext(), R.color.sensitive);
+
+            } else if (aqi > 380 && aqi <= 800) {
+
+                color = ContextCompat.getColor(getContext(), R.color.unhealthy);
+
+            } else if (aqi > 800 && aqi <= 1600) {
+
+                color = ContextCompat.getColor(getContext(), R.color.very_unhealthy);
+
+            } else if (aqi > 1600) {
+
+                color = ContextCompat.getColor(getContext(), R.color.hazardous);
+
+            }
+
+
+            airPollutionIndividualValueList.add(new AirPollutionIndividualValue(
+                    airPollutionIndividualAqi.getS02().getV(), "SO2", color));
+
+            Log.d(TAG, "S02 Present");
+
+        } else {
+
+            int color = R.color.accentGray;
+            airPollutionIndividualValueList.add(new AirPollutionIndividualValue(
+                    -9999, "So2", color));
+            Log.d(TAG, "S02 Not Present");
+
+        }
+
+        return airPollutionIndividualValueList;
+
+
 /*
     This Method is for Temperature that we are not going to use.
     Only Gases Will be Showin in Recycler View .
@@ -539,8 +559,6 @@ This Method is for Pressure that we are not going to use.
 
         }
 */
-
-        return airPollutionIndividualValueList;
 
 
     }

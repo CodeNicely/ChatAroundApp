@@ -1,35 +1,33 @@
 {
   "project_info": {
-    "project_number": "174878464807",
-    "firebase_url": "https://onemile-244e4.firebaseio.com",
-    "project_id": "onemile-244e4",
-    "storage_bucket": "onemile-244e4.appspot.com"
+    "project_number": "675990547882",
+    "project_id": "mile-c581d"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:174878464807:android:6cbd1eb37ebd5645",
+        "mobilesdk_app_id": "1:675990547882:android:6cbd1eb37ebd5645",
         "android_client_info": {
           "package_name": "com.fame.plumbum.chataround"
         }
       },
       "oauth_client": [
         {
-          "client_id": "174878464807-p22e365n34151bpjk72s4fgumuok7eks.apps.googleusercontent.com",
+          "client_id": "675990547882-6m46upf43o14fg7ods809dluv7vhst7g.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.fame.plumbum.chataround",
-            "certificate_hash": "253BF9C345C9EC78145D1BF50F9AC28D3FCCB217"
+            "certificate_hash": "e51591f90ecd875811c0f92b177914a85e5ef865"
           }
         },
         {
-          "client_id": "174878464807-os6fo4saakicef9oafe6f4ul8p56hjol.apps.googleusercontent.com",
+          "client_id": "675990547882-gqavgqtn0br5n2sqgsnhbs91ai0huval.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBjrrA5WZVcShJ13A6q428F552joqLILmc"
+          "current_key": "AIzaSyCLdPl5tXTcJ57xjNqdkGho1r4eQsknPM0"
         }
       ],
       "services": {
@@ -37,16 +35,11 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 2,
-          "other_platform_oauth_client": [
-            {
-              "client_id": "174878464807-os6fo4saakicef9oafe6f4ul8p56hjol.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "status": 1,
+          "other_platform_oauth_client": []
         },
         "ads_service": {
-          "status": 2
+          "status": 1
         }
       }
     }
