@@ -7,6 +7,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -19,11 +20,16 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.fame.plumbum.chataround.R;
+import com.fame.plumbum.chataround.pollution.presenter.PollutionPresenterImpl;
+import com.fame.plumbum.chataround.pollution.provider.RetrofitPollutionProvider;
 import com.fame.plumbum.chataround.restroom.model.RestRoomData;
 import com.fame.plumbum.chataround.restroom.presenter.RestRoomPresenter;
 import com.fame.plumbum.chataround.restroom.presenter.RestRoomPresenterImpl;
 import com.fame.plumbum.chataround.restroom.provider.RetrofitRestRoomProvider;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -45,17 +51,23 @@ import butterknife.ButterKnife;
  * Use the {@link RestroomFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class RestroomFragment extends Fragment implements RestRoomView, OnMapReadyCallback, LocationListener {
+public class RestroomFragment extends Fragment implements RestRoomView, OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private static final String TAG = "RestroomFragment";
 
     private static View view;
 
     private List<RestRoomData> restRoomDataList;
     private RestRoomPresenter restRoomPresenter;
     private GoogleMap googleMap;
+    private GoogleApiClient mGoogleApiClient = null;
+    private Location mLastLocation;
+    private double latitude;
+    private double longitude;
+
 
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
@@ -114,25 +126,19 @@ public class RestroomFragment extends Fragment implements RestRoomView, OnMapRea
         /* map is already there, just return view as it is */
         }
 
-        restRoomPresenter = new RestRoomPresenterImpl(this, new RetrofitRestRoomProvider());
+
         ButterKnife.bind(this, view);
-        LocationManager lm = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
-        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return view;
+        restRoomPresenter = new RestRoomPresenterImpl(this, new RetrofitRestRoomProvider());
+
+        if (mGoogleApiClient == null) {
+            mGoogleApiClient = new GoogleApiClient.Builder(getContext())
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
+                    .addApi(LocationServices.API)
+                    .build();
         }
-//        Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-//        double longitude = location.getLongitude();
-//        double latitude = location.getLatitude();
-        double latitude = 28.567522;
-        double longitude = 77.218951;
-        restRoomPresenter.requestRestRooms(latitude, longitude);
+
+
         return view;
     }
 
@@ -204,8 +210,6 @@ public class RestroomFragment extends Fragment implements RestRoomView, OnMapRea
     @Override
     public void onMapReady(GoogleMap googleMap) {
         this.googleMap = googleMap;
-        double latitude = 28.567522;
-        double longitude = 77.218951;
 
         LatLng delhi = new LatLng(latitude, longitude);
 
@@ -231,8 +235,44 @@ public class RestroomFragment extends Fragment implements RestRoomView, OnMapRea
         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(delhi, 8.0f));
     }
 
+
     @Override
-    public void onLocationChanged(Location location) {
+    public void onConnected(@Nullable Bundle bundle) {
+        Log.d(TAG,"Connected");
+        if (ActivityCompat.checkSelfPermission(getContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(getContext(),
+                        Manifest.permission.ACCESS_COARSE_LOCATION)
+                        != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
+                mGoogleApiClient);
+        if (mLastLocation != null) {
+            latitude = mLastLocation.getLatitude();
+            longitude = mLastLocation.getLongitude();
+
+            restRoomPresenter.requestRestRooms(latitude, longitude);
+            Log.d(TAG,"Presenter Sent Request");
+        }
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
     }
 

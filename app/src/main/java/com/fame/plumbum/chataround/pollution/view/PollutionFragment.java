@@ -1,10 +1,16 @@
 package com.fame.plumbum.chataround.pollution.view;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.location.Location;
 import android.net.Uri;
 import android.nfc.Tag;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.NestedScrollView;
@@ -29,6 +35,9 @@ import com.fame.plumbum.chataround.pollution.model.air_model.AirPollutionIndivid
 import com.fame.plumbum.chataround.pollution.presenter.PollutionPresenterImpl;
 import com.fame.plumbum.chataround.pollution.provider.RetrofitPollutionProvider;
 import com.github.pavlospt.CircleView;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +55,7 @@ import static com.facebook.login.widget.ProfilePictureView.TAG;
  * Use the {@link PollutionFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class PollutionFragment extends Fragment implements PollutionView {
+public class PollutionFragment extends Fragment implements PollutionView, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -79,6 +88,11 @@ public class PollutionFragment extends Fragment implements PollutionView {
 
     @BindView(R.id.wind)
     TextView wind;
+
+    private GoogleApiClient mGoogleApiClient = null;
+    private Location mLastLocation;
+    private double latitude;
+    private double longitude;
 
     public PollutionFragment() {
         // Required empty public constructor
@@ -118,10 +132,19 @@ public class PollutionFragment extends Fragment implements PollutionView {
         View view = inflater.inflate(R.layout.fragment_pollution, container, false);
         ButterKnife.bind(this, view);
 
+        if (mGoogleApiClient == null) {
+            mGoogleApiClient = new GoogleApiClient.Builder(getContext())
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
+                    .addApi(LocationServices.API)
+                    .build();
+        }
+
+/*
         double latitude = 19.130306;
         double longitude = 72.889993;
+*/
 
-        new PollutionPresenterImpl(this, new RetrofitPollutionProvider()).requestAirPollution(latitude, longitude);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(linearLayoutManager);
@@ -130,6 +153,18 @@ public class PollutionFragment extends Fragment implements PollutionView {
         return view;
     }
 
+    @Override
+    public void onStart() {
+        mGoogleApiClient.connect();
+
+        super.onStart();
+    }
+
+    @Override
+    public void onStop() {
+        mGoogleApiClient.disconnect();
+        super.onStop();
+    }
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
@@ -227,6 +262,7 @@ public class PollutionFragment extends Fragment implements PollutionView {
 
         circleView.setTitleText(String.valueOf(airPollutionDetails.getData().getAqi()) + "\n" + "AQI");
         aqi_health_notice.setText(healthStatement);
+        aqi_health_notice.append("\n\n City :"+airPollutionDetails.getData().getCity().getName());
 
 
         pollutuionAqiAdapter = new
@@ -560,6 +596,46 @@ This Method is for Pressure that we are not going to use.
         }
 */
 
+
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        if (ActivityCompat.checkSelfPermission(getContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(getContext(),
+                        Manifest.permission.ACCESS_COARSE_LOCATION)
+                        != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
+                mGoogleApiClient);
+        if (mLastLocation != null) {
+            latitude = mLastLocation.getLatitude();
+            longitude = mLastLocation.getLongitude();
+
+            new PollutionPresenterImpl(this,
+                    new RetrofitPollutionProvider())
+                    .requestAirPollution(latitude, longitude);
+        }
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
     }
 

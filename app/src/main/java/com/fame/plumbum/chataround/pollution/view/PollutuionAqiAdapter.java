@@ -93,7 +93,6 @@ public class PollutuionAqiAdapter extends RecyclerView.Adapter<RecyclerView.View
     public int getItemCount() {
 
 
-        Toast.makeText(context, String.valueOf(valueList.size()), Toast.LENGTH_SHORT).show();
         return valueList.size();
     }
 

@@ -14,7 +14,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Menu;
@@ -51,6 +53,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * Created by pankaj on 4/8/16.
  */
@@ -64,10 +69,13 @@ public class MainActivity extends AppCompatActivity {
     public int count = 0;
     String token;
 
+    private Menu menu;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.chat_window);
+
 
         if (receiver == null) {
             IntentFilter filter = new IntentFilter("Hello World");
@@ -91,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
         }
         sp = PreferenceManager.getDefaultSharedPreferences(this);
         initFCM();
-        getSupportActionBar();
+        final ActionBar toolbar = getSupportActionBar();
         getSupportActionBar().setDisplayHomeAsUpEnabled(false); // remove the left caret
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
         setupViewPager(viewPager);
@@ -103,6 +111,62 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.getTabAt(2).setIcon(R.drawable.restroom1);
         tabLayout.getTabAt(3).setIcon(R.drawable.pollution1);
         tabLayout.getTabAt(4).setIcon(R.drawable.newspaper);
+
+
+
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+                if(menu!=null){
+                    MenuItem shout = menu.findItem(R.id.action_shout);
+                    if(position==1) {
+                        shout.setVisible(true);
+                    }else {
+                        shout.setVisible(false);
+                    }
+                }
+
+
+                switch (position) {
+                    case 0:
+                        toolbar.setTitle("Profile");
+                        break;
+                    case 1:
+                        toolbar.setTitle("Shouts");
+                        break;
+                    case 2:
+                        toolbar.setTitle("Restrooms");
+
+                        break;
+                    case 3:
+                        toolbar.setTitle("Pollutuion Meter");
+
+                        break;
+                    case 4:
+                        toolbar.setTitle("News");
+
+                        break;
+                    default:
+                        toolbar.setTitle("Profile");
+
+                        break;
+                }
+
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
 
         viewPager.setCurrentItem(1);
     }
@@ -133,7 +197,7 @@ public class MainActivity extends AppCompatActivity {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(profile, "My Profile");
         adapter.addFragment(world, "World");
-        adapter.addFragment(new RestroomFragment().newInstance("",""), "RestRoomFragment");
+        adapter.addFragment(new RestroomFragment().newInstance("", ""), "RestRoomFragment");
         adapter.addFragment(pollutionFragment, "PollutionFragment");
         adapter.addFragment(newsFragment, "NewsFragment");
 
@@ -226,7 +290,10 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+
+        this.menu = menu;
         getMenuInflater().inflate(R.menu.main_inside, menu);
+
         return super.onCreateOptionsMenu(menu);
     }
 

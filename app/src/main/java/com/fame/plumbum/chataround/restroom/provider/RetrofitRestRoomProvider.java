@@ -7,6 +7,8 @@ import com.fame.plumbum.chataround.restroom.model.RestRoomData;
 
 import java.util.List;
 
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -22,8 +24,16 @@ public class RetrofitRestRoomProvider implements RestRoomProvider {
     private Retrofit retrofit;
 
     public RetrofitRestRoomProvider() {
+        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor)
+                .build();
+
+
         retrofit = new Retrofit.Builder()
                 .baseUrl(Urls.BASE_URL_RESTROOM)
+                .client(client)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
     }
