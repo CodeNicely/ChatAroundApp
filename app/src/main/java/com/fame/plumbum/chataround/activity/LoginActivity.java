@@ -23,13 +23,10 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -85,7 +82,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     private static final String TAG = "LoginActivity";
     //    EditText pass_edit, email_edit;
 //    String password, email="", loginFlag = "0", photoUrl = "";
-    String email = "", photoUrl = "", loginFlag = "0", password;
+    String email = "", imageUrl = "", name;
     SharedPreferences sp;
     RelativeLayout rl_progress;
     File file;
@@ -186,9 +183,9 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 startActivity(intent);
                 finish();
             } else if (sp.contains("uid")) {
-                Intent intent = new Intent(this, GetProfileDetails.class);
+               /* Intent intent = new Intent(this, GetProfileDetails.class);
                 startActivity(intent);
-                finish();
+                finish();*/
             }
         }
         rl_progress = (RelativeLayout) findViewById(R.id.progress_imageLoading);
@@ -261,10 +258,10 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         }
     }
 
-    private void sendData(String email, String password, String s) {
+    private void sendData(String email, String name, String imageUrl) {
         this.email = email;
-        this.password = password;
-        loginFlag = s;
+        this.name = name;
+        this.imageUrl = imageUrl;
         registerUserWithFb();
     }
 
@@ -294,6 +291,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                             }
                         } catch (JSONException ignored) {
 
+                            ignored.printStackTrace();
+
                         }
 
                     }
@@ -302,13 +301,14 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                     @Override
                     public void onErrorResponse(VolleyError ignored) {
                         Toast.makeText(LoginActivity.this, "Something went wrong", Toast.LENGTH_SHORT).show();
+                        ignored.printStackTrace();
                     }
                 }) {
 
             protected Map<String, String> getParams() throws com.android.volley.AuthFailureError {
                 Map<String, String> params = new HashMap<String, String>();
                 SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(LoginActivity.this);
-                params.put("UserId", sp.getString("uid", ""));
+                params.put("UserId", sp.getString("uid", "None"));
                 return params;
             }
 
@@ -318,6 +318,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         requestQueue.add(myReq);
     }
 
+/*
     void registerUser() {
         StringRequest myReq = new StringRequest(Request.Method.POST,
                 Urls.BASE_URL + "AuthenticateUser",
@@ -358,7 +359,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             protected Map<String, String> getParams() throws com.android.volley.AuthFailureError {
                 Map<String, String> params = new HashMap<String, String>();
                 params.put("Email", email.replace(" ", "%20"));
-                params.put("Password", password.replace(" ", "%20"));
+//                params.put("Password", name.replace(" ", "%20"));
                 return params;
             }
         };
@@ -367,6 +368,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         requestQueue.add(myReq);
     }
 
+*/
 
     void registerUserWithFb() {
         StringRequest myReq = new StringRequest(Request.Method.POST,
@@ -381,18 +383,30 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                                 SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(LoginActivity.this);
                                 SharedPreferences.Editor editor = sp.edit();
                                 editor.putString("uid", jO.getString("UserId"));
+                                editor.putString("user_name",jO.getString("Name"));
+                                editor.putString("user_email",jO.getString("Email"));
+
                                 editor.apply();
-                                if (jO.getString("ProfileFlag").contentEquals("1")) {
+/*                                if (jO.getString("ProfileFlag").contentEquals("1")) {
                                     editor.putString("edited", "1");
                                     editor.apply();
                                     receiveData();
-                                    rl_progress.setVisibility(View.GONE);
-                                } else {
-                                    Intent intent = new Intent(LoginActivity.this, GetProfileDetails.class);
+                                    rl_progress.setVisibility(View.GONE);*/
+  /*                              } else {
+                                    *//*Intent intent = new Intent(LoginActivity.this, GetProfileDetails.class);
                                     startActivity(intent);
                                     finish();
+                               *//*
+                                    Toast.makeText(LoginActivity.this, "395", Toast.LENGTH_SHORT).show();
                                     rl_progress.setVisibility(View.GONE);
                                 }
+
+
+  */
+
+                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                startActivity(intent);
+                                finish();
                             } else if (jO.getString("Status").contentEquals("400")) {
                                 Toast.makeText(LoginActivity.this, "Email  already registered", Toast.LENGTH_SHORT).show();
                             } else {
@@ -410,14 +424,15 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         rl_progress.setVisibility(View.GONE);
+                        error.printStackTrace();
                         Toast.makeText(LoginActivity.this, "Something went wrong", Toast.LENGTH_SHORT).show();
                     }
                 }) {
             protected Map<String, String> getParams() throws com.android.volley.AuthFailureError {
                 Map<String, String> params = new HashMap<String, String>();
                 params.put("Email", email);
-                params.put("Password", password);
-                params.put("LoginFlag", loginFlag);
+                params.put("Name", name);
+                params.put("ImageUrl", imageUrl);
                 return params;
             }
 
@@ -461,26 +476,29 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             GoogleSignInAccount acct = result.getSignInAccount();
             if (acct != null) {
                 email = acct.getEmail();
+                name = acct.getDisplayName();
+
                 Log.d(TAG, "Email - " + email);
                 if (email != null) {
-                    if (email.length() == 0)
+                    if (email.length() == 0) {
                         Toast.makeText(LoginActivity.this, "Email not found!", Toast.LENGTH_SHORT).show();
-                    else {
+
+                    } else {
                         if (acct.getPhotoUrl() != null) {
-                            photoUrl = acct.getPhotoUrl().toString();
-                            Log.d(TAG, "Photo Url - " + photoUrl);
+                            imageUrl = acct.getPhotoUrl().toString();
+                            Log.d(TAG, "Photo Url - " + imageUrl);
 
                             Target target = new Target() {
                                 @Override
                                 public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
                                     savebitmap(bitmap);
-                                    sendDataWithPhoto(email, "ChatAroundWithPankaj", "1");
+                                    sendDataWithPhoto(email, name, imageUrl);
                                 }
 
                                 @Override
                                 public void onBitmapFailed(Drawable errorDrawable) {
                                     Toast.makeText(LoginActivity.this, "Error retrieving Profile picture", Toast.LENGTH_SHORT).show();
-                                    sendData(email, "ChatAroundWithPankaj", "1");
+                                    sendData(email, name, "1");
                                 }
 
                                 @Override
@@ -489,22 +507,24 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                             };
                             img = new ImageView(this);
                             img.setTag(target);
-                            Picasso.with(LoginActivity.this).load(Uri.parse(photoUrl)).resize(256, 256).into(target);
+                            Picasso.with(LoginActivity.this).load(Uri.parse(imageUrl)).resize(256, 256).into(target);
 
                         } else
-                            sendData(email, "ChatAroundWithPankaj", "1");
+                            sendData(email, name, "Not Available");
                     }
                 }
-            } else
+            } else {
                 Log.d(TAG, "Null Account");
-            Toast.makeText(LoginActivity.this, "Unable to get details! Null Account", Toast.LENGTH_SHORT).show();
-        } else
+                Toast.makeText(LoginActivity.this, "Unable to get details! Null Account", Toast.LENGTH_SHORT).show();
+            }
+        } else {
             Log.d(TAG, "Result False");
 
-        Toast.makeText(LoginActivity.this, "Unable to get details! Result False", Toast.LENGTH_SHORT).show();
+            Toast.makeText(LoginActivity.this, "Unable to get details! Result False", Toast.LENGTH_SHORT).show();
+        }
     }
 
-    private void sendDataWithPhoto(final String email, final String password, final String loginFlag) {
+    private void sendDataWithPhoto(final String email, final String name, final String imageUrl) {
         StringRequest myReq = new StringRequest(Request.Method.POST,
                 Urls.BASE_URL + "CreateUser",
                 new Response.Listener<String>() {
@@ -516,19 +536,11 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                                 SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(LoginActivity.this);
                                 SharedPreferences.Editor editor = sp.edit();
                                 editor.putString("uid", jO.getString("UserId"));
+                                editor.putString("user_name",jO.getString("Name"));
+                                editor.putString("user_email",jO.getString("Email"));
                                 editor.apply();
                                 sendImage_one();
-                                if (jO.getString("ProfileFlag").contentEquals("1")) {
-                                    editor.putString("edited", "1");
-                                    editor.apply();
-                                    receiveData();
-                                    rl_progress.setVisibility(View.GONE);
-                                } else {
-                                    Intent intent = new Intent(LoginActivity.this, GetProfileDetails.class);
-                                    startActivity(intent);
-                                    finish();
-                                    rl_progress.setVisibility(View.GONE);
-                                }
+
                             } else if (jO.getString("Status").contentEquals("400")) {
                                 rl_progress.setVisibility(View.GONE);
                                 Toast.makeText(LoginActivity.this, "Email  already registered", Toast.LENGTH_SHORT).show();
@@ -550,8 +562,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             protected Map<String, String> getParams() throws com.android.volley.AuthFailureError {
                 Map<String, String> params = new HashMap<String, String>();
                 params.put("Email", email);
-                params.put("Password", password);
-                params.put("LoginFlag", loginFlag);
+                params.put("Name", name);
+                params.put("ImageUrl", imageUrl);
                 return params;
             }
         };
@@ -582,12 +594,19 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 } else {
                     Toast.makeText(LoginActivity.this, "Error uploading image!", Toast.LENGTH_SHORT).show();
                 }
+
+                Intent intent=new Intent(LoginActivity.this,MainActivity.class);
+                startActivity(intent);
+                finish();
                 rl_progress.setVisibility(View.GONE);
             }
 
             @Override
             public void onFailure(Call<ImageSendData> call, Throwable t) {
                 Toast.makeText(LoginActivity.this, "Error uploading image!", Toast.LENGTH_SHORT).show();
+                Intent intent=new Intent(LoginActivity.this,MainActivity.class);
+                startActivity(intent);
+                finish();
             }
         });
     }

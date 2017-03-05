@@ -19,6 +19,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -60,6 +61,7 @@ import butterknife.ButterKnife;
  * Created by pankaj on 4/8/16.
  */
 public class MainActivity extends AppCompatActivity {
+    private static final String TAG = "MainActivity";
     public double lat, lng;
     public boolean needSomethingTweet = false, needSomethingWorld = false;
     MyProfile profile;
@@ -113,16 +115,15 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.getTabAt(4).setIcon(R.drawable.newspaper);
 
 
-
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
-                if(menu!=null){
+                if (menu != null) {
                     MenuItem shout = menu.findItem(R.id.action_shout);
-                    if(position==1) {
+                    if (position == 1) {
                         shout.setVisible(true);
-                    }else {
+                    } else {
                         shout.setVisible(false);
                     }
                 }
@@ -326,20 +327,28 @@ public class MainActivity extends AppCompatActivity {
             create_post.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
+                    Toast.makeText(MainActivity.this, Urls.BASE_URL + "Post?UserId=" + profile.uid + "&UserName=" + profile.name.replace(" ", "%20") + "&Post=Hello&Latitude=" + lat + "&Longitude=" + lng, Toast.LENGTH_SHORT).show();
+                    Log.d(TAG,Urls.BASE_URL + "Post?UserId=" + profile.uid + "&UserName=" + profile.name + "&Post=Hello&Latitude=" + lat + "&Longitude=" + lng);
                     String content_txt = content.getText().toString();
                     if (lat != 0 && lng != 0) {
                         RequestQueue queue = MySingleton.getInstance(MainActivity.this.getApplicationContext()).
                                 getRequestQueue();
                         content_txt = content_txt.replace("\n", "%0A");
-                        StringRequest stringRequest = new StringRequest(Request.Method.GET, Urls.BASE_URL + "Post?UserId=" + profile.uid + "&UserName=" + profile.name + "&Post=" + content_txt.replace(" ", "%20") + "&Latitude=" + lat + "&Longitude=" + lng,
+                        StringRequest stringRequest = new StringRequest(Request.Method.GET, Urls.BASE_URL + "Post?UserId=" + profile.uid + "&UserName=" + profile.name.replace(" ", "%20") + "&Post=" + content_txt.replace(" ", "%20") + "&Latitude=" + lat + "&Longitude=" + lng,
                                 new Response.Listener<String>() {
+                                    public static final String TAG = "MainActivity" ;
+
                                     @Override
                                     public void onResponse(String response) {
+                                        Log.d(TAG,"Response "+response);
                                         needSomethingTweet = true;
+
                                     }
                                 }, new Response.ErrorListener() {
                             @Override
                             public void onErrorResponse(VolleyError error) {
+                                error.printStackTrace();
                                 Toast.makeText(MainActivity.this, "Error sending data!", Toast.LENGTH_SHORT).show();
                             }
                         });

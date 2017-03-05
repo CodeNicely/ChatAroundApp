@@ -31,6 +31,7 @@ import com.fame.plumbum.chataround.adapters.Chat_adapter;
 import com.fame.plumbum.chataround.database.ChatTable;
 import com.fame.plumbum.chataround.database.DBHandler;
 import com.fame.plumbum.chataround.helper.Urls;
+import com.ibm.watson.developer_cloud.alchemy.v1.model.Url;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
@@ -168,11 +169,11 @@ public class ParticularChat extends AppCompatActivity implements SwipeRefreshLay
     }
 
     private void picassoGlobal(String s, CircleImageView user_img) {
-        Picasso.with(this).load("http://52.66.45.251/ImageReturn?ImageName="+s).resize(256,256).error(R.drawable.user).into(user_img);
+        Picasso.with(this).load(Urls.BASE_URL+"ImageReturn?ImageName="+s).resize(256,256).error(R.drawable.user).into(user_img);
     }
 
     private void picassoLocal(String s, CircleImageView user_img) {
-        Picasso.with(this).load("http://52.66.45.251/ImageReturn?ImageName="+s).resize(256,256).error(R.drawable.user).into(user_img);
+        Picasso.with(this).load(Urls.BASE_URL+"ImageReturn?ImageName="+s).resize(256,256).error(R.drawable.user).into(user_img);
     }
 
     private void refreshUpdate(){
@@ -210,7 +211,7 @@ public class ParticularChat extends AppCompatActivity implements SwipeRefreshLay
         //SimpleDateFormat sdf = new SimpleDateFormat("MMM dd");
         SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss yyyy");
         time_created = sdf.format(new Date());
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://52.66.45.251/SendMessage?SenderId="+sp.getString("uid", null)+"&ReceiverId="+uid_r+"&SenderName="+sp.getString("user_name", null).replace(" ", "%20")+"&Message="+message.replace(" ", "%20")+"&CreatedAt=" + sdf.format(new Date()).replace(" ", "%20") + "&epochTime=" + sdf.format(new Date()).replace(" ", "%20") +"&PostId="+post_id,
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, Urls.BASE_URL+"SendMessage?SenderId="+sp.getString("uid", null)+"&ReceiverId="+uid_r+"&SenderName="+sp.getString("user_name", null).replace(" ", "%20")+"&Message="+message.replace(" ", "%20")+"&CreatedAt=" + sdf.format(new Date()).replace(" ", "%20") + "&epochTime=" + sdf.format(new Date()).replace(" ", "%20") +"&PostId="+post_id,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {

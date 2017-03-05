@@ -117,7 +117,7 @@ public class ParticularPost extends AppCompatActivity implements View.OnClickLis
     private void sendComment(String s) {
         MySingleton.getInstance(getApplicationContext()).
                 getRequestQueue();
-        StringRequest stringRequest = new StringRequest(Request.Method.GET,"http://52.66.45.251/Comment?UserId="+uid+"&PostId="+post_id+"&UserName="+user_name.replace(" ", "%20")+"&Comment="+s.replace(" ", "%20")+"&Latitude="+lat+"&Longitude="+lng,
+        StringRequest stringRequest = new StringRequest(Request.Method.GET,Urls.BASE_URL+"Comment?UserId="+uid+"&PostId="+post_id+"&UserName="+user_name.replace(" ", "%20")+"&Comment="+s.replace(" ", "%20")+"&Latitude="+lat+"&Longitude="+lng,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -142,7 +142,7 @@ public class ParticularPost extends AppCompatActivity implements View.OnClickLis
     private void refresh() {
         MySingleton.getInstance(getApplicationContext()).
                 getRequestQueue();
-        StringRequest stringRequest = new StringRequest(Request.Method.GET,"http://52.66.45.251/GetPostDetailed?UserId="+uid+"&PostId="+post_id+"&UserName="+user_name.replace(" ", "%20"),
+        StringRequest stringRequest = new StringRequest(Request.Method.GET,Urls.BASE_URL+"GetPostDetailed?UserId="+uid+"&PostId="+post_id+"&UserName="+user_name.replace(" ", "%20"),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -226,7 +226,7 @@ public class ParticularPost extends AppCompatActivity implements View.OnClickLis
         final String[] image_name = new String[1];
         MySingleton.getInstance(getApplicationContext()).
                 getRequestQueue();
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://52.66.45.251/ImageName?UserId=" + uid,
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, Urls.BASE_URL+"ImageName?UserId=" + uid,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -250,7 +250,7 @@ public class ParticularPost extends AppCompatActivity implements View.OnClickLis
     }
 
     private void picassoLoad(String s, CircleImageView img_user) {
-        Picasso.with(this).load("http://52.66.45.251/ImageReturn?ImageName="+s).error(R.drawable.user).into(img_user);
+        Picasso.with(this).load(Urls.BASE_URL+"ImageReturn?ImageName="+s).error(R.drawable.user).into(img_user);
     }
 
     public static void getDetails(JSONObject post) {

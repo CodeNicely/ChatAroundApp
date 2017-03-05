@@ -238,7 +238,7 @@ public class RestroomFragment extends Fragment implements RestRoomView, OnMapRea
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        Log.d(TAG,"Connected");
+        Log.d(TAG, "Connected");
         if (ActivityCompat.checkSelfPermission(getContext(),
                 Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED &&
@@ -261,7 +261,7 @@ public class RestroomFragment extends Fragment implements RestRoomView, OnMapRea
             longitude = mLastLocation.getLongitude();
 
             restRoomPresenter.requestRestRooms(latitude, longitude);
-            Log.d(TAG,"Presenter Sent Request");
+            Log.d(TAG, "Presenter Sent Request");
         }
 
     }

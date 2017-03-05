@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -191,7 +192,7 @@ public class Tweets_adapter extends BaseAdapter {
                     RequestQueue queue = MySingleton.getInstance(context.getApplicationContext()).
                             getRequestQueue();
                     SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-                    StringRequest stringRequest = new StringRequest(Request.Method.GET, Urls.BASE_URL + "/Like?UserId=" + sp.getString("uid", "") + "&PostId=" + posts.getJSONObject(position).getString("PostId") + "&UserName=" + sp.getString("user_name", "").replace(" ", "%20") + "&Latitude=" + lat + "&Longitude=" + lng,
+                    StringRequest stringRequest = new StringRequest(Request.Method.GET, Urls.BASE_URL + "Like?UserId=" + sp.getString("uid", "") + "&PostId=" + posts.getJSONObject(position).getString("PostId") + "&UserName=" + sp.getString("user_name", "").replace(" ", "%20") + "&Latitude=" + lat + "&Longitude=" + lng,
                             new Response.Listener<String>() {
                                 @Override
                                 public void onResponse(String response) {
@@ -258,11 +259,22 @@ public class Tweets_adapter extends BaseAdapter {
                     public void onResponse(String response) {
                         try {
                             JSONObject json = new JSONObject(response);
-                            image_name[0] = json.getString("ImageName");
-                            if (big)
-                                picassoBig(image_name[0], user_img);
-                            else
-                                picassoSmall(image_name[0], user_img);
+                            Log.d("Tweets Adapter ",json.toString());
+                            if (json.getInt("Status") == 200) {
+                                image_name[0] = json.getString("ImageName");
+                                if (big)
+                                {
+                                    picassoBig(image_name[0], user_img);
+                                }
+                                else
+                                {
+                                    picassoSmall(image_name[0], user_img);
+                                }
+                            }else if(json.getInt("Status")==400){
+
+                                Toast.makeText(context, "Status 400 for ImageName Api", Toast.LENGTH_SHORT).show();
+
+                            }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }

@@ -77,7 +77,7 @@ public class MyProfile extends Fragment implements SwipeRefreshLayout.OnRefreshL
     SharedPreferences sharedPreferences;
     MainActivity activity;
 
-    public String name = "", phone = "";
+    public String name = "", email = "";
     SharedPreferences.Editor editor;
     Bitmap bitmap;
     File file;
@@ -130,11 +130,11 @@ public class MyProfile extends Fragment implements SwipeRefreshLayout.OnRefreshL
         editor = sharedPreferences.edit();
         uid = sharedPreferences.getString("uid", null);
         name = sharedPreferences.getString("user_name", "");
-        phone = sharedPreferences.getString("user_phone", "");
+        email = sharedPreferences.getString("user_email", "");
         completeListOfPosts = new JSONArray[]{new JSONArray()};
         activity.needSomethingTweet = true;
         name_view.setText(name.replace("%20", " "));
-        phone_view.setText(phone);
+        phone_view.setText(email);
         getImage();
     }
 

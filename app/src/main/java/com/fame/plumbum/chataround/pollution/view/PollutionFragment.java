@@ -106,7 +106,8 @@ public class PollutionFragment extends Fragment implements PollutionView, Google
      * @param param2 Parameter 2.
      * @return A new instance of fragment PollutionFragment.
      */
-    // TODO: Rename and change types and number of parameters
+    // TODO: Rename and change types and number of parameters    @Override
+
     public static PollutionFragment newInstance(String param1, String param2) {
         PollutionFragment fragment = new PollutionFragment();
         Bundle args = new Bundle();
@@ -116,11 +117,10 @@ public class PollutionFragment extends Fragment implements PollutionView, Google
         return fragment;
     }
 
-    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
+                mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
