@@ -36,6 +36,7 @@ import com.android.volley.toolbox.Volley;
 import com.facebook.appevents.AppEventsLogger;
 import com.fame.plumbum.chataround.LocationService;
 import com.fame.plumbum.chataround.R;
+import com.fame.plumbum.chataround.helper.SharedPrefs;
 import com.fame.plumbum.chataround.helper.Urls;
 import com.fame.plumbum.chataround.models.ImageSendData;
 import com.fame.plumbum.chataround.queries.ServerAPI;
@@ -82,19 +83,22 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     private static final String TAG = "LoginActivity";
     //    EditText pass_edit, email_edit;
 //    String password, email="", loginFlag = "0", photoUrl = "";
-    String email = "", imageUrl = "", name;
-    SharedPreferences sp;
-    RelativeLayout rl_progress;
-    File file;
-    GoogleApiClient mGoogleApiClient;
-    SignInButton signInButton;
-    ImageView img;
+    private String email = "", imageUrl = "", name;
+    private SharedPreferences sp;
+    private RelativeLayout rl_progress;
+    private File file;
+    private GoogleApiClient mGoogleApiClient;
+    private SignInButton signInButton;
+    private ImageView img;
+    private SharedPrefs sharedPrefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 //        facebookSDKInitialize();
         setContentView(R.layout.activity_login);
+
+        sharedPrefs=new SharedPrefs(this);
         GoogleSignInOptions gso = new GoogleSignInOptions.
                 Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestScopes(new Scope(Scopes.PLUS_LOGIN))
@@ -385,8 +389,13 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                                 editor.putString("uid", jO.getString("UserId"));
                                 editor.putString("user_name",jO.getString("Name"));
                                 editor.putString("user_email",jO.getString("Email"));
-
                                 editor.apply();
+
+                                // Update - Structured Shared Preference Now
+                                sharedPrefs.setUserId(jO.getString("UserId"));
+                                sharedPrefs.setEmailId(jO.getString("Email"));
+                                sharedPrefs.setUsername(jO.getString("Name"));
+
 /*                                if (jO.getString("ProfileFlag").contentEquals("1")) {
                                     editor.putString("edited", "1");
                                     editor.apply();
@@ -539,6 +548,11 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                                 editor.putString("user_name",jO.getString("Name"));
                                 editor.putString("user_email",jO.getString("Email"));
                                 editor.apply();
+
+                                sharedPrefs.setUserId(jO.getString("UserId"));
+                                sharedPrefs.setEmailId(jO.getString("Email"));
+                                sharedPrefs.setUsername(jO.getString("Name"));
+
                                 sendImage_one();
 
                             } else if (jO.getString("Status").contentEquals("400")) {

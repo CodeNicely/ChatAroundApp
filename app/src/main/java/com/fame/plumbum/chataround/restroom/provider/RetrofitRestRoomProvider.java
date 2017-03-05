@@ -4,6 +4,7 @@ import com.fame.plumbum.chataround.helper.Urls;
 import com.fame.plumbum.chataround.restroom.OnRestRoomApiResponse;
 import com.fame.plumbum.chataround.restroom.api.RestroomRequestApi;
 import com.fame.plumbum.chataround.restroom.model.RestRoomData;
+import com.fame.plumbum.chataround.restroom.model.RestRoomDetails;
 
 import java.util.List;
 
@@ -32,7 +33,7 @@ public class RetrofitRestRoomProvider implements RestRoomProvider {
 
 
         retrofit = new Retrofit.Builder()
-                .baseUrl(Urls.BASE_URL_RESTROOM)
+                .baseUrl(Urls.BASE_URL)
                 .client(client)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
@@ -40,21 +41,34 @@ public class RetrofitRestRoomProvider implements RestRoomProvider {
 
 
     @Override
-    public void requestRestRooms(Double latitude, Double langitude, final OnRestRoomApiResponse onRestRoomApiResponse) {
+    public void requestRestRooms(String user_id, double latitude, double langitude, final OnRestRoomApiResponse onRestRoomApiResponse) {
 
         RestroomRequestApi restroomRequestApi = retrofit.create(RestroomRequestApi.class);
-        Call<List<RestRoomData>> call = restroomRequestApi.requestRestRooms(latitude, langitude);
-        call.enqueue(new Callback<List<RestRoomData>>() {
+        Call<RestRoomData> call = restroomRequestApi.requestRestRooms(user_id, latitude, langitude);
+        /*call.enqueue(new Callback<RestRoomData>() {
             @Override
-            public void onResponse(Call<List<RestRoomData>> call, Response<List<RestRoomData>> response) {
+            public void onResponse(Call<List<RestRoomDetails>> call, Response<List<RestRoomDetails>> response) {
                 onRestRoomApiResponse.onSuccess(response.body());
             }
 
             @Override
-            public void onFailure(Call<List<RestRoomData>> call, Throwable t) {
+            public void onFailure(Call<List<RestRoomDetails>> call, Throwable t) {
 
                 t.printStackTrace();
                 onRestRoomApiResponse.onFailure("Failed to connect to server");
+            }
+        });*/
+
+        call.enqueue(new Callback<RestRoomData>() {
+            @Override
+            public void onResponse(Call<RestRoomData> call, Response<RestRoomData> response) {
+                onRestRoomApiResponse.onSuccess(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<RestRoomData> call, Throwable t) {
+
+                onRestRoomApiResponse.onFailure("Something Went Wrong");
             }
         });
     }

@@ -1,6 +1,7 @@
 package com.fame.plumbum.chataround.restroom;
 
 import com.fame.plumbum.chataround.restroom.model.RestRoomData;
+import com.fame.plumbum.chataround.restroom.model.RestRoomDetails;
 
 import java.util.List;
 
@@ -11,7 +12,7 @@ import java.util.List;
 public interface OnRestRoomApiResponse {
 
 
-    void onSuccess(List<RestRoomData> restRoomDataList);
+    void onSuccess(RestRoomData restRoomData);
 
     void onFailure(String message);
 }

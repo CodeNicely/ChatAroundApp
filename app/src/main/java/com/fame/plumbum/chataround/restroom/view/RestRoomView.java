@@ -1,6 +1,6 @@
 package com.fame.plumbum.chataround.restroom.view;
 
-import com.fame.plumbum.chataround.restroom.model.RestRoomData;
+import com.fame.plumbum.chataround.restroom.model.RestRoomDetails;
 
 import java.util.List;
 
@@ -15,5 +15,5 @@ public interface RestRoomView {
 
     void showMessage(String message);
 
-    void onReceived(List<RestRoomData> restRoomDataList);
+    void onReceived(List<RestRoomDetails> restRoomDetailsList);
 }
