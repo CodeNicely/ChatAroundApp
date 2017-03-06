@@ -55,7 +55,11 @@ public class RestroomAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         RestRoomDetails restRoomDetails = restRoomDetailsList.get(position);
         RestroomViewHolder restroomViewHolder = (RestroomViewHolder) holder;
 
+        restroomViewHolder.viewPager.setAdapter(restroomViewHolder.imagesAdapter);
+
         restroomViewHolder.imagesAdapter.setData(restRoomDetails.getImage_list());
+
+        restroomViewHolder.imagesAdapter.notifyDataSetChanged();
 
         restroomViewHolder.address.setText(restRoomDetails.getAddress());
         restroomViewHolder.distance.setText(String.valueOf(restRoomDetails.getDistance()) + " Kms");
