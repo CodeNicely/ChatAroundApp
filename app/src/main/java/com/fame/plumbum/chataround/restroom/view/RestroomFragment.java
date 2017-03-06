@@ -1,6 +1,7 @@
 package com.fame.plumbum.chataround.restroom.view;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,11 +13,13 @@ import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.fame.plumbum.chataround.R;
 import com.fame.plumbum.chataround.helper.SharedPrefs;
+import com.fame.plumbum.chataround.image_upload.view.UploadImageActivity;
 import com.fame.plumbum.chataround.restroom.model.RestRoomDetails;
 import com.fame.plumbum.chataround.restroom.presenter.RestRoomPresenter;
 import com.fame.plumbum.chataround.restroom.presenter.RestRoomPresenterImpl;
@@ -42,6 +45,7 @@ public class RestroomFragment extends Fragment implements RestRoomView {
     private static final String ARG_PARAM2 = "param2";
     private static final String TAG = "RestroomFragment";
 
+
     private static View view;
     private RestRoomPresenter restRoomPresenter;
     private SharedPrefs sharedPrefs;
@@ -51,6 +55,9 @@ public class RestroomFragment extends Fragment implements RestRoomView {
 
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
+
+    @BindView(R.id.add_restroom)
+    Button addRestroom;
 
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
@@ -122,6 +129,14 @@ public class RestroomFragment extends Fragment implements RestRoomView {
 
         restRoomPresenter = new RestRoomPresenterImpl(this, new RetrofitRestRoomProvider());
         restRoomPresenter.requestRestRooms(sharedPrefs.getUserId(), 12.12, 13.12);
+
+        addRestroom.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(getActivity(), UploadImageActivity.class);
+                startActivity(intent);
+            }
+        });
 
         return view;
     }

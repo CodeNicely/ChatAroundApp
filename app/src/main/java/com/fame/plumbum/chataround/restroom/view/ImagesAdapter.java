@@ -25,8 +25,10 @@ public class ImagesAdapter extends PagerAdapter {
     private List<String> imageUrl = new ArrayList<>();
     private ImageLoader imageLoader;
 
+
     ImagesAdapter(Context context) {
 
+        this.context=context;
         imageLoader = new GlideImageLoader(context);
 
     }
@@ -67,5 +69,11 @@ public class ImagesAdapter extends PagerAdapter {
     public void destroyItem(ViewGroup container, int position, Object object) {
         View view = (View) object;
         container.removeView(view);
+    }
+
+    @Override
+    public float getPageWidth(int position) {
+        super.getPageWidth(position);
+        return 0.4f;
     }
 }

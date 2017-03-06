@@ -48,7 +48,10 @@ public class GlideImageLoader implements ImageLoader {
             @Override
             public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
 
-                progressBar.setVisibility(View.GONE);
+                if (progressBar != null) {
+                    progressBar.setVisibility(View.GONE);
+
+                }
                 return false;
             }
         }).diskCacheStrategy(DiskCacheStrategy.SOURCE)

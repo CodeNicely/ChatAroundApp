@@ -4,6 +4,12 @@
     android:layout_height="match_parent"
     tools:context="com.fame.plumbum.chataround.restroom.view.RestroomFragment">
 
+    <Button
+        android:id="@+id/add_restroom"
+        style="@style/Base.Widget.AppCompat.Button.Colored"
+        android:text="@string/add_restroom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
     <ProgressBar
         android:id="@+id/progressBar"
         android:layout_width="wrap_content"
@@ -12,6 +18,7 @@
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView"
+        android:layout_below="@+id/add_restroom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
