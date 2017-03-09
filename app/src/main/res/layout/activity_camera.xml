@@ -218,6 +218,7 @@
             android:id="@+id/uploadButton"
             style="@style/Widget.AppCompat.Button.Colored"
             android:layout_width="match_parent"
+            android:textColor="@color/black"
             android:layout_height="wrap_content"
             android:text="@string/submit_restroom" />
 

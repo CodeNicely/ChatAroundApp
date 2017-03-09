@@ -3,10 +3,8 @@ package com.fame.plumbum.chataround.pollution.view;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.location.Location;
 import android.net.Uri;
-import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -14,20 +12,16 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.NestedScrollView;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.amulyakhare.textdrawable.TextDrawable;
 import com.fame.plumbum.chataround.R;
 import com.fame.plumbum.chataround.pollution.model.air_model.AirPollutionDetails;
 import com.fame.plumbum.chataround.pollution.model.air_model.AirPollutionIndividualAqi;
@@ -45,7 +39,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.facebook.login.widget.ProfilePictureView.TAG;
+import static com.desmond.squarecamera.SquareCameraPreview.TAG;
+
 
 /**
  * A simple {@link Fragment} subclass.

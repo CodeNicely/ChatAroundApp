@@ -20,7 +20,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.facebook.login.widget.ProfilePictureView.TAG;
 
 /**
  * Created by meghal on 23/2/17.

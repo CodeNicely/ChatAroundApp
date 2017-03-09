@@ -33,7 +33,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.facebook.appevents.AppEventsLogger;
 import com.fame.plumbum.chataround.LocationService;
 import com.fame.plumbum.chataround.R;
 import com.fame.plumbum.chataround.helper.SharedPrefs;
@@ -644,13 +643,11 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         super.onResume();
 
         // Logs 'install' and 'app activate' App Events.
-        AppEventsLogger.activateApp(this);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        AppEventsLogger.deactivateApp(this);
         mGoogleApiClient.disconnect();
     }
 

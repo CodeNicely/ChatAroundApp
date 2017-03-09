@@ -85,6 +85,6 @@ public class ImagesAdapter extends PagerAdapter {
     @Override
     public float getPageWidth(int position) {
         super.getPageWidth(position);
-        return 0.8f;
+        return 0.75f;
     }
 }

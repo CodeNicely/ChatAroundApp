@@ -140,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
 
                         break;
                     case 3:
-                        toolbar.setTitle("Pollutuion Meter");
+                        toolbar.setTitle("Pollution Meter");
 
                         break;
                     case 4:

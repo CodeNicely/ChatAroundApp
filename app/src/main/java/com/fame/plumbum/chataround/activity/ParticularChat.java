@@ -31,7 +31,6 @@ import com.fame.plumbum.chataround.adapters.Chat_adapter;
 import com.fame.plumbum.chataround.database.ChatTable;
 import com.fame.plumbum.chataround.database.DBHandler;
 import com.fame.plumbum.chataround.helper.Urls;
-import com.ibm.watson.developer_cloud.alchemy.v1.model.Url;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;

@@ -12,7 +12,6 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.NestedScrollView;
@@ -30,6 +29,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.desmond.squarecamera.CameraActivity;
 import com.fame.plumbum.chataround.R;
 import com.fame.plumbum.chataround.helper.Keys;
 import com.fame.plumbum.chataround.helper.RxSchedulersHook;
@@ -175,7 +175,7 @@ public class UploadImageActivity extends Activity implements
         StaggeredGridLayoutManager staggeredGridLayoutManager = new
                 StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(staggeredGridLayoutManager);
-        recyclerView.setHasFixedSize(true);
+//        recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(imageAdapter);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         galleryButton.setOnClickListener(new View.OnClickListener() {
@@ -294,10 +294,11 @@ public class UploadImageActivity extends Activity implements
             case CAMERA_REQUEST_ID:
                 if (resultCode == Activity.RESULT_OK) {
 
-                    Log.i(TAG, "Result code for Camera : " + resultCode);
-                    if (image != null)
+                    /*Log.i(TAG, "Result code for Camera : " + resultCode);
+                    if (image != null) {
                         uriList.add(Uri.fromFile(image));
-
+                    }*/
+                    uriList.add(data.getData());
                 }
                 break;
             case RESULT_LOAD_IMAGE:
@@ -345,6 +346,7 @@ public class UploadImageActivity extends Activity implements
     @Override
     public void showCamera() {
 
+/*
         Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(image));
         Log.i(TAG, image.getPath());
@@ -354,6 +356,10 @@ public class UploadImageActivity extends Activity implements
             startActivityForResult(intent, CAMERA_REQUEST_ID);
         }
 
+*/
+
+        Intent startCustomCameraIntent = new Intent(this, CameraActivity.class);
+        startActivityForResult(startCustomCameraIntent, CAMERA_REQUEST_ID);
 
     }
 
@@ -612,14 +618,14 @@ public class UploadImageActivity extends Activity implements
         }
     }
 
-    void showRestroomAddLayout(boolean show){
-        if(show){
+    void showRestroomAddLayout(boolean show) {
+        if (show) {
 
             nestedScrollView.setVisibility(View.VISIBLE);
             submitLayout.setVisibility(View.VISIBLE);
             progressBar.setVisibility(View.GONE);
 
-        }else{
+        } else {
             nestedScrollView.setVisibility(View.GONE);
             submitLayout.setVisibility(View.GONE);
             progressBar.setVisibility(View.VISIBLE);

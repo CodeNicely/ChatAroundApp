@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.fame.plumbum.chataround"
     android:installLocation="auto">
 
-    <!-- To auto-complete the email text field in the login form with the user's emails -->
+
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
@@ -28,13 +29,26 @@
         android:name="android.hardware.wifi"
         android:required="true" />
 
+    <!--android:name="android.support.multidex.MultiDexApplication"-->
+
+
     <application
         android:name="android.support.multidex.MultiDexApplication"
         android:allowBackup="true"
         android:icon="@drawable/logo"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        tools:replace="android:theme"
+
+        >
+
+        <meta-data
+            android:name="com.mixpanel.android.MPConfig.ResourcePackageName"
+            android:value="com.desmond.squarecamera" />
+
+
+        <activity android:name="com.desmond.squarecamera.CameraActivity" />        <!--<activity android:name=""-->
         <meta-data
             android:name="com.indooratlas.android.sdk.API_KEY"
             android:value="af4f809e-634a-4097-9925-9d7077839044" />
@@ -69,7 +83,8 @@
         <activity
             android:name=".activity.LoginActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -79,32 +94,53 @@
         <activity
             android:name=".activity.SignUp"
             android:label="Sign Up"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"
+
+            />
         <activity
             android:name=".activity.GetProfileDetails"
             android:label="Info"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"
+
+            />
         <activity
             android:name=".activity.OTP"
             android:label="Verification"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"
+
+            />
         <activity
             android:name=".activity.SelfChatList"
             android:label="Personal Chat"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"
+
+            />
         <activity
             android:name=".activity.ParticularPost"
             android:label="Comments"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize" />
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="adjustResize"
+
+            />
         <activity
             android:name=".activity.ParticularChat"
             android:label="Personal Chat"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"
+
+            />
         <activity
             android:name=".activity.MainActivity"
             android:label="Shouts"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"
+
+            />
         <activity
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|screenLayout|screenSize|orientation"
@@ -114,7 +150,9 @@
         <activity
             android:name=".IndoorMapping"
             android:label="@string/title_activity_indoor_mapping"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+
+            />
         <activity
             android:name=".image_upload.view.UploadImageActivity"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -125,6 +163,8 @@
             android:name=".image_viewer.ImageViewerActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
+
+
     </application>
 
 </manifest>
