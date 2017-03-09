@@ -12,5 +12,5 @@ public class Keys {
     public static final String KEY_PASSWORD = "password";
     public static final String KEY_ADMIN_TOKEN = "admin_token";
     public static final String KEY_ORDER_ID = "order_id";
-
+    public static final String KEY_RESTROOM_ID ="restroom_id" ;
 }

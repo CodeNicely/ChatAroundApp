@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
@@ -39,7 +40,9 @@ import com.fame.plumbum.chataround.MySingleton;
 import com.fame.plumbum.chataround.R;
 import com.fame.plumbum.chataround.fragments.MyProfile;
 import com.fame.plumbum.chataround.fragments.World;
+import com.fame.plumbum.chataround.helper.Keys;
 import com.fame.plumbum.chataround.helper.Urls;
+import com.fame.plumbum.chataround.image_viewer.ImageViewerActivity;
 import com.fame.plumbum.chataround.news.view.NewsFragment;
 import com.fame.plumbum.chataround.pollution.view.PollutionFragment;
 import com.fame.plumbum.chataround.restroom.view.RestroomFragment;
@@ -325,7 +328,7 @@ public class MainActivity extends AppCompatActivity {
                 public void onClick(View v) {
 
                     Toast.makeText(MainActivity.this, Urls.BASE_URL + "Post?UserId=" + profile.uid + "&UserName=" + profile.name.replace(" ", "%20") + "&Post=Hello&Latitude=" + lat + "&Longitude=" + lng, Toast.LENGTH_SHORT).show();
-                    Log.d(TAG,Urls.BASE_URL + "Post?UserId=" + profile.uid + "&UserName=" + profile.name + "&Post=Hello&Latitude=" + lat + "&Longitude=" + lng);
+                    Log.d(TAG, Urls.BASE_URL + "Post?UserId=" + profile.uid + "&UserName=" + profile.name + "&Post=Hello&Latitude=" + lat + "&Longitude=" + lng);
                     String content_txt = content.getText().toString();
                     if (lat != 0 && lng != 0) {
                         RequestQueue queue = MySingleton.getInstance(MainActivity.this.getApplicationContext()).
@@ -333,11 +336,11 @@ public class MainActivity extends AppCompatActivity {
                         content_txt = content_txt.replace("\n", "%0A");
                         StringRequest stringRequest = new StringRequest(Request.Method.GET, Urls.BASE_URL + "Post?UserId=" + profile.uid + "&UserName=" + profile.name.replace(" ", "%20") + "&Post=" + content_txt.replace(" ", "%20") + "&Latitude=" + lat + "&Longitude=" + lng,
                                 new Response.Listener<String>() {
-                                    public static final String TAG = "MainActivity" ;
+                                    public static final String TAG = "MainActivity";
 
                                     @Override
                                     public void onResponse(String response) {
-                                        Log.d(TAG,"Response "+response);
+                                        Log.d(TAG, "Response " + response);
                                         needSomethingTweet = true;
 
                                     }
@@ -422,4 +425,31 @@ public class MainActivity extends AppCompatActivity {
             receiver = null;
         }
     }
+
+
+    public void openGoogleMaps(double latitude, double longitude) {
+        Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
+                Uri.parse("http://maps.google.com/maps?daddr=" + latitude + "," + longitude));
+        startActivity(intent);
+    }
+
+    public void openImageViewer(ArrayList<String> urlList, int position) {
+
+        Intent intent = new Intent(this, ImageViewerActivity.class);
+        intent.putStringArrayListExtra(Keys.KEY_IMAGE_LIST, urlList);
+        intent.putExtra(Keys.KEY_POSITION_IMAGE, position);
+        startActivity(intent);
+    }
+
+    public void openImageViewer(String url, int position) {
+
+        ArrayList<String> arrayList=new ArrayList<>();
+        arrayList.add(url);
+
+        Intent intent = new Intent(this, ImageViewerActivity.class);
+        intent.putStringArrayListExtra(Keys.KEY_IMAGE_LIST, arrayList);
+        intent.putExtra(Keys.KEY_POSITION_IMAGE, position);
+        startActivity(intent);
+    }
+
 }

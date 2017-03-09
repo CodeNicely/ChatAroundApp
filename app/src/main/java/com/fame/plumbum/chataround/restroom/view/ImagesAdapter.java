@@ -9,6 +9,8 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.fame.plumbum.chataround.R;
+import com.fame.plumbum.chataround.activity.MainActivity;
+import com.fame.plumbum.chataround.helper.Urls;
 import com.fame.plumbum.chataround.helper.image_loader.GlideImageLoader;
 import com.fame.plumbum.chataround.helper.image_loader.ImageLoader;
 
@@ -22,18 +24,18 @@ import java.util.List;
 public class ImagesAdapter extends PagerAdapter {
 
     private Context context;
-    private List<String> imageUrl = new ArrayList<>();
+    private ArrayList<String> imageUrl = new ArrayList<>();
     private ImageLoader imageLoader;
 
 
     ImagesAdapter(Context context) {
 
-        this.context=context;
+        this.context = context;
         imageLoader = new GlideImageLoader(context);
 
     }
 
-    void setData(List<String> imageUrl) {
+    void setData(ArrayList<String> imageUrl) {
 
         this.imageUrl = imageUrl;
     }
@@ -45,7 +47,7 @@ public class ImagesAdapter extends PagerAdapter {
 
 
     @Override
-    public Object instantiateItem(ViewGroup container, int position) {
+    public Object instantiateItem(ViewGroup container, final int position) {
 
         String url = imageUrl.get(position);
         LayoutInflater layoutInflater = LayoutInflater.from(context);
@@ -55,7 +57,16 @@ public class ImagesAdapter extends PagerAdapter {
 
         ImageView imageView = (ImageView) view.findViewById(R.id.image);
         ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
-        imageLoader.loadImage(url, imageView, progressBar);
+        imageLoader.loadImage(Urls.BASE_URL + "ImageReturn?ImageName=" + url, imageView, progressBar);
+
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (context instanceof MainActivity) {
+                    ((MainActivity) context).openImageViewer(imageUrl, position);
+                }
+            }
+        });
 
         return view;
     }
@@ -74,6 +85,6 @@ public class ImagesAdapter extends PagerAdapter {
     @Override
     public float getPageWidth(int position) {
         super.getPageWidth(position);
-        return 0.4f;
+        return 0.8f;
     }
 }

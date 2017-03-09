@@ -6,9 +6,11 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     tools:context="com.fame.plumbum.chataround.MainActivity">
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <android.support.design.widget.AppBarLayout
             android:id="@+id/app_Bar"
             android:layout_width="match_parent"
@@ -24,10 +26,10 @@
 
         </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_main"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/app_Bar"
-        />
+        <include
+            layout="@layout/content_main"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/app_Bar" />
     </RelativeLayout>
 </android.support.design.widget.CoordinatorLayout>

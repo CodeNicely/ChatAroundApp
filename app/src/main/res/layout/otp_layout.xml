@@ -1,41 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#ffffff"
-    >
+    android:orientation="vertical">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:layout_centerVertical="true"
-        >
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Please enter the one time password sent to your mobile phone."
-        android:textColor="#202020"
-        android:layout_margin="8dp"
-        android:gravity="center"
-        />
+        android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/edit_otp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Enter OTP"
-        android:inputType="number"
-        android:layout_margin="50dp"
-        android:padding="@dimen/activity_horizontal_margin"
-        />
-    <com.rey.material.widget.Button
-        android:id="@+id/okay_otp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="50dp"
-        android:layout_marginRight="50dp"
-        android:text="Okay"
-        android:background="@drawable/border_button"
-        />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:gravity="center"
+            android:text="Please enter the one time password sent to your mobile phone."
+            android:textColor="#202020" />
+
+        <EditText
+            android:id="@+id/edit_otp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="50dp"
+            android:hint="Enter OTP"
+            android:inputType="number"
+            android:padding="@dimen/activity_horizontal_margin" />
+
+        <com.rey.material.widget.Button
+            android:id="@+id/okay_otp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp"
+            android:background="@drawable/border_button"
+            android:text="Okay" />
     </LinearLayout>
 </RelativeLayout>

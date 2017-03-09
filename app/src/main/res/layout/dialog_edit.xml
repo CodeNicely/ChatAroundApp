@@ -1,55 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Please update the following entries:"
-        android:textColor="#000000"
-        android:textSize="22sp"
-        android:layout_marginTop="@dimen/activity_vertical_margin"
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
-        />
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:text="Please update the following entries:"
+        android:textColor="#000000"
+        android:textSize="22sp" />
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        >
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        >
-    <EditText
-        android:id="@+id/name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Name"
-        android:paddingLeft="6dp"
-        android:layout_margin="8dp"
-        android:maxLength="30"
-        android:maxLines="1"
-        />
-    <EditText
-        android:id="@+id/phone"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Phone"
-        android:inputType="phone"
-        android:paddingLeft="6dp"
-        android:layout_below="@+id/name"
-        android:layout_margin="8dp"
-        android:maxLines="1"
-        />
-    </RelativeLayout>
+        android:layout_centerVertical="true">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:hint="Name"
+                android:maxLength="30"
+                android:maxLines="1"
+                android:paddingLeft="6dp" />
+
+            <EditText
+                android:id="@+id/phone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/name"
+                android:layout_margin="8dp"
+                android:hint="Phone"
+                android:inputType="phone"
+                android:maxLines="1"
+                android:paddingLeft="6dp" />
+        </RelativeLayout>
     </ScrollView>
+
     <Button
         android:id="@+id/update"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
-        android:text="Update"
         android:layout_alignParentBottom="true"
-        />
+        android:background="@color/colorPrimary"
+        android:text="Update" />
 </RelativeLayout>

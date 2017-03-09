@@ -13,8 +13,8 @@ import java.io.File;
 public interface FileUploader {
 
     /**
-     * @param user_id     is unique AdminToken for admin verification
-     * @param restroom_id        is orderId to which we have to attach the image file
+     * @param user_id        is unique AdminToken for admin verification
+     * @param restroom_id    is orderId to which we have to attach the image file
      * @param file           is file to be uploaded
      * @param uploadCallback is an interface that is used as Callback to notify presenter when
      *                       response from api call is ready or when api call is failed.

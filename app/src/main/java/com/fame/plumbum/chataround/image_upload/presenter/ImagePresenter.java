@@ -21,6 +21,8 @@ public interface ImagePresenter {
      */
     void onImagesSelected(List<Uri> imageUriList);
 
+    void onImagesUpload(List<Uri> imageUriList);
+
     /**
      * This function is called to open camera for clicking new image
      */

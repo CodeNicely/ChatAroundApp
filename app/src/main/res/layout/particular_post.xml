@@ -1,193 +1,196 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#ffffff"
     android:focusable="true"
-    android:focusableInTouchMode="true"
-    >
+    android:focusableInTouchMode="true">
+
     <RelativeLayout
         android:id="@+id/heading_rl"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <RelativeLayout
             android:id="@+id/image_user_rl"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_margin="8dp">
+
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/image_user_bound"
                 android:layout_width="58dp"
                 android:layout_height="58dp"
-                android:src="#202020"
                 android:layout_centerInParent="true"
-                />
+                android:src="#202020" />
+
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/image_user_boundary"
                 android:layout_width="54dp"
                 android:layout_height="54dp"
-                android:src="#ffffff"
                 android:layout_centerInParent="true"
-                />
+                android:src="#ffffff" />
+
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/image_user"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:src="@drawable/user"
                 android:layout_centerInParent="true"
-                />
+                android:src="@drawable/user" />
         </RelativeLayout>
+
         <TextView
             android:id="@+id/poster_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/activity_vertical_margin"
+            android:layout_marginTop="18dp"
+            android:layout_toRightOf="@+id/image_user_rl"
             android:textColor="#000000"
             android:textSize="13sp"
             android:textStyle="bold"
-            android:layout_toRightOf="@+id/image_user_rl"
-            android:layout_marginLeft="@dimen/activity_vertical_margin"
-            android:layout_marginTop="18dp"
 
             />
+
         <TextView
             android:id="@+id/post_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="#202020"
-            android:textSize="16sp"
+            android:layout_below="@+id/image_user_rl"
+            android:layout_marginLeft="8dp"
             android:background="#ffffff"
             android:padding="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_below="@+id/image_user_rl"
-            />
+            android:textColor="#202020"
+            android:textSize="16sp" />
     </RelativeLayout>
+
     <TextView
         android:id="@+id/reports_count"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/heading_rl"
-        android:paddingLeft="8dp"
-        android:text="No one reported this"
         android:layout_marginBottom="4dp"
         android:layout_marginTop="4dp"
-        />
+        android:paddingLeft="8dp"
+        android:text="No one reported this" />
+
     <View
         android:id="@+id/extra_view1"
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
-        android:background="#12320F"
         android:layout_below="@+id/reports_count"
-        />
+        android:background="#12320F" />
+
     <TextView
         android:id="@+id/notif_heading"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Comments"
         android:layout_below="@+id/extra_view1"
+        android:layout_marginBottom="4dp"
         android:layout_marginLeft="@dimen/activity_vertical_margin"
         android:layout_marginTop="4dp"
-        android:layout_marginBottom="4dp"
-        />
+        android:text="Comments" />
+
     <View
         android:id="@+id/extra_view2"
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
-        android:background="#12320F"
         android:layout_below="@+id/notif_heading"
-        />
+        android:background="#12320F" />
+
     <ListView
         android:id="@+id/list_comments_post"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/extra_view2"
         android:layout_above="@+id/rl_bottom"
-        android:paddingBottom="4dp"
-        />
+        android:layout_below="@+id/extra_view2"
+        android:paddingBottom="4dp" />
+
     <TextView
         android:id="@+id/midText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/rl_bottom"
+        android:layout_below="@+id/extra_view2"
+        android:gravity="center"
         android:text="No comments found!"
         android:textSize="18sp"
         android:textStyle="bold"
-        android:gravity="center"
-        android:layout_below="@+id/extra_view2"
-        android:layout_above="@+id/rl_bottom"
-        android:visibility="gone"
-        />
+        android:visibility="gone" />
+
     <RelativeLayout
         android:id="@+id/rl_bottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        >
+        android:layout_alignParentBottom="true">
+
         <LinearLayout
             android:id="@+id/ll_one"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:gravity="bottom|center_horizontal"
-            >
+            android:gravity="bottom|center_horizontal">
+
             <ImageButton
                 android:id="@+id/chat_button"
                 android:layout_width="33dp"
                 android:layout_height="33dp"
-                android:background="@drawable/chat"
-                android:paddingRight="2dp"
                 android:layout_gravity="bottom"
-                />
+                android:background="@drawable/chat"
+                android:paddingRight="2dp" />
         </LinearLayout>
+
         <LinearLayout
             android:id="@+id/ll_two"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:gravity="bottom|center_horizontal"
             android:layout_toRightOf="@+id/ll_one"
+            android:gravity="bottom|center_horizontal"
 
             >
-        <ImageButton
-            android:id="@+id/like_button"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:background="@drawable/thumbs_down_accent"
-            android:layout_gravity="bottom"
-            />
+
+            <ImageButton
+                android:id="@+id/like_button"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="bottom"
+                android:background="@drawable/thumbs_down_accent" />
         </LinearLayout>
+
         <EditText
             android:id="@+id/comment_add"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Comment"
             android:layout_toLeftOf="@+id/add_button"
             android:layout_toRightOf="@+id/ll_two"
-            android:maxLines="2"
-            />
+            android:hint="Comment"
+            android:maxLines="2" />
+
         <ImageView
             android:id="@+id/add_button"
             android:layout_width="40dp"
             android:layout_height="30dp"
-            android:layout_alignParentRight="true"
             android:layout_alignBottom="@+id/comment_add"
+            android:layout_alignParentRight="true"
             android:layout_marginBottom="4dp"
-            android:src="@drawable/back"
-            />
+            android:src="@drawable/back" />
     </RelativeLayout>
+
     <RelativeLayout
         android:id="@+id/rl_progress"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#bbffffff"
-        android:visibility="gone"
-        >
+        android:visibility="gone">
+
         <com.rey.material.widget.ProgressView
             android:layout_width="80dp"
             android:layout_height="80dp"
+            android:layout_centerInParent="true"
             app:pv_autostart="true"
             app:pv_circular="true"
-            app:pv_progressStyle="@style/Material.Drawable.CircularProgress"
             app:pv_progressMode="indeterminate"
-            android:layout_centerInParent="true"
-            />
+            app:pv_progressStyle="@style/Material.Drawable.CircularProgress" />
     </RelativeLayout>
 </RelativeLayout>

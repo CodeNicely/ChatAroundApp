@@ -59,7 +59,7 @@ public class RetrofitFileUploader implements FileUploader {
     }
 
     @Override
-    public void uploadImage(String admin_token, String order_id, File file, final UploadCallback uploadCallback) {
+    public void uploadImage(String user_id, String restroom_id, File file, final UploadCallback uploadCallback) {
 
 /*
         Retrofit retrofit = new Retrofit.Builder().baseUrl("http://photoshoto.me")
@@ -68,10 +68,10 @@ public class RetrofitFileUploader implements FileUploader {
         RequestBody photo = RequestBody.create(MediaType.parse("application/image"), file);
         RequestBody body = new MultipartBody.Builder()
                 .type(MultipartBody.FORM)
-                .addFormDataPart("photo", file.getName(), photo)
+                .addFormDataPart("photo", file.getUsername(), photo)
                 .build();
 
-        Call<JsonObject> call = userService.changeUserPhoto(token, username, body);
+        Call<JsonObject> call = userService.changeUserPhoto(token, user_id, body);
 
         */
 
@@ -79,8 +79,8 @@ public class RetrofitFileUploader implements FileUploader {
         Log.i(TAG, "Retrofit file uploader called ");
         JSONObject jsonObject = new JSONObject();
         try {
-            jsonObject.put(Keys.KEY_ADMIN_TOKEN, admin_token);
-            jsonObject.put(Keys.KEY_ORDER_ID, order_id);
+            jsonObject.put(Keys.KEY_ADMIN_TOKEN, user_id);
+            jsonObject.put(Keys.KEY_ORDER_ID, restroom_id);
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -89,18 +89,18 @@ public class RetrofitFileUploader implements FileUploader {
 
         RequestBody fbody = RequestBody.create(MediaType.parse("multipart/form-data"), file);
 
-        RequestBody adminToken =
+        RequestBody userId =
                 RequestBody.create(
-                        MediaType.parse("multipart/form-data"), admin_token);
-        RequestBody orderId =
+                        MediaType.parse("multipart/form-data"), user_id);
+        RequestBody restroomId =
                 RequestBody.create(
-                        MediaType.parse("multipart/form-data"), String.valueOf(order_id));
+                        MediaType.parse("multipart/form-data"), String.valueOf(restroom_id));
 
         MultipartBody.Part body =
                 MultipartBody.Part.createFormData("file", file.getName(), fbody);
 
 
-        Call<FileUploadData> call = imageUploadApi.uploadImage(adminToken, orderId, body);
+        Call<FileUploadData> call = imageUploadApi.uploadImage(userId, restroomId, body);
         call.enqueue(new Callback<FileUploadData>() {
 
             @Override

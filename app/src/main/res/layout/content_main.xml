@@ -4,46 +4,44 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:showIn="@layout/app_bar_main">
+
     <ImageView
         android:id="@+id/image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#ffffff"
         android:layout_above="@+id/phone"
-        />
+        android:background="#ffffff" />
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/image_user"
         android:layout_width="200dp"
         android:layout_height="200dp"
         android:layout_centerInParent="true"
-        android:src="@drawable/user_big"
         android:layout_margin="50dp"
-        />
+        android:src="@drawable/user_big" />
+
     <TextView
         android:id="@+id/name_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="KAUSTUB JOSHI"
-        android:textSize="20sp"
-        android:textColor="#000000"
+        android:layout_marginTop="8dp"
         android:paddingLeft="16dp"
         android:paddingTop="8dp"
-        android:layout_marginTop="8dp"
-        />
+        android:text="KAUSTUB JOSHI"
+        android:textColor="#000000"
+        android:textSize="20sp" />
+
     <TextView
         android:id="@+id/phone_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="+91-9643531782"
-        android:textSize="18sp"
-        android:textColor="#000000"
-        android:background="@color/colorPrimary"
-        android:padding="10dp"
-        android:gravity="center_horizontal"
         android:layout_alignParentBottom="true"
-        />
+        android:background="@color/colorPrimary"
+        android:gravity="center_horizontal"
+        android:padding="10dp"
+        android:text="+91-9643531782"
+        android:textColor="#000000"
+        android:textSize="18sp" />
 
-    
 
 </RelativeLayout>

@@ -42,7 +42,7 @@ public class ImagePresenterImpl implements ImagePresenter {
 
 
     @Override
-    public void onImagesSelected(final List<Uri> imageUriList) {
+    public void onImagesUpload(final List<Uri> imageUriList) {
         Observable.from(imageUriList).flatMap(new Func1<Uri, Observable<ImageData>>() {
             @Override
             public Observable<ImageData> call(Uri uri) {
@@ -67,11 +67,45 @@ public class ImagePresenterImpl implements ImagePresenter {
 
                                    eventBus.post(new ImageEvent(imageData.getFile()));
                                    //             EventBus.getDefault().post(String.valueOf(imageData.getFile()));
+//                                   imageDataList.add(imageData);
+                               }
+                           }
+                );
+    }
+
+
+    @Override
+    public void onImagesSelected(final List<Uri> imageUriList) {
+        Observable.from(imageUriList).flatMap(new Func1<Uri, Observable<ImageData>>() {
+            @Override
+            public Observable<ImageData> call(Uri uri) {
+                return imageDataProvider.getImageData(uri);
+            }
+        }).observeOn(rxSchedulersHook.getMainThreadScheduler()).subscribeOn(rxSchedulersHook.getIOScheduler())
+                .subscribe(new Observer<ImageData>() {
+                               @Override
+                               public void onCompleted() {
+
+                                   uploadImageView.setData(imageDataList);
+                               }
+
+                               @Override
+                               public void onError(Throwable e) {
+                                   e.printStackTrace();
+                               }
+
+                               @Override
+                               public void onNext(ImageData imageData) {
+
+
+//                                   eventBus.post(new ImageEvent(imageData.getFile()));
+                                   //             EventBus.getDefault().post(String.valueOf(imageData.getFile()));
                                    imageDataList.add(imageData);
                                }
                            }
                 );
     }
+
 
     @Override
     public void openCamera() {

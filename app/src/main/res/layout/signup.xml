@@ -3,65 +3,66 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#ffffff">
-        <ImageView
-            android:layout_width="200dp"
-            android:layout_height="100dp"
-            android:src="@drawable/logo"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="40dp"
-            />
-        <RelativeLayout
+
+    <ImageView
+        android:layout_width="200dp"
+        android:layout_height="100dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp"
+        android:src="@drawable/logo" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:paddingTop="@dimen/activity_vertical_margin">
+
+        <EditText
+            android:id="@+id/email_edit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:paddingTop="@dimen/activity_vertical_margin"
-            >
-            <EditText
-                android:id="@+id/email_edit"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Email ID"
-                android:textColor="#000000"
-                android:inputType="textEmailAddress"
-                android:padding="@dimen/activity_horizontal_margin"
-                android:gravity="center_horizontal"
-                android:layout_centerHorizontal="true"
-                android:layout_marginLeft="50dp"
-                android:layout_marginRight="50dp"
-                />
-                <EditText
-                    android:id="@+id/pass_edit"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="password"
-                    android:textColor="#000000"
-                    android:inputType="textPassword"
-                    android:padding="@dimen/activity_horizontal_margin"
-                    android:layout_below="@+id/email_edit"
-                    android:gravity="center_horizontal"
-                    android:layout_alignLeft="@+id/email_edit"
-                    android:layout_alignRight="@+id/email_edit"
-                    />
-            <Button
-                android:id="@+id/sign_up"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Sign Up"
-                android:textSize="18sp"
-                android:background="@drawable/border_button"
-                android:layout_marginTop="@dimen/activity_vertical_margin"
-                android:layout_marginBottom="4dp"
-                android:layout_below="@+id/pass_edit"
-                android:layout_alignLeft="@+id/pass_edit"
-                android:layout_alignRight="@+id/pass_edit"
-                />
-        </RelativeLayout>
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp"
+            android:gravity="center_horizontal"
+            android:hint="Email ID"
+            android:inputType="textEmailAddress"
+            android:padding="@dimen/activity_horizontal_margin"
+            android:textColor="#000000" />
+
+        <EditText
+            android:id="@+id/pass_edit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/email_edit"
+            android:layout_alignRight="@+id/email_edit"
+            android:layout_below="@+id/email_edit"
+            android:gravity="center_horizontal"
+            android:hint="password"
+            android:inputType="textPassword"
+            android:padding="@dimen/activity_horizontal_margin"
+            android:textColor="#000000" />
+
+        <Button
+            android:id="@+id/sign_up"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/pass_edit"
+            android:layout_alignRight="@+id/pass_edit"
+            android:layout_below="@+id/pass_edit"
+            android:layout_marginBottom="4dp"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:background="@drawable/border_button"
+            android:text="Sign Up"
+            android:textSize="18sp" />
+    </RelativeLayout>
+
     <Button
         android:id="@+id/sign_in"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Already have an account? Sign In"
         android:layout_alignParentBottom="true"
-        android:textAllCaps="false"
-        android:background="@color/colorPrimary" />
+        android:background="@color/colorPrimary"
+        android:text="Already have an account? Sign In"
+        android:textAllCaps="false" />
 </RelativeLayout>

@@ -2,27 +2,26 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipe"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingBottom="4dp"
-        >
+        android:paddingBottom="4dp">
+
         <ListView
             android:id="@+id/world_tweets_list"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            />
+            android:layout_height="match_parent" />
     </android.support.v4.widget.SwipeRefreshLayout>
 
     <TextView
         android:id="@+id/midText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
         android:text="No content found!"
         android:textSize="18sp"
         android:textStyle="bold"
-        android:layout_centerInParent="true"
-        android:visibility="gone"
-        />
+        android:visibility="gone" />
 </RelativeLayout>

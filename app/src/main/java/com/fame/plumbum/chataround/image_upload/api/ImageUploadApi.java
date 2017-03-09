@@ -3,6 +3,7 @@ package com.fame.plumbum.chataround.image_upload.api;
 
 import com.fame.plumbum.chataround.helper.Urls;
 import com.fame.plumbum.chataround.image_upload.model.data.FileUploadData;
+import com.fame.plumbum.chataround.services.UploadService;
 
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -19,13 +20,13 @@ public interface ImageUploadApi {
     /**
      * We are using Multipart annotation here for image uploading.
      *
-     * @param admin_token is unique admin token for admin verification.
-     * @param orderId     orderId with which admin wants to attach image.
+     * @param user_id    is unique admin token for admin verification.
+     * @param restroom_id restroom_id with which admin wants to attach image.
      * @param file        is Image file to be uploaded
      * @return
      */
     @Multipart
     @POST(Urls.SUB_URL_IMAGE_UPLOAD_API)
-    Call<FileUploadData> uploadImage(@Part("admin_token") RequestBody admin_token,
-                                     @Part("order_id") RequestBody orderId, @Part MultipartBody.Part file);
+    Call<FileUploadData> uploadImage(@Part("userId") RequestBody user_id,
+                                     @Part("restroomId") RequestBody restroom_id, @Part MultipartBody.Part file);
 }

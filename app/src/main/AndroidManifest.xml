@@ -114,10 +114,17 @@
         <activity
             android:name=".IndoorMapping"
             android:label="@string/title_activity_indoor_mapping"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity android:name=".image_upload.view.UploadImageActivity"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".image_upload.view.UploadImageActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
 
+        <service android:name=".services.UploadService" />
 
+        <activity
+            android:name=".image_viewer.ImageViewerActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
     </application>
 
 </manifest>

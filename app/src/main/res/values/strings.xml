@@ -37,4 +37,10 @@
     <string name="add_restroom">Add New Restroom</string>
     <string name="male_compatible">Male Compatible</string>
     <string name="female_compatible">Female Compatible</string>
+    <string name="disabled_compatible">Disabled Compatible</string>
+    <string name="address">Address Here</string>
+    <string name="get_route">Get Route</string>
+    <string name="submit_restroom">Submit Restroom</string>
+    <string name="click_pic">Click and Add one or More Pictures</string>
+    <string name="directions">Directions</string>
 </resources>

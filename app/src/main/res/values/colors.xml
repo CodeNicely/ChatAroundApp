@@ -11,6 +11,8 @@
 
     <color name="transparent">#00000000</color>
 
+    <color name="black_100_percent">#000000</color>
+
     <color name="good">#BB00E400</color>
     <color name="moderate">#BBFFFF00</color>
     <color name="sensitive">#BBFF7E00</color>

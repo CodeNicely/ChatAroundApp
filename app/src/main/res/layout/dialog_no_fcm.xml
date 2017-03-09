@@ -9,39 +9,36 @@
         android:id="@+id/heading"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:text="Please wait"
-        android:textSize="24sp"
-        android:textColor="#FFFFFF"
         android:background="#202020"
+        android:paddingBottom="4dp"
         android:paddingLeft="12dp"
         android:paddingTop="8dp"
-        android:paddingBottom="4dp"
-        />
+        android:text="Please wait"
+        android:textColor="#FFFFFF"
+        android:textSize="24sp" />
 
     <com.rey.material.widget.ProgressView
         android:layout_width="80dp"
         android:layout_height="80dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="30dp"
+        android:layout_marginTop="30dp"
         app:pv_autostart="true"
         app:pv_circular="true"
-        app:pv_progressStyle="@style/Material.Drawable.CircularProgress"
         app:pv_progressMode="indeterminate"
-        android:layout_marginTop="30dp"
-        android:layout_marginBottom="30dp"
-        android:layout_gravity="center_horizontal"
-        />
+        app:pv_progressStyle="@style/Material.Drawable.CircularProgress" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Receiving data from server.\nPlease be patient."
-        android:gravity="center_horizontal"
-        android:layout_marginTop="@dimen/activity_vertical_margin"
         android:layout_marginBottom="@dimen/activity_vertical_margin"
-        />
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:gravity="center_horizontal"
+        android:text="Receiving data from server.\nPlease be patient." />
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="#202020"
         android:layout_marginTop="20dp"
-        />
+        android:background="#202020" />
 </LinearLayout>

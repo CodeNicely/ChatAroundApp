@@ -1,10 +1,18 @@
 package com.fame.plumbum.chataround.restroom.view;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentSender;
+import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,13 +27,22 @@ import android.widget.Toast;
 
 import com.fame.plumbum.chataround.R;
 import com.fame.plumbum.chataround.helper.SharedPrefs;
+import com.fame.plumbum.chataround.image_upload.model.data.AddRestroomData;
+import com.fame.plumbum.chataround.image_upload.view.AddRestroomView;
 import com.fame.plumbum.chataround.image_upload.view.UploadImageActivity;
 import com.fame.plumbum.chataround.restroom.model.RestRoomDetails;
 import com.fame.plumbum.chataround.restroom.presenter.RestRoomPresenter;
 import com.fame.plumbum.chataround.restroom.presenter.RestRoomPresenterImpl;
 import com.fame.plumbum.chataround.restroom.provider.RetrofitRestRoomProvider;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -38,13 +55,26 @@ import butterknife.ButterKnife;
  * Use the {@link RestroomFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class RestroomFragment extends Fragment implements RestRoomView {
+public class RestroomFragment extends Fragment implements
+        RestRoomView,
+        AddRestroomView,
+        GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener,
+        LocationListener {
+
+
     // TODO: Rename parameter arguments, choose names that match
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private static final String TAG = "RestroomFragment";
 
+    private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
+    private GoogleApiClient mGoogleApiClient;
+    private LocationRequest mLocationRequest;
+
+    private double latitude;
+    private double longitude;
 
     private static View view;
     private RestRoomPresenter restRoomPresenter;
@@ -119,7 +149,25 @@ public class RestroomFragment extends Fragment implements RestRoomView {
 
         ButterKnife.bind(this, view);
         context = getContext();
-        restroomAdapter = new RestroomAdapter(getContext());
+        restroomAdapter = new RestroomAdapter(context);
+
+
+        mGoogleApiClient = new GoogleApiClient.Builder(context)
+                // The next two lines tell the new client that “this” current class will handle connection stuff
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                //fourth line adds the LocationServices API endpoint from GooglePlayServices
+                .addApi(LocationServices.API)
+                .build();
+
+        // Create the LocationRequest object
+        mLocationRequest = LocationRequest.create()
+                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+                .setInterval(10 * 1000)        // 10 seconds, in milliseconds
+                .setFastestInterval(1 * 1000); // 1 second, in milliseconds
+
+        mGoogleApiClient.connect();
+
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
         recyclerView.setLayoutManager(linearLayoutManager);
@@ -128,18 +176,18 @@ public class RestroomFragment extends Fragment implements RestRoomView {
         sharedPrefs = new SharedPrefs(context);
 
         restRoomPresenter = new RestRoomPresenterImpl(this, new RetrofitRestRoomProvider());
-        restRoomPresenter.requestRestRooms(sharedPrefs.getUserId(), 12.12, 13.12);
 
         addRestroom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(getActivity(), UploadImageActivity.class);
+                Intent intent = new Intent(getActivity(), UploadImageActivity.class);
                 startActivity(intent);
             }
         });
 
         return view;
     }
+
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -188,6 +236,11 @@ public class RestroomFragment extends Fragment implements RestRoomView {
     }
 
     @Override
+    public void onRestroomAdded(AddRestroomData addRestroomData) {
+
+    }
+
+    @Override
     public void onReceived(List<RestRoomDetails> restRoomDetailsList) {
 
         Log.d("Data Received", String.valueOf(restRoomDetailsList.size()));
@@ -195,6 +248,87 @@ public class RestroomFragment extends Fragment implements RestRoomView {
         restroomAdapter.notifyDataSetChanged();
 
 
+    }
+
+    /**
+     * If connected get lat and long
+     */
+    @Override
+    public void onConnected(Bundle bundle) {
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+
+        if (location == null) {
+            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+
+        } else {
+            //If everything went fine lets get latitude and longitude
+            latitude = location.getLatitude();
+            longitude = location.getLongitude();
+
+            restRoomPresenter.requestRestRooms(sharedPrefs.getUserId(), latitude, longitude);
+
+            Toast.makeText(context, latitude + " WORKS " + longitude + "", Toast.LENGTH_LONG).show();
+        }
+    }
+
+
+    @Override
+    public void onConnectionSuspended(int i) {
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+            /*
+             * Google Play services can resolve some errors it detects.
+             * If the error has a resolution, try sending an Intent to
+             * start a Google Play services activity that can resolve
+             * error.
+             */
+        if (connectionResult.hasResolution()) {
+            try {
+                // Start an Activity that tries to resolve the error
+                connectionResult.startResolutionForResult(getActivity(), CONNECTION_FAILURE_RESOLUTION_REQUEST);
+                    /*
+                     * Thrown if Google Play services canceled the original
+                     * PendingIntent
+                     */
+            } catch (IntentSender.SendIntentException e) {
+                // Log the error
+                e.printStackTrace();
+            }
+        } else {
+                /*
+                 * If no resolution is available, display a dialog to the
+                 * user with the error.
+                 */
+            Log.e("Error", "Location services connection failed with code " + connectionResult.getErrorCode());
+        }
+    }
+
+    /**
+     * If locationChanges change lat and long
+     *
+     * @param location
+     */
+    @Override
+    public void onLocationChanged(Location location) {
+        latitude = location.getLatitude();
+        longitude = location.getLongitude();
+
+        restRoomPresenter.requestRestRooms(sharedPrefs.getUserId(), latitude, longitude);
+
+
+        Toast.makeText(context, latitude + " WORKS " + longitude + "", Toast.LENGTH_LONG).show();
     }
 
 

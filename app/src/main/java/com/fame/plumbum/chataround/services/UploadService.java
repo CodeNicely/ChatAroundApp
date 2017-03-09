@@ -47,7 +47,7 @@ public class UploadService extends Service {
     private static final int NOTIFICATION_ID = 1;
     private FileUploader fileUploader;
     private SharedPrefs sharedPrefs;
-    private String orderId;
+    private String restroomId;
 
     @Nullable
     @Override
@@ -61,14 +61,15 @@ public class UploadService extends Service {
         EventBus.getDefault().register(this);
         sharedPrefs = new SharedPrefs(this);
         fileUploader = new RetrofitFileUploader();
+
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
 
-        orderId = intent.getExtras().getString(Keys.KEY_ORDER_ID);
-/*        if (intent.hasExtra("imageData")) {
+        restroomId = intent.getExtras().getString(Keys.KEY_RESTROOM_ID);
+        /*        if (intent.hasExtra("imageData")) {
 
             String json = intent.getExtras().getString("imageData");
 
@@ -120,7 +121,7 @@ public class UploadService extends Service {
     private void uploadImage(final ImageData imageData) {
 
         fileUploader.uploadImage(sharedPrefs.getUserId(),
-                orderId, new File(imageData.getFile())
+                restroomId, new File(imageData.getFile())
                 , new UploadCallback() {
 
                     @Override
@@ -128,12 +129,14 @@ public class UploadService extends Service {
 
                         if (fileUploadData.isSuccess()) {
                             Log.i(TAG, "Image Uploaded");
+
                             startForeground(NOTIFICATION_ID, showNotification());
-                            showMessage(" Image Uploaded " + imageData.getFile());
                             UploadImages = false;
                             uploadImages();
                         } else {
-                            showMessage("Image uploading Failed " + fileUploadData.getMessage());
+                            showMessage("Restroom uploading Failed " + fileUploadData.getMessage()+
+                            ". Please try again");
+
                         }
 
                     }
@@ -215,8 +218,8 @@ public class UploadService extends Service {
 
         mNotifyManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         mBuilder = new NotificationCompat.Builder(this);
-        mBuilder.setContentTitle("Image Upload Complete")
-                .setContentText("The image is uploaded successfully")
+        mBuilder.setContentTitle("Restroom Added Successfully")
+                .setContentText("Restroom has been added successfully by you and now we are waiting for Verification Process. It will be accepted within 48 hours")
                 .setSmallIcon(R.drawable.ic_file_upload_white).setOngoing(false);
 // Start a lengthy operation in a background thread
    /*     new Thread(
@@ -267,6 +270,8 @@ public class UploadService extends Service {
 
     @Subscribe
     public void onImageUploadEvent(ImageEvent imageEvent) {
+
+        Toast.makeText(this, "Event Bus called in Service", Toast.LENGTH_SHORT).show();
         ImageData imageData = new ImageData(imageEvent.getFile());
         myQueue.add(imageData);
         uploadImages();

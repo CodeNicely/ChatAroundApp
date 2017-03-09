@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    >
+    android:fitsSystemWindows="true">
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <android.support.design.widget.AppBarLayout
             android:id="@+id/app_Bar"
             android:layout_width="match_parent"
@@ -24,10 +24,10 @@
 
         </android.support.design.widget.AppBarLayout>
 
-        <include layout="@layout/content_main_user"
+        <include
+            layout="@layout/content_main_user"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/app_Bar"
-            />
+            android:layout_below="@+id/app_Bar" />
     </RelativeLayout>
 </android.support.design.widget.CoordinatorLayout>
