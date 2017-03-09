@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -24,6 +25,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -124,6 +127,15 @@ public class UploadImageActivity extends Activity implements
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
+
+    @BindView(R.id.nestedScrollView)
+    NestedScrollView nestedScrollView;
+
+    @BindView(R.id.submitLayout)
+    LinearLayout submitLayout;
+
+    @BindView(R.id.progressBar)
+    ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -590,6 +602,7 @@ public class UploadImageActivity extends Activity implements
                     addressTextView.setText(address);
 
                 }
+                showRestroomAddLayout(true);
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -599,6 +612,21 @@ public class UploadImageActivity extends Activity implements
         }
     }
 
+    void showRestroomAddLayout(boolean show){
+        if(show){
+
+            nestedScrollView.setVisibility(View.VISIBLE);
+            submitLayout.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.GONE);
+
+        }else{
+            nestedScrollView.setVisibility(View.GONE);
+            submitLayout.setVisibility(View.GONE);
+            progressBar.setVisibility(View.VISIBLE);
+
+        }
+
+    }
 
     @Override
     public void onConnectionSuspended(int i) {
@@ -673,6 +701,7 @@ public class UploadImageActivity extends Activity implements
 
             }
 
+            showRestroomAddLayout(true);
 
         } catch (IOException e) {
             e.printStackTrace();

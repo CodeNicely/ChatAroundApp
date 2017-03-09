@@ -8,11 +8,44 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingBottom="4dp">
-
-        <ListView
-            android:id="@+id/world_tweets_list"
+<!--
+        <android.support.v4.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:nestedScrollingEnabled="true"
+            >-->
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+
+                >
+
+                <Button
+
+                    style="@style/Widget.AppCompat.Button.Colored"
+                    android:id="@+id/shout"
+                    android:textColor="@color/black"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/shout"
+                    android:focusableInTouchMode="true"
+
+                    />
+
+                <ListView
+                    android:id="@+id/world_tweets_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+
+
+                    />
+
+
+            </LinearLayout>
+
+
     </android.support.v4.widget.SwipeRefreshLayout>
 
     <TextView

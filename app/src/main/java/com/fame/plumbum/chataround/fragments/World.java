@@ -21,6 +21,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * Created by pankaj on 22/7/16.
  */
@@ -31,6 +34,10 @@ public class World extends Fragment implements SwipeRefreshLayout.OnRefreshListe
     ListView listView;
     JSONArray[] currentListOfPost;
     MainActivity activity;
+
+    @BindView(R.id.shout)
+    Button shout;
+
     public SwipeRefreshLayout swipeRefreshLayout;
     public double lat, lng;
 
@@ -67,7 +74,11 @@ public class World extends Fragment implements SwipeRefreshLayout.OnRefreshListe
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
         rootView = inflater.inflate(R.layout.frag_world, container, false);
+
+        ButterKnife.bind(this,rootView);
+
         listView = (ListView) rootView.findViewById(R.id.world_tweets_list);
 
         swipeRefreshLayout = (SwipeRefreshLayout)rootView.findViewById(R.id.swipe);
@@ -80,8 +91,19 @@ public class World extends Fragment implements SwipeRefreshLayout.OnRefreshListe
                                     }
                                 }
         );
+
+        shout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(getContext() instanceof MainActivity){
+                    ((MainActivity)getContext()).actionShout();
+                }
+            }
+        });
+
         return rootView;
     }
+
 
     public void getAllPosts(String response, int count) {
         try {

@@ -288,83 +288,70 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
 
-        this.menu = menu;
-        getMenuInflater().inflate(R.menu.main_inside, menu);
+    public void actionShout(){
 
-        return super.onCreateOptionsMenu(menu);
+        final Dialog dialog = new Dialog(MainActivity.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.dialog_create_post);
+        final EditText content = (EditText) dialog.findViewById(R.id.post_content);
+        final TextView mTextView = (TextView) dialog.findViewById(R.id.num_chars);
+        final TextWatcher mTextEditorWatcher = new TextWatcher() {
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                //This sets a textview to the current length
+                mTextView.setText(String.valueOf(140 - s.length()) + "/140");
+            }
+
+            public void afterTextChanged(Editable s) {
+            }
+        };
+        content.addTextChangedListener(mTextEditorWatcher);
+
+
+        Button create_post = (Button) dialog.findViewById(R.id.post_button);
+        create_post.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Toast.makeText(MainActivity.this, Urls.BASE_URL + "Post?UserId=" + profile.uid + "&UserName=" + profile.name.replace(" ", "%20") + "&Post=Hello&Latitude=" + lat + "&Longitude=" + lng, Toast.LENGTH_SHORT).show();
+                Log.d(TAG, Urls.BASE_URL + "Post?UserId=" + profile.uid + "&UserName=" + profile.name + "&Post=Hello&Latitude=" + lat + "&Longitude=" + lng);
+                String content_txt = content.getText().toString();
+                if (lat != 0 && lng != 0) {
+                    RequestQueue queue = MySingleton.getInstance(MainActivity.this.getApplicationContext()).
+                            getRequestQueue();
+                    content_txt = content_txt.replace("\n", "%0A");
+                    StringRequest stringRequest = new StringRequest(Request.Method.GET, Urls.BASE_URL + "Post?UserId=" + profile.uid + "&UserName=" + profile.name.replace(" ", "%20") + "&Post=" + content_txt.replace(" ", "%20") + "&Latitude=" + lat + "&Longitude=" + lng,
+                            new Response.Listener<String>() {
+                                public static final String TAG = "MainActivity";
+
+                                @Override
+                                public void onResponse(String response) {
+                                    Log.d(TAG, "Response " + response);
+                                    needSomethingTweet = true;
+
+                                }
+                            }, new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            error.printStackTrace();
+                            Toast.makeText(MainActivity.this, "Error sending data!", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                    stringRequest.setRetryPolicy(new DefaultRetryPolicy(5000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+                    MySingleton.getInstance(MainActivity.this).addToRequestQueue(stringRequest);
+                } else {
+                    Toast.makeText(MainActivity.this, "Location Error", Toast.LENGTH_SHORT).show();
+                }
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
+
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == R.id.action_shout) {
-            final Dialog dialog = new Dialog(MainActivity.this);
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            dialog.setContentView(R.layout.dialog_create_post);
-            final EditText content = (EditText) dialog.findViewById(R.id.post_content);
-            final TextView mTextView = (TextView) dialog.findViewById(R.id.num_chars);
-            final TextWatcher mTextEditorWatcher = new TextWatcher() {
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                }
-
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    //This sets a textview to the current length
-                    mTextView.setText(String.valueOf(140 - s.length()) + "/140");
-                }
-
-                public void afterTextChanged(Editable s) {
-                }
-            };
-            content.addTextChangedListener(mTextEditorWatcher);
-
-
-            Button create_post = (Button) dialog.findViewById(R.id.post_button);
-            create_post.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    Toast.makeText(MainActivity.this, Urls.BASE_URL + "Post?UserId=" + profile.uid + "&UserName=" + profile.name.replace(" ", "%20") + "&Post=Hello&Latitude=" + lat + "&Longitude=" + lng, Toast.LENGTH_SHORT).show();
-                    Log.d(TAG, Urls.BASE_URL + "Post?UserId=" + profile.uid + "&UserName=" + profile.name + "&Post=Hello&Latitude=" + lat + "&Longitude=" + lng);
-                    String content_txt = content.getText().toString();
-                    if (lat != 0 && lng != 0) {
-                        RequestQueue queue = MySingleton.getInstance(MainActivity.this.getApplicationContext()).
-                                getRequestQueue();
-                        content_txt = content_txt.replace("\n", "%0A");
-                        StringRequest stringRequest = new StringRequest(Request.Method.GET, Urls.BASE_URL + "Post?UserId=" + profile.uid + "&UserName=" + profile.name.replace(" ", "%20") + "&Post=" + content_txt.replace(" ", "%20") + "&Latitude=" + lat + "&Longitude=" + lng,
-                                new Response.Listener<String>() {
-                                    public static final String TAG = "MainActivity";
-
-                                    @Override
-                                    public void onResponse(String response) {
-                                        Log.d(TAG, "Response " + response);
-                                        needSomethingTweet = true;
-
-                                    }
-                                }, new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                error.printStackTrace();
-                                Toast.makeText(MainActivity.this, "Error sending data!", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                        stringRequest.setRetryPolicy(new DefaultRetryPolicy(5000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-                        MySingleton.getInstance(MainActivity.this).addToRequestQueue(stringRequest);
-                    } else {
-                        Toast.makeText(MainActivity.this, "Location Error", Toast.LENGTH_SHORT).show();
-                    }
-                    dialog.dismiss();
-                }
-            });
-            dialog.show();
-        } else {
-            finish();
-        }
-        return super.onOptionsItemSelected(item);
-    }
 
     @Override
     protected void onResume() {
