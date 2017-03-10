@@ -9,14 +9,16 @@ public class NewsListDataDetails {
     private String image;
     private String title;
     private String body;
+    private String body_small;
     private String source;
     private String author;
 
-    public NewsListDataDetails(String published_at, String image, String title, String body, String source, String author) {
+    public NewsListDataDetails(String published_at, String image, String title, String body, String body_small, String source, String author) {
         this.published_at = published_at;
         this.image = image;
         this.title = title;
         this.body = body;
+        this.body_small = body_small;
         this.source = source;
         this.author = author;
     }
@@ -67,5 +69,13 @@ public class NewsListDataDetails {
 
     public void setAuthor(String author) {
         this.author = author;
+    }
+
+    public String getBody_small() {
+        return body_small;
+    }
+
+    public void setBody_small(String body_small) {
+        this.body_small = body_small;
     }
 }

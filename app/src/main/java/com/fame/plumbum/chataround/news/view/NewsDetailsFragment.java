@@ -8,10 +8,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.fame.plumbum.chataround.R;
+import com.fame.plumbum.chataround.activity.MainActivity;
 import com.fame.plumbum.chataround.helper.SharedPrefs;
+import com.fame.plumbum.chataround.helper.image_loader.ImageLoader;
 import com.fame.plumbum.chataround.news.presenter.NewsListPresenter;
 
 import butterknife.BindView;
@@ -26,6 +30,28 @@ import butterknife.ButterKnife;
  * create an instance of this fragment.
  */
 public class NewsDetailsFragment extends Fragment {
+    @BindView(R.id.timestamp)
+    TextView news_timestamp;
+    @BindView(R.id.NewsDescription)
+    TextView news_description;
+    @BindView(R.id.newSource)
+    TextView news_source;
+    @BindView(R.id.newsImage)
+    ImageView news_image;
+    @BindView(R.id.newsAuthor)
+    TextView news_author;
+    @BindView(R.id.newsTitle)
+    TextView news_title;
+    @BindView(R.id.imageProgressBar)
+    ProgressBar imageProgressBar;
+    private ImageLoader imageLoader;
+    private MainActivity mainActivity;
+    private String author;
+    private String timestamp;
+    private String image_url;
+    private String title;
+    private String source;
+    private String description;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -74,6 +100,8 @@ public class NewsDetailsFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view= inflater.inflate(R.layout.fragment_news_details, container, false);
+        title=getArguments().getString("newsSource");
+        author=getArguments().getString("newsAuthor");
 
         return view;
     }

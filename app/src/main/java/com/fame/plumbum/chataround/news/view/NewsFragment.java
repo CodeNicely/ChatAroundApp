@@ -104,6 +104,7 @@ public class NewsFragment extends Fragment implements NewsPageView {
         newsListPresenter=new NewsListPresenterImpl(this,new RetrofitNewsListProvider());
         sharedPrefs=new SharedPrefs(getContext());
         LinearLayoutManager linearLayoutManager=new LinearLayoutManager(getContext());
+        newsListAdapter=new NewsListAdapter(getContext(),this);
         recyclerview.setLayoutManager(linearLayoutManager);
         recyclerview.setHasFixedSize(true);
         recyclerview.setAdapter(newsListAdapter);
@@ -164,6 +165,7 @@ public class NewsFragment extends Fragment implements NewsPageView {
         newsListAdapter.setNewsListDataDetailsList(newsListDataList);
         newsListAdapter.notifyDataSetChanged();
     }
+
 
     /**
      * This interface must be implemented by activities that contain this

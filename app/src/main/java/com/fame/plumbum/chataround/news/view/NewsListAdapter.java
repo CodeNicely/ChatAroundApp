@@ -1,6 +1,7 @@
 package com.fame.plumbum.chataround.news.view;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -54,19 +55,26 @@ public class NewsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         newsListDataDetails=newsListDataDetailsList.get(position);
         final NewsViewHolder newsViewHolder=(NewsViewHolder)holder;
         newsViewHolder.newsTitle.setText(newsListDataDetails.getTitle());
-        if(newsListDataDetails.getImage()!=null)
+        /*if(newsListDataDetails.getImage()!=null)
         {
             newsViewHolder.news_relative_image_layout.setVisibility(View.VISIBLE);
             imageLoader.loadImage(newsListDataDetails.getImage(),newsViewHolder.newsImage,newsViewHolder.imageProgressBar);
-        }
+        }*/
         newsViewHolder.news_published_timestamp.setText(newsListDataDetails.getPublished_at());
         newsViewHolder.newsAuthor.setText(newsListDataDetails.getAuthor());
-        newsViewHolder.newsDescription.setText(newsListDataDetails.getBody());
         newsViewHolder.newsSource.setText(newsListDataDetails.getSource());
-        newsViewHolder.product_card.setOnClickListener(new View.OnClickListener() {
+        newsViewHolder.news_card.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                NewsDetailsFragment newsDetailsFragment= new NewsDetailsFragment();
+                Bundle bundle = new Bundle();
+                bundle.putString("newsTitle",newsListDataDetails.getTitle());
+                bundle.putString("image",newsListDataDetails.getImage());
+                bundle.putString("newsSource",newsListDataDetails.getSource());
+                bundle.putString("newsDescription",newsListDataDetails.getBody());
+                bundle.putString("newsAuthor",newsListDataDetails.getAuthor());
+                bundle.putString("newstimestamp",newsListDataDetails.getPublished_at());
+                newsDetailsFragment.setArguments(bundle);
             }
         });
 
@@ -81,24 +89,19 @@ public class NewsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         this.newsListDataDetailsList = newsListDataDetailsList;
     }
     public class NewsViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.newsImage)
-        ImageView newsImage;
         @BindView(R.id.newsTitle)
         TextView newsTitle;
         @BindView(R.id.newsAuthor)
         TextView newsAuthor;
         @BindView(R.id.newSource)
         TextView newsSource;
-        @BindView(R.id.NewsDescription)
+        @BindView(R.id.NewsSmallDescription)
         TextView newsDescription;
         @BindView(R.id.timestamp)
         TextView news_published_timestamp;
-        @BindView(R.id.imageProgressBar)
-        ProgressBar imageProgressBar;
         @BindView(R.id.news_card)
-        CardView product_card;
-        @BindView(R.id.newsLayout)
-        RelativeLayout news_relative_image_layout;
+        CardView news_card;
+
         public NewsViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this,itemView);
