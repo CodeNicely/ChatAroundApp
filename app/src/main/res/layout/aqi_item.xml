@@ -42,6 +42,8 @@
         android:id="@+id/seek_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:thumb="@drawable/oval_thumb"
+        android:splitTrack="false"
         />
 
 </RelativeLayout>
