@@ -36,5 +36,13 @@
         app:cv_titleColor="@color/black"
         app:cv_titleSize="18dp"
         app:cv_titleText="title" />
+
+    <SeekBar
+        android:layout_below="@id/circleView"
+        android:id="@+id/seek_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
+
 </RelativeLayout>
 

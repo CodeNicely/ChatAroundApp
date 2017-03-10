@@ -1,14 +1,19 @@
 package com.fame.plumbum.chataround.pollution.view;
 
 import android.content.Context;
+import android.graphics.LinearGradient;
+import android.graphics.Shader;
+import android.graphics.drawable.PaintDrawable;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.RectShape;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.fame.plumbum.chataround.R;
 import com.fame.plumbum.chataround.pollution.model.air_model.AirPollutionIndividualValue;
@@ -75,6 +80,41 @@ public class PollutuionAqiAdapter extends RecyclerView.Adapter<RecyclerView.View
             individualAqiViewHolder.circleView.setBackgroundColor(value.getColor());
             individualAqiViewHolder.title.setBackgroundColor(value.getColor());
 
+
+            individualAqiViewHolder.discreteSeekBar.setMax(500);
+            individualAqiViewHolder.discreteSeekBar.setProgress((int) value.getV());
+
+            ShapeDrawable.ShaderFactory shaderFactory = new ShapeDrawable.ShaderFactory() {
+                @Override
+                public Shader resize(int width, int height) {
+                    LinearGradient linearGradient = new LinearGradient(0, 0, width, height,
+                            new int[]{
+                                    0xBB00E400, 0xBBFFFF00, 0xBBFF7E00, 0xBBFF0000,
+                                    0xBB8F3F97, 0xBB7E0023
+                    }, //substitute the correct colors for these
+                            new float[]{
+                                    0,0.20f, 0.40f, 0.60f,0.80f, 1},
+                            Shader.TileMode.REPEAT);
+                    return linearGradient;
+                }
+            };
+            PaintDrawable paint = new PaintDrawable();
+            paint.setShape(new RectShape());
+            paint.setShaderFactory(shaderFactory);
+/*
+
+            LinearGradient test = new LinearGradient(100.f, 100.f, 300.f, 0.0f,
+
+                    new int[] { R.color.good, R.color.moderate, R.color.sensitive,R.color.unhealthy,
+                            R.color.very_unhealthy, R.color.hazardous},
+                    null, Shader.TileMode.CLAMP);
+            ShapeDrawable shape = new ShapeDrawable(new RectShape());
+            shape.getPaint().setShader(test);
+*/
+
+            individualAqiViewHolder.discreteSeekBar.setProgressDrawable(paint);
+
+
         } else {
             individualAqiViewHolder.circleView.setTitleText("NA");
             individualAqiViewHolder.title.setText(value.getName());
@@ -101,6 +141,9 @@ public class PollutuionAqiAdapter extends RecyclerView.Adapter<RecyclerView.View
         CircleView circleView;
         @BindView(R.id.title)
         TextView title;
+
+        @BindView(R.id.seek_bar)
+        SeekBar discreteSeekBar;
 
         public IndividualAqiViewHolder(View itemView) {
             super(itemView);
