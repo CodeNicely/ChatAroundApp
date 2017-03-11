@@ -16,7 +16,6 @@ import android.widget.Toast;
 import com.fame.plumbum.chataround.R;
 import com.fame.plumbum.chataround.helper.SharedPrefs;
 import com.fame.plumbum.chataround.news.model.RetrofitNewsListProvider;
-import com.fame.plumbum.chataround.news.model.data.NewsListData;
 import com.fame.plumbum.chataround.news.model.data.NewsListDataDetails;
 import com.fame.plumbum.chataround.news.presenter.NewsListPresenter;
 import com.fame.plumbum.chataround.news.presenter.NewsListPresenterImpl;
@@ -96,18 +95,19 @@ public class NewsFragment extends Fragment implements NewsPageView {
         View view = inflater.inflate(R.layout.fragment_news, container, false);
         ButterKnife.bind(this, view);
         initialise();
-        newsListPresenter.getNews(sharedPrefs.getUserId(),"Raipur");
+        newsListPresenter.getNews(sharedPrefs.getUserId(), "Raipur");
         return view;
 
     }
+
     private void initialise() {
-        newsListPresenter=new NewsListPresenterImpl(this,new RetrofitNewsListProvider());
-        sharedPrefs=new SharedPrefs(getContext());
-        LinearLayoutManager linearLayoutManager=new LinearLayoutManager(getContext());
-        newsListAdapter=new NewsListAdapter(getContext(),this);
+        newsListPresenter = new NewsListPresenterImpl(this, new RetrofitNewsListProvider());
+        sharedPrefs = new SharedPrefs(getContext());
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        newsListAdapter = new NewsListAdapter(getContext(), this);
         recyclerview.setLayoutManager(linearLayoutManager);
         recyclerview.setHasFixedSize(true);
-        newsListAdapter=new NewsListAdapter(getContext(),this);
+        newsListAdapter = new NewsListAdapter(getContext(), this);
         recyclerview.setAdapter(newsListAdapter);
 
 
@@ -134,13 +134,10 @@ public class NewsFragment extends Fragment implements NewsPageView {
 
     @Override
     public void showProgressBar(boolean show) {
-        if(show)
-        {
+        if (show) {
             progressBar.setVisibility(View.VISIBLE);
             recyclerview.setVisibility(View.GONE);
-        }
-        else
-        {
+        } else {
             progressBar.setVisibility(View.INVISIBLE);
             recyclerview.setVisibility(View.VISIBLE);
         }
@@ -149,13 +146,12 @@ public class NewsFragment extends Fragment implements NewsPageView {
 
     @Override
     public void showMessage(String message) {
-        Toast.makeText(getContext(),message,Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void setNewsList(List<NewsListDataDetails> newsListDataList) {
-        if(newsListDataList.size()==0)
-        {
+        if (newsListDataList.size() == 0) {
             linearLayout.setVisibility(View.VISIBLE);
             recyclerview.setVisibility(View.INVISIBLE);
         } else {
@@ -182,4 +178,5 @@ public class NewsFragment extends Fragment implements NewsPageView {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+
 }

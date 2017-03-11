@@ -4,26 +4,42 @@
     android:id="@+id/news_card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="0.5dp"
+    android:layout_margin="4dp"
     android:clickable="true"
-    app:cardCornerRadius="1dp"
-    app:contentPadding="@dimen/padding_small">
+    app:cardCornerRadius="2dp"
+    app:contentPadding="@dimen/padding_medium">
 
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
+        <RelativeLayout
+            android:id="@+id/imageLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/image"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true" />
+        </RelativeLayout>
+
         <TextView
             android:id="@+id/newsTitle"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/newsLayout"
+            android:layout_below="@id/imageLayout"
             android:layout_centerHorizontal="true"
-            android:minHeight="40dp"
-            android:padding="@dimen/padding_small"
-            android:text="Title"
+            android:layout_margin="4dp"
+            android:padding="4dp"
             android:textColor="@color/colorPrimaryDark"
-            android:textSize="@dimen/textSizeExtraSmall" />
+            android:textSize="20dp" />
 
         <LinearLayout
             android:id="@+id/news_layout"
@@ -32,50 +48,58 @@
             android:layout_below="@+id/newsTitle"
             android:layout_centerHorizontal="true"
             android:orientation="horizontal"
-            android:weightSum="3">
+            android:weightSum="2">
+
+
+            <TextView
+                android:id="@+id/newsAuthor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:layout_weight="1"
+                android:padding="4dp"
+                android:textColor="#424242"
+                android:textSize="@dimen/textSizeExtraSmall" />
+
 
             <TextView
                 android:id="@+id/timestamp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:gravity="start"
-                android:text="adfs"
-                android:textColor="@color/colorAccent"
-                android:textSize="@dimen/textSizeExtraSmall"
-                />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="dfsdf"
-                android:id="@+id/newsAuthor"
+                android:layout_margin="4dp"
                 android:layout_weight="1"
-                android:textColor="@color/colorAccent"
-                android:textSize="@dimen/textSizeExtraSmall"
-                android:gravity="end"/>
-            </LinearLayout>
-            <TextView
-                android:id="@+id/NewsSmallDescription"
-                android:text="sfgsfththhrhyhhhyhr"
-                android:layout_below="@+id/news_layout"
-                android:layout_width="wrap_content"
-                android:layout_height="200dp"
-                android:layout_gravity="center"
-                android:layout_centerHorizontal="true"
-                android:layout_margin="12dp"
-                android:padding="@dimen/padding_small"
-                android:gravity="center"
-                android:textColor="@color/colorAccent"
-                android:textSize="@dimen/textSizeExtraSmall" />
+                android:gravity="end"
+                android:padding="4dp"
+                android:textColor="#424242"
+
+                />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/NewsSmallDescription"
+            android:layout_width="wrap_content"
+            android:layout_height="200dp"
+            android:layout_below="@+id/news_layout"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center"
+            android:layout_margin="12dp"
+            android:gravity="center"
+            android:padding="@dimen/padding_small"
+            android:text="Description"
+            android:textColor="@color/colorAccent"
+            android:textSize="@dimen/textSizeExtraSmall"
+            android:visibility="gone" />
+
         <TextView
             android:id="@+id/newSource"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/NewsSmallDescription"
-            android:textSize="@dimen/textSizeExtraSmall"
-            android:textColor="@color/colorAccent"
-            android:text="adfjdff"
-            android:gravity="start"/>
+            android:layout_margin="2dp"
+            android:gravity="center"
+            android:padding="2dp"
+            android:textColor="#877409"
+            android:textSize="@dimen/textSizeExtraSmall" />
     </RelativeLayout>
 
 </android.support.v7.widget.CardView>

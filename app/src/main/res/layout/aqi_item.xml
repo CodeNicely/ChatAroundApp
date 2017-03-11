@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_margin="4dp"
+    android:padding="4dp">
 
     <TextView
         android:id="@+id/title"
@@ -14,7 +15,8 @@
         android:layout_margin="30dp"
         android:background="@color/colorAccent"
         android:gravity="center"
-        android:text="Hello World">
+        android:text="Hello World"
+        android:visibility="gone">
 
 
     </TextView>
@@ -27,6 +29,7 @@
         android:layout_gravity="end"
         android:layout_margin="12dp"
         android:elevation="10dp"
+        android:visibility="gone"
         app:cv_backgroundColorValue="@color/black"
         app:cv_fillColor="@color/colorAccent"
         app:cv_fillRadius="1"
@@ -38,13 +41,24 @@
         app:cv_titleText="title" />
 
     <SeekBar
-        android:layout_below="@id/circleView"
         android:id="@+id/seek_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:thumb="@drawable/oval_thumb"
+        android:layout_below="@id/circleView"
+        android:layout_margin="8dp"
+        android:padding="8dp"
         android:splitTrack="false"
-        />
+        android:thumb="@drawable/oval_thumb" />
 
+    <TextView
+        android:id="@+id/aqi"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/seek_bar"
+        android:layout_margin="4dp"
+        android:gravity="center"
+        android:padding="4dp"
+        android:textColor="@color/black"
+        android:textSize="16dp" />
 </RelativeLayout>
 

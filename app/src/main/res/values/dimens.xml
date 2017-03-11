@@ -13,4 +13,5 @@
     <dimen name="text_size_large">24dp</dimen>
     <dimen name="padding_small">2dp</dimen>
     <dimen name="textSizeExtraSmall">12dp</dimen>
+    <dimen name="padding_medium">4dp</dimen>
 </resources>
