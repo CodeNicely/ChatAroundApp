@@ -15,6 +15,7 @@
 
         <RelativeLayout
             android:id="@+id/imageLayout"
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -32,6 +33,7 @@
 
         <TextView
             android:id="@+id/newsTitle"
+            android:text="title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/imageLayout"
@@ -58,6 +60,7 @@
                 android:layout_margin="4dp"
                 android:layout_weight="1"
                 android:padding="4dp"
+                android:text="News Author"
                 android:textColor="#424242"
                 android:textSize="@dimen/textSizeExtraSmall" />
 
@@ -68,6 +71,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="4dp"
                 android:layout_weight="1"
+                android:text="News Timestamp"
                 android:gravity="end"
                 android:padding="4dp"
                 android:textColor="#424242"
@@ -97,6 +101,7 @@
             android:layout_below="@+id/NewsSmallDescription"
             android:layout_margin="2dp"
             android:gravity="center"
+            android:text="News Source"
             android:padding="2dp"
             android:textColor="#877409"
             android:textSize="@dimen/textSizeExtraSmall" />

@@ -44,6 +44,7 @@ import com.fame.plumbum.chataround.fragments.World;
 import com.fame.plumbum.chataround.helper.Keys;
 import com.fame.plumbum.chataround.helper.Urls;
 import com.fame.plumbum.chataround.image_viewer.ImageViewerActivity;
+import com.fame.plumbum.chataround.news.view.NewsDetailsFragment;
 import com.fame.plumbum.chataround.news.view.NewsFragment;
 import com.fame.plumbum.chataround.pollution.view.PollutionFragment;
 import com.fame.plumbum.chataround.restroom.view.RestroomFragment;
@@ -439,6 +440,33 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra(Keys.KEY_POSITION_IMAGE, position);
         startActivity(intent);
     }
+    public void openNewsDetails(String newsTitle, String image,String newsSource,
+                                String newsDescription,String newsAuthor,String newsTimestamp)
+    {
+        NewsDetailsFragment newsDetailsFragment = new NewsDetailsFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("newsTitle", newsTitle);
+        bundle.putString("image", image);
+        bundle.putString("newsSource", newsSource);
+        bundle.putString("newsDescription", newsDescription);
+        bundle.putString("newsAuthor", newsAuthor);
+        bundle.putString("newsTimestamp", newsTimestamp);
+        newsDetailsFragment.setArguments(bundle);
+        addFragment(newsDetailsFragment,"News Details");
+
+    }
+    public void addFragment(Fragment fragment, String title) {
+        if (fragment != null) {
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.container_body, fragment);
+            fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.commit();
+            //     getSupportActionBar().setTitle(title);
+        }
+
+    }
+
 
 
 }

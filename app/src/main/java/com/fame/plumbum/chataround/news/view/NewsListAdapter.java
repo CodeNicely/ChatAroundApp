@@ -55,14 +55,14 @@ public class NewsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         final NewsViewHolder newsViewHolder = (NewsViewHolder) holder;
 
         newsViewHolder.newsTitle.setText(newsListDataDetails.getTitle());
-        if (newsListDataDetails.getImage() != null) {
+       /* if (newsListDataDetails.getImage() != null) {
 
             newsViewHolder.imageView.setVisibility(View.VISIBLE);
             imageLoader.loadImage(newsListDataDetails.getImage(), newsViewHolder.imageView, newsViewHolder.progressBar);
         } else {
             newsViewHolder.imageView.setVisibility(View.GONE);
             newsViewHolder.progressBar.setVisibility(View.GONE);
-        }
+        }*/
 
         if (newsListDataDetails.getSource() == null) {
             newsViewHolder.newsSource.setVisibility(View.GONE);
@@ -88,15 +88,7 @@ public class NewsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             @Override
             public void onClick(View view) {
 
-                NewsDetailsFragment newsDetailsFragment = new NewsDetailsFragment();
-                Bundle bundle = new Bundle();
-                bundle.putString("newsTitle", newsListDataDetails.getTitle());
-                bundle.putString("image", newsListDataDetails.getImage());
-                bundle.putString("newsSource", newsListDataDetails.getSource());
-                bundle.putString("newsDescription", newsListDataDetails.getBody());
-                bundle.putString("newsAuthor", newsListDataDetails.getAuthor());
-                bundle.putString("newstimestamp", newsListDataDetails.getPublished_at());
-                newsDetailsFragment.setArguments(bundle);
+
 
 
             }

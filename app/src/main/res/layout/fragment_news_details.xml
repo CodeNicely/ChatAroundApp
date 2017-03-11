@@ -60,14 +60,14 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
                 android:gravity="start"
-                android:text="adfs"
+                android:text="News Timestamp"
                 android:textColor="@color/colorAccent"
                 android:textSize="@dimen/textSizeExtraSmall"
                 />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="dfsdf"
+                android:text="News Author"
                 android:id="@+id/newsAuthor"
                 android:layout_weight="1"
                 android:textColor="@color/colorAccent"
@@ -76,7 +76,7 @@
         </LinearLayout>
         <TextView
             android:id="@+id/NewsDescription"
-            android:text="sfgsfththhrhyhhhyhr"
+            android:text="News Description"
             android:layout_below="@+id/news_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -94,7 +94,7 @@
             android:layout_below="@+id/NewsDescription"
             android:textSize="@dimen/textSizeExtraSmall"
             android:textColor="@color/colorAccent"
-            android:text="adfjdff"
+            android:text="News Source"
             android:gravity="start"/>
     </RelativeLayout>
 

@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.fame.plumbum.chataround.R;
 import com.fame.plumbum.chataround.activity.MainActivity;
 import com.fame.plumbum.chataround.helper.SharedPrefs;
+import com.fame.plumbum.chataround.helper.image_loader.GlideImageLoader;
 import com.fame.plumbum.chataround.helper.image_loader.ImageLoader;
 import com.fame.plumbum.chataround.news.presenter.NewsListPresenter;
 
@@ -44,7 +45,6 @@ public class NewsDetailsFragment extends Fragment {
     TextView news_title;
     @BindView(R.id.imageProgressBar)
     ProgressBar imageProgressBar;
-    private ImageLoader imageLoader;
     private MainActivity mainActivity;
     private String author;
     private String timestamp;
@@ -52,6 +52,7 @@ public class NewsDetailsFragment extends Fragment {
     private String title;
     private String source;
     private String description;
+    private ImageLoader imageLoader;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -100,8 +101,44 @@ public class NewsDetailsFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view= inflater.inflate(R.layout.fragment_news_details, container, false);
-        title=getArguments().getString("newsSource");
-        author=getArguments().getString("newsAuthor");
+        Bundle bundle = this.getArguments();
+        source=bundle.getString("newsSource");
+        author=bundle.getString("newsAuthor");
+        description=bundle.getString("newsDescription");
+        image_url=bundle.getString("image");
+        title=bundle.getString("newsTitle");
+        timestamp=bundle.getString("newsTimestamp");
+        imageLoader=new GlideImageLoader(getContext());
+        news_author.setText(author);
+        news_description.setText(description);
+        if(image_url!=null)
+        {
+            news_image.setVisibility(View.VISIBLE);
+            imageLoader.loadImage(image_url,news_image,imageProgressBar);
+        }
+        else
+        {
+            news_image.setVisibility(View.GONE);
+            imageProgressBar.setVisibility(View.GONE);
+        }
+        if(source!=null)
+        {
+            news_source.setVisibility(View.VISIBLE);
+         news_source.setText(source);
+        }
+        else
+        {
+            news_source.setVisibility(View.GONE);
+        }
+        if(author!=null)
+        {
+            news_author.setVisibility(View.VISIBLE);
+            news_author.setText(author);
+        }
+        else
+        {
+            news_author.setVisibility(View.GONE);
+        }
 
         return view;
     }

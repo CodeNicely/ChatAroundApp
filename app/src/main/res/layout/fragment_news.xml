@@ -34,7 +34,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:padding="8dp"
-            android:text="No Products Available!"
+            android:text="No news Available!"
             android:textColor="@color/colorAccent"
             android:textSize="12dp" />
 
