@@ -1,0 +1,60 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:weightSum="10"
+    tools:context="com.fame.plumbum.chataround.splash_screen.view.SplashScreenFragment">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:id="@+id/one_mile_logo"
+        android:layout_marginTop="50dp"
+        android:layout_weight="1"
+        />
+    <TextView
+        android:id="@+id/tagLine"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="40dp"
+        android:layout_weight="2"
+        android:gravity="center"
+        android:padding="8dp"
+        android:visibility="gone"
+        android:text="@string/tagline"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="12sp" />
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="24dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_weight="2" />
+    <TextView
+        android:id="@+id/powered_by"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="48dp"
+        android:layout_weight="2"
+        android:gravity="center"
+        android:text="Powered By"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="12dp" />
+    <ImageView
+        android:id="@+id/codeNicelyLogo"
+        android:layout_width="match_parent"
+        android:layout_height="84dp"
+        android:layout_gravity="center"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/codenicely"
+        android:layout_gravity="center"
+        android:padding="4dp"
+        android:text="CodeNicely"
+        android:textSize="10sp"/>
+
+</LinearLayout>
