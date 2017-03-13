@@ -135,7 +135,9 @@
             android:name=".image_viewer.ImageViewerActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
-        <activity android:name=".news.view.NewsDetailsActivity"></activity>
+        <activity
+            android:name=".news.view.NewsDetailsActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

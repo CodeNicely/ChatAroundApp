@@ -2,6 +2,7 @@ package com.fame.plumbum.chataround.news.view;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -26,7 +27,7 @@ public class NewsDetailsActivity extends AppCompatActivity {
     @BindView(R.id.newSource)
     TextView news_source;
 
-    @BindView(R.id.newsImage)
+    @BindView(R.id.image)
     ImageView news_image;
 
     @BindView(R.id.newsAuthor)
@@ -35,14 +36,28 @@ public class NewsDetailsActivity extends AppCompatActivity {
     @BindView(R.id.newsTitle)
     TextView news_title;
 
-    @BindView(R.id.imageProgressBar)
+    @BindView(R.id.progressBar)
     ProgressBar imageProgressBar;
+
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_news_details);
         ButterKnife.bind(this);
+
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                finish();
+            }
+        });
+
+
 
         ImageLoader imageLoader = new GlideImageLoader(this);
 
@@ -88,6 +103,7 @@ public class NewsDetailsActivity extends AppCompatActivity {
             if (title != null) {
                 news_title.setVisibility(View.VISIBLE);
                 news_title.setText(title);
+                toolbar.setTitle(title);
             } else {
                 news_title.setVisibility(View.GONE);
             }
