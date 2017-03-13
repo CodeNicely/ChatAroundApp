@@ -97,7 +97,14 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 //        facebookSDKInitialize();
         setContentView(R.layout.activity_login);
 
-        sharedPrefs=new SharedPrefs(this);
+        sharedPrefs = new SharedPrefs(this);
+
+        if(sharedPrefs.isLoggedIn()){
+            Intent intent=new Intent(LoginActivity.this,MainActivity.class);
+            startActivity(intent);
+            finish();
+        }
+
         GoogleSignInOptions gso = new GoogleSignInOptions.
                 Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestScopes(new Scope(Scopes.PLUS_LOGIN))
@@ -106,7 +113,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
         SignInButton signInButton = (SignInButton) findViewById(R.id.sign_in_button);
         signInButton.setSize(SignInButton.SIZE_WIDE);
-        signInButton.setStyle(SignInButton.COLOR_DARK,SignInButton.COLOR_DARK);
+//        signInButton.setStyle(SignInButton.COLOR_DARK, SignInButton.COLOR_DARK);
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
@@ -393,15 +400,15 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                                 SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(LoginActivity.this);
                                 SharedPreferences.Editor editor = sp.edit();
                                 editor.putString("uid", jO.getString("UserId"));
-                                editor.putString("user_name",jO.getString("Name"));
-                                editor.putString("user_email",jO.getString("Email"));
+                                editor.putString("user_name", jO.getString("Name"));
+                                editor.putString("user_email", jO.getString("Email"));
                                 editor.apply();
 
                                 // Update - Structured Shared Preference Now
                                 sharedPrefs.setUserId(jO.getString("UserId"));
                                 sharedPrefs.setEmailId(jO.getString("Email"));
                                 sharedPrefs.setUsername(jO.getString("Name"));
-
+                                sharedPrefs.setLogin(true);
 /*                                if (jO.getString("ProfileFlag").contentEquals("1")) {
                                     editor.putString("edited", "1");
                                     editor.apply();
@@ -551,8 +558,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                                 SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(LoginActivity.this);
                                 SharedPreferences.Editor editor = sp.edit();
                                 editor.putString("uid", jO.getString("UserId"));
-                                editor.putString("user_name",jO.getString("Name"));
-                                editor.putString("user_email",jO.getString("Email"));
+                                editor.putString("user_name", jO.getString("Name"));
+                                editor.putString("user_email", jO.getString("Email"));
                                 editor.apply();
 
                                 sharedPrefs.setUserId(jO.getString("UserId"));
@@ -615,7 +622,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                     Toast.makeText(LoginActivity.this, "Error uploading image!", Toast.LENGTH_SHORT).show();
                 }
 
-                Intent intent=new Intent(LoginActivity.this,MainActivity.class);
+                sharedPrefs.setLogin(true);
+                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                 startActivity(intent);
                 finish();
                 rl_progress.setVisibility(View.GONE);
@@ -624,7 +632,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             @Override
             public void onFailure(Call<ImageSendData> call, Throwable t) {
                 Toast.makeText(LoginActivity.this, "Error uploading image!", Toast.LENGTH_SHORT).show();
-                Intent intent=new Intent(LoginActivity.this,MainActivity.class);
+                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                 startActivity(intent);
                 finish();
             }

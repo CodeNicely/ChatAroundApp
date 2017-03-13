@@ -20,19 +20,17 @@ public class NewsListPresenterImpl implements NewsListPresenter {
 
 
     @Override
-    public void getNews(String  userId, String city) {
+    public void getNews(String userId, String city) {
         newsListFragment.showProgressBar(true);
         newsListProvider.getNewsList(userId, city, new NewsFeedRequestCallback() {
             @Override
             public void onSuccess(NewsListData newsListData) {
                 newsListFragment.showProgressBar(false);
-                if (newsListData.isSuccess())
-                {
+                if (newsListData.isSuccess()) {
                     newsListFragment.setNewsList(newsListData.getNewsListDataDetailsList());
-                }
-                else
-                {
-                   newsListFragment.showMessage(newsListData.getMessage());
+                    newsListFragment.showMessage(newsListData.getMessage());
+                } else {
+                    newsListFragment.showMessage(newsListData.getMessage());
                 }
             }
 

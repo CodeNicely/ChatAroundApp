@@ -9,6 +9,7 @@
         android:layout_height="wrap_content"
         android:background="#202020"
         android:padding="6dp"
+        android:gravity="center"
         android:text="Your Shout"
         android:textColor="#FFFFFF"
         android:textSize="24sp" />
@@ -45,6 +46,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/num_chars"
         android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:textColor="@color/white"
         android:background="@color/colorPrimary"
         android:text="SHOUT" />
 </RelativeLayout>

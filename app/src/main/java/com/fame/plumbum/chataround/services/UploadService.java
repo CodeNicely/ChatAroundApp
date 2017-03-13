@@ -134,8 +134,8 @@ public class UploadService extends Service {
                             UploadImages = false;
                             uploadImages();
                         } else {
-                            showMessage("Restroom uploading Failed " + fileUploadData.getMessage()+
-                            ". Please try again");
+                            showMessage("Restroom uploading Failed " + fileUploadData.getMessage() +
+                                    ". Please try again");
 
                         }
 
@@ -271,12 +271,10 @@ public class UploadService extends Service {
     @Subscribe
     public void onImageUploadEvent(ImageEvent imageEvent) {
 
-        Toast.makeText(this, "Event Bus called in Service", Toast.LENGTH_SHORT).show();
         ImageData imageData = new ImageData(imageEvent.getFile());
         myQueue.add(imageData);
         uploadImages();
         Log.i(TAG, "Yeah Added to Queue");
-        Toast.makeText(this, String.valueOf(imageData.getFile()), Toast.LENGTH_SHORT).show();
     }
 
     @Override
