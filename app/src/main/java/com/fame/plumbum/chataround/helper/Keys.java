@@ -13,4 +13,10 @@ public class Keys {
     public static final String KEY_ADMIN_TOKEN = "admin_token";
     public static final String KEY_ORDER_ID = "order_id";
     public static final String KEY_RESTROOM_ID ="restroom_id" ;
+    public static final java.lang.String NEWS_SOURCE = "news_source" ;
+    public static final java.lang.String NEWS_AUTHOR ="news_author" ;
+    public static final java.lang.String NEWS_DESCRIPTION ="news_description" ;
+    public static final java.lang.String NEWS_IMAGE ="news_image" ;
+    public static final java.lang.String NEWS_TITLE ="news_title" ;
+    public static final java.lang.String NEWS_TIMESTAMP ="news_Timestamp" ;
 }

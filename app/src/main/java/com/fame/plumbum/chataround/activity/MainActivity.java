@@ -14,7 +14,6 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -44,7 +43,7 @@ import com.fame.plumbum.chataround.fragments.World;
 import com.fame.plumbum.chataround.helper.Keys;
 import com.fame.plumbum.chataround.helper.Urls;
 import com.fame.plumbum.chataround.image_viewer.ImageViewerActivity;
-import com.fame.plumbum.chataround.news.view.NewsDetailsFragment;
+import com.fame.plumbum.chataround.news.view.NewsDetailsActivity;
 import com.fame.plumbum.chataround.news.view.NewsListFragment;
 import com.fame.plumbum.chataround.pollution.view.PollutionFragment;
 import com.fame.plumbum.chataround.restroom.view.RestroomFragment;
@@ -443,20 +442,24 @@ public class MainActivity extends AppCompatActivity {
 
     public void openNewsDetails(String newsTitle, String image, String newsSource,
                                 String newsDescription, String newsAuthor, String newsTimestamp) {
-        NewsDetailsFragment newsDetailsFragment = new NewsDetailsFragment();
+        Intent newsDetailsActivityIntent = new Intent(this, NewsDetailsActivity.class);
+
+
         Bundle bundle = new Bundle();
-        bundle.putString("newsTitle", newsTitle);
-        bundle.putString("image", image);
-        bundle.putString("newsSource", newsSource);
-        bundle.putString("newsDescription", newsDescription);
-        bundle.putString("newsAuthor", newsAuthor);
-        bundle.putString("newsTimestamp", newsTimestamp);
-        newsDetailsFragment.setArguments(bundle);
-        addFragment(newsDetailsFragment, "News Details");
+        bundle.putString(Keys.NEWS_TITLE, newsTitle);
+        bundle.putString(Keys.NEWS_IMAGE, image);
+        bundle.putString(Keys.NEWS_SOURCE, newsSource);
+        bundle.putString(Keys.NEWS_DESCRIPTION, newsDescription);
+        bundle.putString(Keys.NEWS_AUTHOR, newsAuthor);
+        bundle.putString(Keys.NEWS_TIMESTAMP, newsTimestamp);
+
+        newsDetailsActivityIntent.putExtras(bundle);
+
+        startActivity(newsDetailsActivityIntent);
 
     }
 
-    public void addFragment(Fragment fragment, String title) {
+/*    public void addFragment(Fragment fragment, String title) {
         if (fragment != null) {
             FragmentManager fragmentManager = getSupportFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -466,7 +469,7 @@ public class MainActivity extends AppCompatActivity {
             //     getSupportActionBar().setTitle(title);
         }
 
-    }
+    }*/
 
 
 }
