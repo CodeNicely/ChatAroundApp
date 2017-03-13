@@ -291,7 +291,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void actionShout(){
+    public void actionShout() {
 
         final Dialog dialog = new Dialog(MainActivity.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -432,7 +432,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void openImageViewer(String url, int position) {
 
-        ArrayList<String> arrayList=new ArrayList<>();
+        ArrayList<String> arrayList = new ArrayList<>();
         arrayList.add(url);
 
         Intent intent = new Intent(this, ImageViewerActivity.class);
@@ -440,9 +440,9 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra(Keys.KEY_POSITION_IMAGE, position);
         startActivity(intent);
     }
-    public void openNewsDetails(String newsTitle, String image,String newsSource,
-                                String newsDescription,String newsAuthor,String newsTimestamp)
-    {
+
+    public void openNewsDetails(String newsTitle, String image, String newsSource,
+                                String newsDescription, String newsAuthor, String newsTimestamp) {
         NewsDetailsFragment newsDetailsFragment = new NewsDetailsFragment();
         Bundle bundle = new Bundle();
         bundle.putString("newsTitle", newsTitle);
@@ -452,9 +452,10 @@ public class MainActivity extends AppCompatActivity {
         bundle.putString("newsAuthor", newsAuthor);
         bundle.putString("newsTimestamp", newsTimestamp);
         newsDetailsFragment.setArguments(bundle);
-        addFragment(newsDetailsFragment,"News Details");
+        addFragment(newsDetailsFragment, "News Details");
 
     }
+
     public void addFragment(Fragment fragment, String title) {
         if (fragment != null) {
             FragmentManager fragmentManager = getSupportFragmentManager();
@@ -466,7 +467,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
-
 
 
 }

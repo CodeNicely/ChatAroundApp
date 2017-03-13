@@ -27,10 +27,12 @@
             android:layout_height="match_parent"
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
     </LinearLayout>
+
     <FrameLayout
         android:id="@+id/container_body"
         android:layout_width="fill_parent"
         android:layout_height="0dp"
-        android:layout_weight="1">
-        </FrameLayout>
+        android:layout_weight="1" />
+
+
 </android.support.design.widget.CoordinatorLayout>

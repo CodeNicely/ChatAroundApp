@@ -4,7 +4,6 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,10 +13,8 @@ import android.widget.TextView;
 
 import com.fame.plumbum.chataround.R;
 import com.fame.plumbum.chataround.activity.MainActivity;
-import com.fame.plumbum.chataround.helper.SharedPrefs;
 import com.fame.plumbum.chataround.helper.image_loader.GlideImageLoader;
 import com.fame.plumbum.chataround.helper.image_loader.ImageLoader;
-import com.fame.plumbum.chataround.news.presenter.NewsListPresenter;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -100,49 +97,41 @@ public class NewsDetailsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view= inflater.inflate(R.layout.fragment_news_details, container, false);
+        View view = inflater.inflate(R.layout.fragment_news_details, container, false);
+        ButterKnife.bind(this,view);
+
         Bundle bundle = this.getArguments();
-        source=bundle.getString("newsSource");
-        author=bundle.getString("newsAuthor");
-        description=bundle.getString("newsDescription");
-        image_url=bundle.getString("image");
-        title=bundle.getString("newsTitle");
-        timestamp=bundle.getString("newsTimestamp");
-        imageLoader=new GlideImageLoader(getContext());
+        source = bundle.getString("newsSource");
+        author = bundle.getString("newsAuthor");
+        description = bundle.getString("newsDescription");
+        image_url = bundle.getString("image");
+        title = bundle.getString("newsTitle");
+        timestamp = bundle.getString("newsTimestamp");
+        imageLoader = new GlideImageLoader(getContext());
         news_author.setText(author);
         news_description.setText(description);
-        if(image_url!=null)
-        {
+        if (image_url != null) {
             news_image.setVisibility(View.VISIBLE);
-            imageLoader.loadImage(image_url,news_image,imageProgressBar);
-        }
-        else
-        {
+            imageLoader.loadImage(image_url, news_image, imageProgressBar);
+        } else {
             news_image.setVisibility(View.GONE);
             imageProgressBar.setVisibility(View.GONE);
         }
-        if(source!=null)
-        {
+        if (source != null) {
             news_source.setVisibility(View.VISIBLE);
-         news_source.setText(source);
-        }
-        else
-        {
+            news_source.setText(source);
+        } else {
             news_source.setVisibility(View.GONE);
         }
-        if(author!=null)
-        {
+        if (author != null) {
             news_author.setVisibility(View.VISIBLE);
             news_author.setText(author);
-        }
-        else
-        {
+        } else {
             news_author.setVisibility(View.GONE);
         }
 
         return view;
     }
-
 
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -155,12 +144,12 @@ public class NewsDetailsFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
+/*        if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
-        }
+        }*/
     }
 
     @Override
