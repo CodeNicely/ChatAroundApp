@@ -17,7 +17,6 @@ import android.widget.TextView;
 
 import com.fame.plumbum.chataround.R;
 import com.fame.plumbum.chataround.pollution.model.air_model.AirPollutionIndividualValue;
-import com.github.pavlospt.CircleView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,7 +62,7 @@ public class PollutuionAqiAdapter extends RecyclerView.Adapter<RecyclerView.View
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
         IndividualAqiViewHolder individualAqiViewHolder = (IndividualAqiViewHolder) holder;
-        AirPollutionIndividualValue value = valueList.get(position);
+        final AirPollutionIndividualValue value = valueList.get(position);
 
 
         // Setting Color
@@ -73,17 +72,17 @@ public class PollutuionAqiAdapter extends RecyclerView.Adapter<RecyclerView.View
 
         // Setting Up Values
         if (valueList.get(position).getV() != -9999) {
-            individualAqiViewHolder.circleView.setTitleText(String.valueOf(value.getV()));
-            individualAqiViewHolder.title.setText(value.getName());
+//            individualAqiViewHolder.circleView.setTitleText(String.valueOf(value.getV()));
+//            individualAqiViewHolder.title.setText(value.getName());
 
             individualAqiViewHolder.aqi.setText(value.getName() + " - - Value - - " + String.valueOf(value.getV()));
 
-            individualAqiViewHolder.circleView.setFillColor(value.getColor());
-            individualAqiViewHolder.circleView.setBackgroundColor(value.getColor());
-            individualAqiViewHolder.title.setBackgroundColor(value.getColor());
+//            individualAqiViewHolder.circleView.setFillColor(value.getColor());
+//            individualAqiViewHolder.circleView.setBackgroundColor(value.getColor());
+//            individualAqiViewHolder.title.setBackgroundColor(value.getColor());
 
 
-            individualAqiViewHolder.discreteSeekBar.setMax(400);
+            individualAqiViewHolder.discreteSeekBar.setMax(Math.round(value.getValue6()));
             individualAqiViewHolder.discreteSeekBar.setProgress((int) value.getV());
 
             ShapeDrawable.ShaderFactory shaderFactory = new ShapeDrawable.ShaderFactory() {
@@ -95,7 +94,12 @@ public class PollutuionAqiAdapter extends RecyclerView.Adapter<RecyclerView.View
                                     0xBB8F3F97, 0xBB7E0023
                             }, //substitute the correct colors for these
                             new float[]{
-                                    0, 0.20f, 0.40f, 0.60f, 0.80f, 1},
+                                    value.getValue1() / value.getValue6(),
+                                    value.getValue2() / value.getValue6(),
+                                    value.getValue3() / value.getValue6(),
+                                    value.getValue4() / value.getValue6(),
+                                    value.getValue5() / value.getValue6(),
+                                    value.getValue6() / value.getValue6()},
                             Shader.TileMode.REPEAT);
                     return linearGradient;
                 }
@@ -115,17 +119,18 @@ public class PollutuionAqiAdapter extends RecyclerView.Adapter<RecyclerView.View
 */
 
             individualAqiViewHolder.discreteSeekBar.setProgressDrawable(paint);
+            individualAqiViewHolder.discreteSeekBar.setEnabled(false);
 
 
         } else {
-            individualAqiViewHolder.circleView.setTitleText("NA");
-            individualAqiViewHolder.title.setText(value.getName());
+//            individualAqiViewHolder.circleView.setTitleText("NA");
+//            individualAqiViewHolder.title.setText(value.getName());
 
             individualAqiViewHolder.aqi.setText(value.getName() + " - - Value - - " + "NA");
 
-            individualAqiViewHolder.circleView.setFillColor(ContextCompat.getColor(context, R.color.accentGray));
-            individualAqiViewHolder.circleView.setBackgroundColor(ContextCompat.getColor(context, R.color.accentGray));
-            individualAqiViewHolder.title.setBackgroundColor(ContextCompat.getColor(context, R.color.accentGray));
+//            individualAqiViewHolder.circleView.setFillColor(ContextCompat.getColor(context, R.color.accentGray));
+//            individualAqiViewHolder.circleView.setBackgroundColor(ContextCompat.getColor(context, R.color.accentGray));
+//            individualAqiViewHolder.title.setBackgroundColor(ContextCompat.getColor(context, R.color.accentGray));
 
         }
 
@@ -141,10 +146,6 @@ public class PollutuionAqiAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     public class IndividualAqiViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.circleView)
-        CircleView circleView;
-        @BindView(R.id.title)
-        TextView title;
 
         @BindView(R.id.seek_bar)
         SeekBar discreteSeekBar;

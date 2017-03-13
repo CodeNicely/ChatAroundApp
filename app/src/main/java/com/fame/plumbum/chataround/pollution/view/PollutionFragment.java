@@ -12,6 +12,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.NestedScrollView;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -23,14 +24,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.fame.plumbum.chataround.R;
+import com.fame.plumbum.chataround.helper.utils.DistanceUtils;
 import com.fame.plumbum.chataround.pollution.model.air_model.AirPollutionDetails;
 import com.fame.plumbum.chataround.pollution.model.air_model.AirPollutionIndividualAqi;
 import com.fame.plumbum.chataround.pollution.model.air_model.AirPollutionIndividualValue;
+import com.fame.plumbum.chataround.pollution.presenter.PollutionPresenter;
 import com.fame.plumbum.chataround.pollution.presenter.PollutionPresenterImpl;
 import com.fame.plumbum.chataround.pollution.provider.RetrofitPollutionProvider;
 import com.github.pavlospt.CircleView;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
 import java.util.ArrayList;
@@ -50,7 +55,12 @@ import static com.desmond.squarecamera.SquareCameraPreview.TAG;
  * Use the {@link PollutionFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class PollutionFragment extends Fragment implements PollutionView, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class PollutionFragment extends Fragment implements
+        PollutionView,
+        GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener,
+        LocationListener {
+
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -63,7 +73,7 @@ public class PollutionFragment extends Fragment implements PollutionView, Google
     private OnFragmentInteractionListener mListener;
 
 
-    @BindView(R.id.scrollView)
+    @BindView(R.id.nestedScrollView)
     NestedScrollView scrollView;
 
     @BindView(R.id.progressBar)
@@ -84,10 +94,18 @@ public class PollutionFragment extends Fragment implements PollutionView, Google
     @BindView(R.id.wind)
     TextView wind;
 
+    @BindView(R.id.pollution_data_not_found_layout)
+    CardView pollution_data_not_found_layout;
+
     private GoogleApiClient mGoogleApiClient = null;
     private Location mLastLocation;
     private double latitude;
     private double longitude;
+
+    private PollutionPresenter pollutionPresenter;
+
+    private LocationRequest mLocationRequest;
+
 
     public PollutionFragment() {
         // Required empty public constructor
@@ -102,7 +120,6 @@ public class PollutionFragment extends Fragment implements PollutionView, Google
      * @return A new instance of fragment PollutionFragment.
      */
     // TODO: Rename and change types and number of parameters    @Override
-
     public static PollutionFragment newInstance(String param1, String param2) {
         PollutionFragment fragment = new PollutionFragment();
         Bundle args = new Bundle();
@@ -115,7 +132,7 @@ public class PollutionFragment extends Fragment implements PollutionView, Google
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-                mParam1 = getArguments().getString(ARG_PARAM1);
+            mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
@@ -127,6 +144,8 @@ public class PollutionFragment extends Fragment implements PollutionView, Google
         View view = inflater.inflate(R.layout.fragment_pollution, container, false);
         ButterKnife.bind(this, view);
 
+        pollutionPresenter = new PollutionPresenterImpl(this, new RetrofitPollutionProvider());
+
         if (mGoogleApiClient == null) {
             mGoogleApiClient = new GoogleApiClient.Builder(getContext())
                     .addConnectionCallbacks(this)
@@ -134,6 +153,12 @@ public class PollutionFragment extends Fragment implements PollutionView, Google
                     .addApi(LocationServices.API)
                     .build();
         }
+
+        // Create the LocationRequest object
+        mLocationRequest = LocationRequest.create()
+                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+                .setInterval(10 * 1000)        // 10 seconds, in milliseconds
+                .setFastestInterval(1 * 1000); // 1 second, in milliseconds
 
 /*
         double latitude = 19.130306;
@@ -185,9 +210,11 @@ public class PollutionFragment extends Fragment implements PollutionView, Google
         if (show) {
             progressBar.setVisibility(View.VISIBLE);
             scrollView.setVisibility(View.GONE);
+
         } else {
             progressBar.setVisibility(View.GONE);
             scrollView.setVisibility(View.VISIBLE);
+
         }
     }
 
@@ -200,6 +227,26 @@ public class PollutionFragment extends Fragment implements PollutionView, Google
 
     @Override
     public void setData(AirPollutionDetails airPollutionDetails) {
+
+        List<Double> geo = airPollutionDetails.getData().getCity().getGeo();
+
+
+        if (DistanceUtils.calculateDistanceBetweenTwoPoints(
+                latitude,
+                longitude,
+                geo.get(0),
+                geo.get(1)
+        ) > 50) {
+
+            pollution_data_not_found_layout.setVisibility(View.VISIBLE);
+            scrollView.setVisibility(View.GONE);
+            return;
+        } else {
+            pollution_data_not_found_layout.setVisibility(View.GONE);
+            scrollView.setVisibility(View.VISIBLE);
+
+        }
+
 
         double aqi = airPollutionDetails.getData().getAqi();
         String healthStatement = "";
@@ -257,7 +304,7 @@ public class PollutionFragment extends Fragment implements PollutionView, Google
 
         circleView.setTitleText(String.valueOf(airPollutionDetails.getData().getAqi()) + "\n" + "AQI");
         aqi_health_notice.setText(healthStatement);
-        aqi_health_notice.append("\n\n City :"+airPollutionDetails.getData().getCity().getName());
+        aqi_health_notice.append("\n\n City :" + airPollutionDetails.getData().getCity().getName());
 
 
         pollutuionAqiAdapter = new
@@ -279,8 +326,11 @@ public class PollutionFragment extends Fragment implements PollutionView, Google
 
         if (airPollutionIndividualAqi.getPm25() != null) {
 
+
             double aqi = airPollutionIndividualAqi.getPm25().getV();
             int color = ContextCompat.getColor(getContext(), R.color.white);
+
+
             if (aqi < 30) {
 
                 color = ContextCompat.getColor(getContext(), R.color.good);
@@ -310,13 +360,13 @@ public class PollutionFragment extends Fragment implements PollutionView, Google
 
 
             airPollutionIndividualValueList.add(new AirPollutionIndividualValue(
-                    airPollutionIndividualAqi.getPm25().getV(), "PM 2.5", color));
+                    airPollutionIndividualAqi.getPm25().getV(), "PM2.5", color, 30, 60, 90, 120, 250, 360));
 
         } else {
 
-            int color = R.color.accentGray;
+           /* int color = R.color.accentGray;
             airPollutionIndividualValueList.add(new AirPollutionIndividualValue(
-                    -9999, "PM 2.5", color));
+                    -9999, "PM 2.5", color,0,0,0,0,0,0));*/
 
         }
 
@@ -352,13 +402,13 @@ public class PollutionFragment extends Fragment implements PollutionView, Google
             }
 
             airPollutionIndividualValueList.add(new AirPollutionIndividualValue(
-                    airPollutionIndividualAqi.getPm10().getV(), "PM 10", color));
+                    airPollutionIndividualAqi.getPm10().getV(), "PM10", color, 50, 100, 250, 350, 430, 500));
 
         } else {
 
-            int color = R.color.accentGray;
+/*            int color = R.color.accentGray;
             airPollutionIndividualValueList.add(new AirPollutionIndividualValue(
-                    -9999, "PM 10", color));
+                    -9999, "PM 10", color,0,0,0,0,0,0));*/
         }
 
 
@@ -395,13 +445,13 @@ public class PollutionFragment extends Fragment implements PollutionView, Google
 
 
             airPollutionIndividualValueList.add(new AirPollutionIndividualValue(
-                    airPollutionIndividualAqi.getO3().getV(), "o3", color));
+                    airPollutionIndividualAqi.getO3().getV(), "Ozone", color, 50, 100, 168, 208, 748, 900));
 
         } else {
 
-            int color = R.color.accentGray;
+  /*          int color = R.color.accentGray;
             airPollutionIndividualValueList.add(new AirPollutionIndividualValue(
-                    -9999, "o3", color));
+                    -9999, "o3", color,0,0,0,0,0,0));*/
         }
 
 
@@ -438,12 +488,13 @@ public class PollutionFragment extends Fragment implements PollutionView, Google
 
 
             airPollutionIndividualValueList.add(new AirPollutionIndividualValue(
-                    airPollutionIndividualAqi.getNo2().getV(), "No2", color));
+                    airPollutionIndividualAqi.getNo2().getV(), getResources().
+                    getString(R.string.nitrogen_dioxide), color, 40, 80, 180, 280, 400, 500));
         } else {
 
-            int color = R.color.accentGray;
+/*            int color = R.color.accentGray;
             airPollutionIndividualValueList.add(new AirPollutionIndividualValue(
-                    -9999, "No2", color));
+                    -9999, "No2", color,0,0,0,0,0,0));*/
         }
 
 
@@ -480,18 +531,19 @@ public class PollutionFragment extends Fragment implements PollutionView, Google
 
 
             airPollutionIndividualValueList.add(new AirPollutionIndividualValue(
-                    airPollutionIndividualAqi.getCo().getV(), "CO", color));
+                    airPollutionIndividualAqi.getCo().getV(), getResources().
+                    getString(R.string.carbon_oxide), color, 1, 2, 10, 17, 34, 50));
 
             Log.d(TAG, "CO Present " + String.valueOf(airPollutionIndividualAqi.getCo().getV()));
 
 
         } else {
 
-            int color = R.color.white;
+  /*          int color = R.color.white;
             airPollutionIndividualValueList.add(new AirPollutionIndividualValue(
-                    -9999, "Co", color));
+                    -9999, "Co", color,0,0,0,0,0,0));
 
-            Log.d(TAG, "CO Not Present");
+            Log.d(TAG, "CO Not Present");*/
 
         }
 
@@ -528,16 +580,17 @@ public class PollutionFragment extends Fragment implements PollutionView, Google
 
 
             airPollutionIndividualValueList.add(new AirPollutionIndividualValue(
-                    airPollutionIndividualAqi.getS02().getV(), "SO2", color));
+                    airPollutionIndividualAqi.getS02().getV(), getResources().
+                    getString(R.string.sulphur_dioxide), color, 40, 80, 380, 800, 1600, 1700));
 
             Log.d(TAG, "S02 Present");
 
         } else {
 
-            int color = R.color.accentGray;
+/*            int color = R.color.accentGray;
             airPollutionIndividualValueList.add(new AirPollutionIndividualValue(
-                    -9999, "So2", color));
-            Log.d(TAG, "S02 Not Present");
+                    -9999, "So2", color,0,0,0,0,0,0));
+            Log.d(TAG, "S02 Not Present");*/
 
         }
 
@@ -635,6 +688,23 @@ This Method is for Pressure that we are not going to use.
     }
 
     /**
+     * If locationChanges change lat and long
+     *
+     * @param location
+     */
+    @Override
+    public void onLocationChanged(Location location) {
+        latitude = location.getLatitude();
+        longitude = location.getLongitude();
+
+        new PollutionPresenterImpl(this,
+                new RetrofitPollutionProvider())
+                .requestAirPollution(latitude, longitude);
+
+
+    }
+
+    /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
      * to the activity and potentially other fragments contained in that
@@ -648,4 +718,6 @@ This Method is for Pressure that we are not going to use.
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+
+
 }

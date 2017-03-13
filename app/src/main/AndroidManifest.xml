@@ -135,7 +135,13 @@
             android:name=".image_viewer.ImageViewerActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
+<<<<<<< HEAD
         <activity android:name=".splash_screen.view.SplashScreenActivity"></activity>
+=======
+        <activity
+            android:name=".news.view.NewsDetailsActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+>>>>>>> 04881ab5bed267d17172dc8e48a894465b162496
     </application>
 
 </manifest>

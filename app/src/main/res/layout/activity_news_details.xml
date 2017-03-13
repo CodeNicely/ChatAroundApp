@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/news_card"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    app:contentPadding="@dimen/padding_medium">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/black"
+        android:title="@string/news_detail"
+        android:titleTextColor="@color/white"
+        app:title="@string/news_detail"
+        app:titleTextColor="@color/white"
+
+        />
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="4dp"
+        android:clickable="true"
+        app:cardCornerRadius="2dp">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="none">
+
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <RelativeLayout
+                    android:id="@+id/imageLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:id="@+id/image"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                    <ProgressBar
+                        android:id="@+id/progressBar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true" />
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/newsTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/imageLayout"
+                    android:layout_centerHorizontal="true"
+                    android:layout_margin="4dp"
+                    android:padding="4dp"
+                    android:text="title"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="20dp" />
+
+                <LinearLayout
+                    android:id="@+id/news_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/newsTitle"
+                    android:layout_centerHorizontal="true"
+                    android:orientation="horizontal"
+                    android:weightSum="2">
+
+
+                    <TextView
+                        android:id="@+id/newsAuthor"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="4dp"
+                        android:layout_weight="1"
+                        android:padding="4dp"
+                        android:text="News Author"
+                        android:textColor="#424242"
+                        android:textSize="@dimen/textSizeExtraSmall" />
+
+
+                    <TextView
+                        android:id="@+id/timestamp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="4dp"
+                        android:layout_weight="1"
+                        android:gravity="end"
+                        android:padding="4dp"
+                        android:text="News Timestamp"
+                        android:textColor="#424242"
+
+                        />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/NewsDescription"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/news_layout"
+                    android:layout_centerHorizontal="true"
+                    android:layout_margin="4dp"
+                    android:gravity="start"
+                    android:padding="4dp"
+                    android:text="Description"
+                    android:textColor="#424242"
+                    android:textSize="14dp"
+
+                    />
+
+                <TextView
+                    android:id="@+id/newSource"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/NewsDescription"
+                    android:layout_margin="2dp"
+                    android:gravity="center"
+                    android:padding="2dp"
+                    android:text="News Source"
+                    android:textColor="#877409"
+                    android:textSize="@dimen/textSizeExtraSmall" />
+            </RelativeLayout>
+        </ScrollView>
+
+    </android.support.v7.widget.CardView>
+
+</LinearLayout>

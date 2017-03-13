@@ -48,7 +48,7 @@ public class NewsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
 
         newsListDataDetails = newsListDataDetailsList.get(position);
 
@@ -87,11 +87,14 @@ public class NewsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         newsViewHolder.news_card.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(context instanceof MainActivity)
-                {
-                    ((MainActivity)context).openNewsDetails(newsListDataDetails.getTitle(),
-                            newsListDataDetails.getImage(),newsListDataDetails.getSource(),
-                            newsListDataDetails.getBody(),newsListDataDetails.getAuthor(),
+                if (context instanceof MainActivity) {
+                    NewsListDataDetails newsListDataDetails=newsListDataDetailsList.get(position);
+                    ((MainActivity) context).openNewsDetails(
+                            newsListDataDetails.getTitle(),
+                            newsListDataDetails.getImage(),
+                            newsListDataDetails.getSource(),
+                            newsListDataDetails.getBody(),
+                            newsListDataDetails.getAuthor(),
                             newsListDataDetails.getPublished_at());
                 }
             }
