@@ -11,6 +11,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.fame.plumbum.chataround.R;
+import com.fame.plumbum.chataround.activity.MainActivity;
 import com.fame.plumbum.chataround.helper.image_loader.GlideImageLoader;
 import com.fame.plumbum.chataround.helper.image_loader.ImageLoader;
 import com.fame.plumbum.chataround.news.model.data.NewsListDataDetails;
@@ -86,12 +87,13 @@ public class NewsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         newsViewHolder.news_card.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-
-
-
-
-
+                if(context instanceof MainActivity)
+                {
+                    ((MainActivity)context).openNewsDetails(newsListDataDetails.getTitle(),
+                            newsListDataDetails.getImage(),newsListDataDetails.getSource(),
+                            newsListDataDetails.getBody(),newsListDataDetails.getAuthor(),
+                            newsListDataDetails.getPublished_at());
+                }
             }
         });
 
