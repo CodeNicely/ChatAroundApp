@@ -3,44 +3,42 @@ package com.fame.plumbum.chataround.news.presenter;
 import com.fame.plumbum.chataround.news.NewsFeedRequestCallback;
 import com.fame.plumbum.chataround.news.model.NewsListProvider;
 import com.fame.plumbum.chataround.news.model.data.NewsListData;
-import com.fame.plumbum.chataround.news.view.NewsFragment;
-
-import retrofit2.Retrofit;
+import com.fame.plumbum.chataround.news.view.NewsListFragment;
 
 /**
  * Created by ramya on 10/3/17.
  */
 
 public class NewsListPresenterImpl implements NewsListPresenter {
-    private NewsFragment newsFragment;
+    private NewsListFragment newsListFragment;
     private NewsListProvider newsListProvider;
 
-    public NewsListPresenterImpl(NewsFragment newsFragment, NewsListProvider newsListProvider) {
-        this.newsFragment = newsFragment;
+    public NewsListPresenterImpl(NewsListFragment newsListFragment, NewsListProvider newsListProvider) {
+        this.newsListFragment = newsListFragment;
         this.newsListProvider = newsListProvider;
     }
 
 
     @Override
     public void getNews(String  userId, String city) {
-        newsFragment.showProgressBar(true);
+        newsListFragment.showProgressBar(true);
         newsListProvider.getNewsList(userId, city, new NewsFeedRequestCallback() {
             @Override
             public void onSuccess(NewsListData newsListData) {
-                newsFragment.showProgressBar(false);
+                newsListFragment.showProgressBar(false);
                 if (newsListData.isSuccess())
                 {
-                    newsFragment.setNewsList(newsListData.getNewsListDataDetailsList());
+                    newsListFragment.setNewsList(newsListData.getNewsListDataDetailsList());
                 }
                 else
                 {
-                   newsFragment.showMessage(newsListData.getMessage());
+                   newsListFragment.showMessage(newsListData.getMessage());
                 }
             }
 
             @Override
             public void OnFailure(String message) {
-                newsFragment.showMessage("something went wrong please try again!");
+                newsListFragment.showMessage("something went wrong please try again!");
             }
         });
 

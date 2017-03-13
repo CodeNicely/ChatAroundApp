@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/gray"
-    tools:context="com.fame.plumbum.chataround.news.view.NewsFragment">
+    tools:context="com.fame.plumbum.chataround.news.view.NewsListFragment">
 
     <LinearLayout
 

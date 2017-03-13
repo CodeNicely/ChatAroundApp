@@ -4,28 +4,11 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.fame.plumbum.chataround.R;
-import com.fame.plumbum.chataround.helper.SharedPrefs;
-import com.fame.plumbum.chataround.news.model.RetrofitNewsListProvider;
-import com.fame.plumbum.chataround.news.model.data.NewsListDataDetails;
-import com.fame.plumbum.chataround.news.presenter.NewsListPresenter;
-import com.fame.plumbum.chataround.news.presenter.NewsListPresenterImpl;
-
-import java.util.List;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
-import static com.fame.plumbum.chataround.R.id.recyclerView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -35,17 +18,7 @@ import static com.fame.plumbum.chataround.R.id.recyclerView;
  * Use the {@link NewsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class NewsFragment extends Fragment implements NewsPageView {
-    private NewsListPresenter newsListPresenter;
-    @BindView(R.id.progressBar)
-    ProgressBar progressBar;
-    @BindView(recyclerView)
-    RecyclerView recyclerview;
-    private SharedPrefs sharedPrefs;
-    private NewsListAdapter newsListAdapter;
-    @BindView(R.id.layout_not_available)
-    LinearLayout linearLayout;
-
+public class NewsFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -92,25 +65,7 @@ public class NewsFragment extends Fragment implements NewsPageView {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_news, container, false);
-        ButterKnife.bind(this, view);
-        initialise();
-        newsListPresenter.getNews(sharedPrefs.getUserId(), "Raipur");
-        return view;
-
-    }
-
-    private void initialise() {
-        newsListPresenter = new NewsListPresenterImpl(this, new RetrofitNewsListProvider());
-        sharedPrefs = new SharedPrefs(getContext());
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-        newsListAdapter = new NewsListAdapter(getContext(), this);
-        recyclerview.setLayoutManager(linearLayoutManager);
-        recyclerview.setHasFixedSize(true);
-        newsListAdapter = new NewsListAdapter(getContext(), this);
-        recyclerview.setAdapter(newsListAdapter);
-
-
+        return inflater.inflate(R.layout.fragment_news2, container, false);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -123,7 +78,12 @@ public class NewsFragment extends Fragment implements NewsPageView {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-
+        if (context instanceof OnFragmentInteractionListener) {
+            mListener = (OnFragmentInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
     }
 
     @Override
@@ -131,38 +91,6 @@ public class NewsFragment extends Fragment implements NewsPageView {
         super.onDetach();
         mListener = null;
     }
-
-    @Override
-    public void showProgressBar(boolean show) {
-        if (show) {
-            progressBar.setVisibility(View.VISIBLE);
-            recyclerview.setVisibility(View.GONE);
-        } else {
-            progressBar.setVisibility(View.INVISIBLE);
-            recyclerview.setVisibility(View.VISIBLE);
-        }
-
-    }
-
-    @Override
-    public void showMessage(String message) {
-        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void setNewsList(List<NewsListDataDetails> newsListDataList) {
-        if (newsListDataList.size() == 0) {
-            linearLayout.setVisibility(View.VISIBLE);
-            recyclerview.setVisibility(View.INVISIBLE);
-        } else {
-            linearLayout.setVisibility(View.GONE);
-            recyclerview.setVisibility(View.VISIBLE);
-
-        }
-        newsListAdapter.setNewsListDataDetailsList(newsListDataList);
-        newsListAdapter.notifyDataSetChanged();
-    }
-
 
     /**
      * This interface must be implemented by activities that contain this
@@ -178,5 +106,4 @@ public class NewsFragment extends Fragment implements NewsPageView {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
-
 }

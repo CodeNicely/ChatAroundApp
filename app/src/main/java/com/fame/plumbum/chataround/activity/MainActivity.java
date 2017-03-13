@@ -45,7 +45,7 @@ import com.fame.plumbum.chataround.helper.Keys;
 import com.fame.plumbum.chataround.helper.Urls;
 import com.fame.plumbum.chataround.image_viewer.ImageViewerActivity;
 import com.fame.plumbum.chataround.news.view.NewsDetailsFragment;
-import com.fame.plumbum.chataround.news.view.NewsFragment;
+import com.fame.plumbum.chataround.news.view.NewsListFragment;
 import com.fame.plumbum.chataround.pollution.view.PollutionFragment;
 import com.fame.plumbum.chataround.restroom.view.RestroomFragment;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -194,14 +194,14 @@ public class MainActivity extends AppCompatActivity {
         world = new World();
         RestroomFragment restroomFragment = new RestroomFragment();
         PollutionFragment pollutionFragment = new PollutionFragment();
-        NewsFragment newsFragment = new NewsFragment();
+        NewsListFragment newsListFragment = new NewsListFragment();
 
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(profile, "My Profile");
         adapter.addFragment(world, "World");
         adapter.addFragment(new RestroomFragment().newInstance("", ""), "RestRoomFragment");
         adapter.addFragment(pollutionFragment, "PollutionFragment");
-        adapter.addFragment(newsFragment, "NewsFragment");
+        adapter.addFragment(newsListFragment, "NewsListFragment");
 
         upViewPager.setAdapter(adapter);
     }

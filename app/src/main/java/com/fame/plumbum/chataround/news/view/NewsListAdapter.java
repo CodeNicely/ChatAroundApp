@@ -1,7 +1,6 @@
 package com.fame.plumbum.chataround.news.view;
 
 import android.content.Context;
-import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -29,14 +28,14 @@ import butterknife.ButterKnife;
 public class NewsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private Context context;
     private LayoutInflater layoutInflater;
-    private NewsFragment newsFragment;
+    private NewsListFragment newsListFragment;
     private NewsListDataDetails newsListDataDetails;
     private ImageLoader imageLoader;
     private List<NewsListDataDetails> newsListDataDetailsList = new ArrayList<>();
 
-    public NewsListAdapter(Context context, NewsFragment newsFragment) {
+    public NewsListAdapter(Context context, NewsListFragment newsListFragment) {
         this.context = context;
-        this.newsFragment = newsFragment;
+        this.newsListFragment = newsListFragment;
         this.layoutInflater = LayoutInflater.from(context);
         this.imageLoader = new GlideImageLoader(context);
     }
@@ -87,6 +86,8 @@ public class NewsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         newsViewHolder.news_card.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+
 
 
 
