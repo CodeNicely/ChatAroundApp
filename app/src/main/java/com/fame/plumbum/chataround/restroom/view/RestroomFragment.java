@@ -277,7 +277,6 @@ public class RestroomFragment extends Fragment implements
 
             restRoomPresenter.requestRestRooms(sharedPrefs.getUserId(), latitude, longitude);
 
-            Toast.makeText(context, latitude + " WORKS " + longitude + "", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -328,7 +327,6 @@ public class RestroomFragment extends Fragment implements
         restRoomPresenter.requestRestRooms(sharedPrefs.getUserId(), latitude, longitude);
 
 
-        Toast.makeText(context, latitude + " WORKS " + longitude + "", Toast.LENGTH_LONG).show();
     }
 
 

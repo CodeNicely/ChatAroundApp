@@ -45,4 +45,8 @@
     <string name="directions">Directions</string>
     <string name="shout">Add Shout</string>
     <string name="tag_line">Necessary Information Within a Range of 1 Mile ! Login Once to enjoy all our Awesome Services</string>
+    <string name="nitrogen_dioxide">Nitrogen Dioxide</string>
+    <string name="carbon_oxide">Carbon Monoxide</string>
+    <string name="sulphur_dioxide">Sulphur Dioxide</string>
+    <string name="pollution_data_not_available">Sorry but Air Pollution data is not available for your city.Please ask the authorities to install a sensor.</string>
 </resources>

@@ -1,64 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="4dp"
-    android:padding="4dp">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_marginLeft="4dp"
+    android:layout_marginRight="4dp"
+    android:layout_marginBottom="0.5dp"
+    app:contentPadding="4dp"
+    app:cardCornerRadius="1dp"
+    >
 
-    <TextView
-        android:id="@+id/title"
-        android:layout_width="match_parent"
-        android:layout_height="28dp"
-        android:layout_centerInParent="true"
-        android:layout_gravity="center"
-        android:layout_margin="30dp"
-        android:background="@color/colorAccent"
-        android:gravity="center"
-        android:text="Hello World"
-        android:visibility="gone">
-
-
-    </TextView>
-
-    <com.github.pavlospt.CircleView
-        android:id="@+id/circleView"
-        android:layout_width="72dp"
-        android:layout_height="72dp"
-        android:layout_alignParentRight="true"
-        android:layout_gravity="end"
-        android:layout_margin="12dp"
-        android:elevation="10dp"
-        android:visibility="gone"
-        app:cv_backgroundColorValue="@color/black"
-        app:cv_fillColor="@color/colorAccent"
-        app:cv_fillRadius="1"
-        app:cv_strokeColorValue="@color/colorAccent"
-        app:cv_strokeWidthSize="0"
-        app:cv_subtitleSize="0dp"
-        app:cv_titleColor="@color/black"
-        app:cv_titleSize="18dp"
-        app:cv_titleText="title" />
-
-    <SeekBar
-        android:id="@+id/seek_bar"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/circleView"
-        android:layout_margin="8dp"
-        android:padding="8dp"
-        android:splitTrack="false"
-        android:thumb="@drawable/oval_thumb" />
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/aqi"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/seek_bar"
-        android:layout_margin="4dp"
-        android:gravity="center"
-        android:padding="4dp"
-        android:textColor="@color/black"
-        android:textSize="16dp" />
-</RelativeLayout>
+        <TextView
+            android:id="@+id/aqi"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:gravity="center"
+            android:padding="4dp"
+            android:textColor="@color/black"
+            android:textSize="16dp" />
+
+
+        <SeekBar
+            android:id="@+id/seek_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:padding="8dp"
+            android:splitTrack="false"
+            android:thumb="@drawable/line1" />
+
+
+    </LinearLayout>
+
+</android.support.v7.widget.CardView>
 
