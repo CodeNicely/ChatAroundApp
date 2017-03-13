@@ -1,11 +1,22 @@
 package com.fame.plumbum.chataround.news.view;
 
+
+import android.Manifest;
 import android.content.Context;
+import android.content.IntentSender;
+import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,12 +30,20 @@ import com.fame.plumbum.chataround.news.model.RetrofitNewsListProvider;
 import com.fame.plumbum.chataround.news.model.data.NewsListDataDetails;
 import com.fame.plumbum.chataround.news.presenter.NewsListPresenter;
 import com.fame.plumbum.chataround.news.presenter.NewsListPresenterImpl;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.fame.plumbum.chataround.R.id.codenicely;
 import static com.fame.plumbum.chataround.R.id.recyclerView;
 
 /**
@@ -35,7 +54,9 @@ import static com.fame.plumbum.chataround.R.id.recyclerView;
  * Use the {@link NewsListFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class NewsListFragment extends Fragment implements NewsPageView {
+public class NewsListFragment extends Fragment implements NewsPageView,GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener,
+        LocationListener {
     private NewsListPresenter newsListPresenter;
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
@@ -45,6 +66,12 @@ public class NewsListFragment extends Fragment implements NewsPageView {
     private NewsListAdapter newsListAdapter;
     @BindView(R.id.layout_not_available)
     LinearLayout linearLayout;
+    private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
+    private GoogleApiClient mGoogleApiClient;
+    private LocationRequest mLocationRequest;
+    private Double latitude;
+    private Double longitude;
+    private Context context;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -95,7 +122,21 @@ public class NewsListFragment extends Fragment implements NewsPageView {
         View view = inflater.inflate(R.layout.fragment_news, container, false);
         ButterKnife.bind(this, view);
         initialise();
-        newsListPresenter.getNews(sharedPrefs.getUserId(), "Raipur");
+        mGoogleApiClient = new GoogleApiClient.Builder(context)
+                // The next two lines tell the new client that “this” current class will handle connection stuff
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                //fourth line adds the LocationServices API endpoint from GooglePlayServices
+                .addApi(LocationServices.API)
+                .build();
+
+        // Create the LocationRequest object
+        mLocationRequest = LocationRequest.create()
+                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+                .setInterval(10 * 1000)        // 10 seconds, in milliseconds
+                .setFastestInterval(1 * 1000); // 1 second, in milliseconds
+
+        mGoogleApiClient.connect();
         return view;
 
     }
@@ -103,6 +144,7 @@ public class NewsListFragment extends Fragment implements NewsPageView {
     private void initialise() {
         newsListPresenter = new NewsListPresenterImpl(this, new RetrofitNewsListProvider());
         sharedPrefs = new SharedPrefs(getContext());
+        context=getContext();
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         newsListAdapter = new NewsListAdapter(getContext(), this);
         recyclerview.setLayoutManager(linearLayoutManager);
@@ -163,7 +205,6 @@ public class NewsListFragment extends Fragment implements NewsPageView {
         newsListAdapter.notifyDataSetChanged();
     }
 
-
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -178,5 +219,106 @@ public class NewsListFragment extends Fragment implements NewsPageView {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+    /**
+     * If connected get lat and long
+     */
+    @Override
+    public void onConnected(Bundle bundle) {
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        if (location == null) {
+            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+        } else {
+            //If everything went fine lets get latitude and longitude
+            latitude = location.getLatitude();
+            longitude = location.getLongitude();
+            Geocoder geocoder;
+            List<Address> addresses;
+            geocoder = new Geocoder(context, Locale.getDefault());
+
+            try {
+                addresses = geocoder.getFromLocation(latitude, longitude, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+                String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
+                String city = addresses.get(0).getLocality();
+                String state = addresses.get(0).getAdminArea();
+                String country = addresses.get(0).getCountryName();
+                String postalCode = addresses.get(0).getPostalCode();
+                String knownName = addresses.get(0).getFeatureName();
+                newsListPresenter.getNews(sharedPrefs.getUserId(), city);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
+    }
+    @Override
+    public void onConnectionSuspended(int i) {
+    }
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+            /*
+             * Google Play services can resolve some errors it detects.
+             * If the error has a resolution, try sending an Intent to
+             * start a Google Play services activity that can resolve
+             * error.
+             */
+        if (connectionResult.hasResolution()) {
+            try {
+                // Start an Activity that tries to resolve the error
+                connectionResult.startResolutionForResult(getActivity(), CONNECTION_FAILURE_RESOLUTION_REQUEST);
+                    /*
+                     * Thrown if Google Play services canceled the original
+                     * PendingIntent
+                     */
+            } catch (IntentSender.SendIntentException e) {
+                // Log the error
+                e.printStackTrace();
+            }
+        } else {
+                /*
+                 * If no resolution is available, display a dialog to the
+                 * user with the error.
+                 */
+            Log.e("Error", "Location services connection failed with code " + connectionResult.getErrorCode());
+        }
+    }
+    /**
+     * If locationChanges change lat and long
+     *
+     * @param location
+     */
+    @Override
+    public void onLocationChanged(Location location) {
+        latitude = location.getLatitude();
+        longitude = location.getLongitude();
+        Geocoder geocoder;
+        List<Address> addresses;
+        geocoder = new Geocoder(context, Locale.getDefault());
+
+        try {
+            addresses = geocoder.getFromLocation(latitude, longitude, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+            String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
+            String city = addresses.get(0).getLocality();
+            String state = addresses.get(0).getAdminArea();
+            String country = addresses.get(0).getCountryName();
+            String postalCode = addresses.get(0).getPostalCode();
+            String knownName = addresses.get(0).getFeatureName();
+            newsListPresenter.getNews(sharedPrefs.getUserId(), city);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 }
