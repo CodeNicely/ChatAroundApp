@@ -241,6 +241,10 @@ public class NewsListFragment extends Fragment implements NewsPageView,GoogleApi
             //If everything went fine lets get latitude and longitude
             latitude = location.getLatitude();
             longitude = location.getLongitude();
+
+           /* latitude=28.5223220;
+            longitude=77.1742630;
+*/
             Geocoder geocoder;
             List<Address> addresses;
             geocoder = new Geocoder(context, Locale.getDefault());
@@ -301,6 +305,12 @@ public class NewsListFragment extends Fragment implements NewsPageView,GoogleApi
     public void onLocationChanged(Location location) {
         latitude = location.getLatitude();
         longitude = location.getLongitude();
+
+/*
+        latitude=28.5223220;
+        longitude=77.1742630;
+*/
+
         Geocoder geocoder;
         List<Address> addresses;
         geocoder = new Geocoder(context, Locale.getDefault());

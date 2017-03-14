@@ -6,7 +6,6 @@ import android.graphics.Shader;
 import android.graphics.drawable.PaintDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RectShape;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -54,7 +53,7 @@ public class PollutuionAqiAdapter extends RecyclerView.Adapter<RecyclerView.View
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        View view = layoutInflater.inflate(R.layout.aqi_item, parent, false);
+        View view = layoutInflater.inflate(R.layout.pollution_item, parent, false);
         return new IndividualAqiViewHolder(view);
     }
 

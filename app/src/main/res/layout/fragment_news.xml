@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/gray"
+    android:background="@color/white"
     tools:context="com.fame.plumbum.chataround.news.view.NewsListFragment">
 
     <LinearLayout
@@ -24,7 +24,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="8dp"
-            android:src="@drawable/ic_menu_camera"
 
             />
 

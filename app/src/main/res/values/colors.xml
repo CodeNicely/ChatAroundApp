@@ -6,8 +6,6 @@
     <!--<color name="colorAccent">#FF4081</color>-->
     <color name="colorAccent">#F7D410</color>
     <color name="colorAccentBlue">#4F7CAC</color>
-    <color name="colorAccentRed">#E3170A</color>
-    <color name="accentGray">#AD343E</color>
 
     <color name="transparent">#00000000</color>
 
@@ -22,11 +20,6 @@
 
 
     <color name="gray">#DCDCDC</color>
-    <color name="green">#228B22</color>
-    <color name="chat">#FAF7D1</color>
-    <color name="textColorPrimary">#FFFFFF</color>
-    <color name="windowBackground">#FFFFFF</color>
-    <color name="navigationBarColor">#000000</color>
     <color name="white_100_percent">#FFFFFF</color>
 
 </resources>

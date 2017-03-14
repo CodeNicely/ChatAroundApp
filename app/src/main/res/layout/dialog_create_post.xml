@@ -10,7 +10,7 @@
         android:background="#202020"
         android:padding="6dp"
         android:gravity="center"
-        android:text="Your Shout"
+        android:text="@string/shout"
         android:textColor="#FFFFFF"
         android:textSize="24sp" />
 

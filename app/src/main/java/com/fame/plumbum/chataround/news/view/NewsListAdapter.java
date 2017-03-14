@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.fame.plumbum.chataround.R;
 import com.fame.plumbum.chataround.activity.MainActivity;

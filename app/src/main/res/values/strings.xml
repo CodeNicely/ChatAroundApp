@@ -2,53 +2,28 @@
     <string name="app_name">1 Mile</string>
 
     <!-- Strings related to login -->
-    <string name="prompt_email">Email</string>
-    <string name="prompt_password">Password (optional)</string>
-    <string name="action_sign_in">Sign in or register</string>
-    <string name="action_sign_in_short">Sign in</string>
-    <string name="error_invalid_email">This email address is invalid</string>
-    <string name="error_invalid_password">This password is too short</string>
-    <string name="error_incorrect_password">This password is incorrect</string>
-    <string name="error_field_required">This field is required</string>
-
     <string name="google_maps_key">AIzaSyCKxL9YpnXpIPYmGa4ZifTGpbbLr59KLOI</string>
-    <string name="permission_rationale">"Contacts permissions are needed for providing email
-        completions."
-    </string>
-    <string name="title_activity_main">User Profile</string>
-
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
-    <string name="facebook_app_id">1013830091986328</string>
-    <string name="lorem">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc,</string>
-    <string-array name="array_chat">
-
-    </string-array>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_indoor_mapping">IndoorMapping</string>
     <string name="take_picture">Take Pic</string>
     <string name="select_images_gallery">Select Images</string>
-    <string name="upload_pic">Upload Restroom</string>
-    <string name="activity_add_restroom">Add Restroom</string>
-    <string name="add_restroom">Add New Restroom</string>
+    <string name="add_restroom">Add Toilet</string>
     <string name="male_compatible">Male Compatible</string>
     <string name="female_compatible">Female Compatible</string>
     <string name="disabled_compatible">Disabled Compatible</string>
     <string name="address">Address Here</string>
-    <string name="get_route">Get Route</string>
-    <string name="submit_restroom">Submit Restroom</string>
+    <string name="submit_restroom">Submit Toilet</string>
     <string name="click_pic">Click and Add one or More Pictures</string>
     <string name="directions">Directions</string>
-    <string name="shout">Add Shout</string>
+    <string name="shout">Shout!</string>
     <string name="tag_line">Go Local</string>
-    <string name="tagline">Go Local</string>
     <string name="nitrogen_dioxide">Nitrogen Dioxide</string>
     <string name="carbon_oxide">Carbon Monoxide</string>
     <string name="sulphur_dioxide">Sulphur Dioxide</string>
     <string name="pollution_data_not_available">Sorry but Air Pollution data is not available for your city.Please ask the authorities to install a sensor.</string>
     <string name="news_detail">News Detail</string>
+    <string name="toilet_data_not_available">Sorry , There are no public restrooms near you. If you see one please add it to our database</string>
 </resources>

@@ -71,8 +71,6 @@ public class MainActivity extends AppCompatActivity {
     public int count = 0;
     String token;
 
-    private Menu menu;
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -114,19 +112,10 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.getTabAt(3).setIcon(R.drawable.pollution1);
         tabLayout.getTabAt(4).setIcon(R.drawable.newspaper);
 
-
+        viewPager.setOffscreenPageLimit(5);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-                if (menu != null) {
-                    MenuItem shout = menu.findItem(R.id.action_shout);
-                    if (position == 1) {
-                        shout.setVisible(true);
-                    } else {
-                        shout.setVisible(false);
-                    }
-                }
 
 
                 switch (position) {
@@ -169,7 +158,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        viewPager.setCurrentItem(1);
+        viewPager.setCurrentItem(4);
     }
 
     private void initFCM() {

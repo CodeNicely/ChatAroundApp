@@ -5,15 +5,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.NestedScrollView;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -40,9 +39,7 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
-import java.io.IOException;
 import java.util.List;
-import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -91,6 +88,12 @@ public class RestroomFragment extends Fragment implements
 
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
+
+    @BindView(R.id.restroom_data_not_found_layout)
+    CardView restroom_data_not_found_layout;
+
+    @BindView(R.id.nestedScrollView)
+    NestedScrollView nestedScrollView;
 
 
     // TODO: Rename and change types of parameters
@@ -242,6 +245,14 @@ public class RestroomFragment extends Fragment implements
 
     @Override
     public void onReceived(List<RestRoomDetails> restRoomDetailsList) {
+
+        if (restRoomDetailsList.size() == 0) {
+            restroom_data_not_found_layout.setVisibility(View.VISIBLE);
+            nestedScrollView.setVisibility(View.GONE);
+        } else {
+            restroom_data_not_found_layout.setVisibility(View.GONE);
+            nestedScrollView.setVisibility(View.VISIBLE);
+        }
 
         Log.d("Data Received", String.valueOf(restRoomDetailsList.size()));
         restroomAdapter.setData(restRoomDetailsList);
