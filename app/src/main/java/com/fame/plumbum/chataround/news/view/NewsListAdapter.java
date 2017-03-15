@@ -65,13 +65,14 @@ public class NewsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             newsViewHolder.progressBar.setVisibility(View.GONE);
         }*/
 
-        if (newsListDataDetails.getSource() == null) {
+/*        if (newsListDataDetails.getSource() == null) {
             newsViewHolder.newsSource.setVisibility(View.GONE);
         } else {
             newsViewHolder.newsSource.setText(newsListDataDetails.getSource());
 
             newsViewHolder.newsSource.setVisibility(View.VISIBLE);
-        }
+        }*/
+/*
 
         if (newsListDataDetails.getAuthor() == null) {
             newsViewHolder.newsAuthor.setVisibility(View.GONE);
@@ -80,11 +81,12 @@ public class NewsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
             newsViewHolder.newsAuthor.setVisibility(View.VISIBLE);
         }
+*/
 
 
-        newsViewHolder.newsDescription.setText(newsListDataDetails.getBody_small());
-        newsViewHolder.news_published_timestamp.setText(newsListDataDetails.getPublished_at());
-        newsViewHolder.newsAuthor.setText(newsListDataDetails.getAuthor());
+//        newsViewHolder.newsDescription.setText(newsListDataDetails.getBody_small());
+//        newsViewHolder.news_published_timestamp.setText(newsListDataDetails.getPublished_at());
+//        newsViewHolder.newsAuthor.setText(newsListDataDetails.getAuthor());
         newsViewHolder.news_card.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -23,7 +23,8 @@
     <string name="nitrogen_dioxide">Nitrogen Dioxide</string>
     <string name="carbon_oxide">Carbon Monoxide</string>
     <string name="sulphur_dioxide">Sulphur Dioxide</string>
-    <string name="pollution_data_not_available">Sorry but Air Pollution data is not available for your city.Please ask the authorities to install a sensor.</string>
+    <string name="pollution_data_not_available">Sorry, Air Pollution data is not available for your
+        location.Please ask the authorities to install an air pollution sensor in your city.</string>
     <string name="news_detail">News Detail</string>
-    <string name="toilet_data_not_available">Sorry , There are no public restrooms near you. If you see one please add it to our database</string>
+    <string name="toilet_data_not_available">Sorry ,our database is not showing any public toilets near you. If you see one, please add it using the button above.</string>
 </resources>

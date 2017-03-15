@@ -92,9 +92,6 @@ public class RestroomFragment extends Fragment implements
     @BindView(R.id.restroom_data_not_found_layout)
     CardView restroom_data_not_found_layout;
 
-    @BindView(R.id.nestedScrollView)
-    NestedScrollView nestedScrollView;
-
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -248,10 +245,10 @@ public class RestroomFragment extends Fragment implements
 
         if (restRoomDetailsList.size() == 0) {
             restroom_data_not_found_layout.setVisibility(View.VISIBLE);
-            nestedScrollView.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.GONE);
         } else {
             restroom_data_not_found_layout.setVisibility(View.GONE);
-            nestedScrollView.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.VISIBLE);
         }
 
         Log.d("Data Received", String.valueOf(restRoomDetailsList.size()));

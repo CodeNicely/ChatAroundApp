@@ -97,6 +97,10 @@ public class PollutionFragment extends Fragment implements
     @BindView(R.id.pollution_data_not_found_layout)
     CardView pollution_data_not_found_layout;
 
+    @BindView(R.id.pollution_data_not_found_message)
+    TextView pollution_data_not_found_message;
+
+
     private GoogleApiClient mGoogleApiClient = null;
     private Location mLastLocation;
     private double latitude;
@@ -230,15 +234,44 @@ public class PollutionFragment extends Fragment implements
 
         List<Double> geo = airPollutionDetails.getData().getCity().getGeo();
 
-
-        if (DistanceUtils.calculateDistanceBetweenTwoPoints(
+        double distance1 = DistanceUtils.calculateDistanceBetweenTwoPoints(
                 latitude,
                 longitude,
                 geo.get(0),
-                geo.get(1)
-        ) > 50) {
+                geo.get(1));
+
+        double distance2 = DistanceUtils.calculateDistanceBetweenTwoPoints(
+                latitude,
+                longitude,
+                geo.get(1),
+                geo.get(0));
+
+        double distance = 0.0;
+        if (distance1 < distance2) {
+            distance = distance1;
+        } else {
+            distance = distance2;
+        }
+/*
+        Location myLocation=new Location("My Location");
+        myLocation.setLatitude(latitude);
+        myLocation.setLongitude(longitude);
+
+        Location sensorLocation=new Location("Sensor Location");
+        sensorLocation.setLatitude(geo.get(1));
+        sensorLocation.setLongitude(geo.get(0));
+
+        distance = myLocation.distanceTo(sensorLocation) ;
+*/
+
+        if (distance > 50) {
 
             pollution_data_not_found_layout.setVisibility(View.VISIBLE);
+            pollution_data_not_found_message.append("\n\nYour distance from Nearest Sensor is - " +
+                    String.valueOf(Math.round(distance)) + " Kms and Sensor Latitude Longitude is "
+                    + String.valueOf(geo.get(0)) + "  " + String.valueOf(geo.get(1))
+            );
+
             scrollView.setVisibility(View.GONE);
             return;
         } else {
@@ -281,7 +314,7 @@ public class PollutionFragment extends Fragment implements
             healthStatement = "Health warnings of emergency conditions. The entire population is " +
                     "more likely to be affected.";
 
-        } else if (aqi > 300 && aqi <= 300) {
+        } else if (aqi > 300) {
 
             circleView.setFillColor(ContextCompat.getColor(getContext(), R.color.hazardous));
             healthStatement = "Health alert: everyone may experience more serious health effects";
@@ -670,6 +703,21 @@ This Method is for Pressure that we are not going to use.
             latitude = mLastLocation.getLatitude();
             longitude = mLastLocation.getLongitude();
 
+/*
+
+            Delhi
+            latitude=28.5223220;
+            longitude=77.1742630;
+*/
+
+/*
+
+            Korba
+
+            latitude=22.360133;
+            longitude=82.719884;
+*/
+
             new PollutionPresenterImpl(this,
                     new RetrofitPollutionProvider())
                     .requestAirPollution(latitude, longitude);
@@ -696,6 +744,18 @@ This Method is for Pressure that we are not going to use.
     public void onLocationChanged(Location location) {
         latitude = location.getLatitude();
         longitude = location.getLongitude();
+
+/*
+        Delhi
+        latitude=28.5223220;
+        longitude=77.1742630;
+*/
+
+
+/*
+        Korba
+        latitude=22.360133;
+        longitude=82.719884;*/
 
         new PollutionPresenterImpl(this,
                 new RetrofitPollutionProvider())

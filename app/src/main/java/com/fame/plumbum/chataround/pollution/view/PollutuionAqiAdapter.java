@@ -89,8 +89,8 @@ public class PollutuionAqiAdapter extends RecyclerView.Adapter<RecyclerView.View
                 public Shader resize(int width, int height) {
                     LinearGradient linearGradient = new LinearGradient(0, 0, width, height,
                             new int[]{
-                                    0xBB00E400, 0xBBFFFF00, 0xBBFF7E00, 0xBBFF0000,
-                                    0xBB8F3F97, 0xBB7E0023
+                                    0xFF00E400, 0xFFFFFF00, 0xFFFF7E00, 0xFFFF0000,
+                                    0xFF8F3F97, 0xFF7E0023
                             }, //substitute the correct colors for these
                             new float[]{
                                     value.getValue1() / value.getValue6(),
