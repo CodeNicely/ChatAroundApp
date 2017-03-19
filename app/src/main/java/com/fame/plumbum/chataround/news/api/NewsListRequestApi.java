@@ -13,6 +13,11 @@ import retrofit2.http.Query;
 
 public interface NewsListRequestApi {
     @GET(Urls.SUB_URL_NEWS_LIST)
-    Call<NewsListData> getNewsList(@Query("userId") String userId,@Query("city") String city);
+    Call<NewsListData> getNewsList(@Query("userId") String userId,
+                                   @Query("city") String city,
+                                   @Query("state") String state,
+                                   @Query("country") String country
+
+    );
 
 }

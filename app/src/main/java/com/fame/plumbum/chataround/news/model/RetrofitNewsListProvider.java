@@ -23,7 +23,7 @@ public class RetrofitNewsListProvider implements NewsListProvider {
 
 
     @Override
-    public void getNewsList(String  userId, String city, final NewsFeedRequestCallback newsFeedRequestCallback) {
+    public void getNewsList(String  userId, String city,String state,String country, final NewsFeedRequestCallback newsFeedRequestCallback) {
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
@@ -31,7 +31,7 @@ public class RetrofitNewsListProvider implements NewsListProvider {
         Retrofit retrofit= new Retrofit.Builder().baseUrl(Urls.BASE_URL).client(client).
                 addConverterFactory(GsonConverterFactory.create()).build();
         NewsListRequestApi newsListRequestApi = retrofit.create(NewsListRequestApi.class);
-        Call<NewsListData> call=newsListRequestApi.getNewsList(userId,city);
+        Call<NewsListData> call=newsListRequestApi.getNewsList(userId,city,state,country);
         call.enqueue(new Callback<NewsListData>() {
             @Override
             public void onResponse(Call<NewsListData> call, Response<NewsListData> response) {

@@ -7,5 +7,9 @@ import com.fame.plumbum.chataround.news.NewsFeedRequestCallback;
  */
 
 public interface NewsListProvider {
-    void getNewsList(String userId, String city, NewsFeedRequestCallback newsFeedRequestCallback);
+    void getNewsList(String userId,
+                     String city,
+                     String state,
+                     String country,
+                     NewsFeedRequestCallback newsFeedRequestCallback);
 }

@@ -257,7 +257,7 @@ public class NewsListFragment extends Fragment implements NewsPageView,GoogleApi
                 String country = addresses.get(0).getCountryName();
                 String postalCode = addresses.get(0).getPostalCode();
                 String knownName = addresses.get(0).getFeatureName();
-                newsListPresenter.getNews(sharedPrefs.getUserId(), city);
+                newsListPresenter.getNews(sharedPrefs.getUserId(), city,state,country);
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -323,7 +323,7 @@ public class NewsListFragment extends Fragment implements NewsPageView,GoogleApi
             String country = addresses.get(0).getCountryName();
             String postalCode = addresses.get(0).getPostalCode();
             String knownName = addresses.get(0).getFeatureName();
-            newsListPresenter.getNews(sharedPrefs.getUserId(), city);
+            newsListPresenter.getNews(sharedPrefs.getUserId(), city,state,country);
 
         } catch (IOException e) {
             e.printStackTrace();
