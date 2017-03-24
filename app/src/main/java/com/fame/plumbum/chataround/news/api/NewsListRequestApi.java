@@ -1,7 +1,7 @@
 package com.fame.plumbum.chataround.news.api;
 
 import com.fame.plumbum.chataround.helper.Urls;
-import com.fame.plumbum.chataround.news.model.data.NewsListData;
+import com.fame.plumbum.chataround.news.model.NewsListData;
 
 import retrofit2.Call;
 import retrofit2.http.GET;

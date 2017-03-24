@@ -76,7 +76,9 @@ public class Chat_adapter extends BaseAdapter {
             rl_caht.setVisibility(View.VISIBLE);
             sender_name.setText(toProperCase(chats.get(position).getRemote_name().replace("%20", " ")));
             message.setText(chats.get(position).getMessage().replace("%20", " "));
-            SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss yyyy");
+//            SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss yyyy");
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
             Date date = null;
             try {
                 date = sdf.parse(chats.get(position).getTimestamp());

@@ -9,13 +9,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.fame.plumbum.chataround.R;
 import com.fame.plumbum.chataround.activity.MainActivity;
 import com.fame.plumbum.chataround.helper.image_loader.GlideImageLoader;
 import com.fame.plumbum.chataround.helper.image_loader.ImageLoader;
-import com.fame.plumbum.chataround.news.model.data.NewsListDataDetails;
+import com.fame.plumbum.chataround.news.model.NewsListDataDetails;
 
 import java.util.ArrayList;
 import java.util.List;

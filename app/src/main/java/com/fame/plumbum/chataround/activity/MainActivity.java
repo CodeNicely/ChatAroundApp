@@ -87,6 +87,10 @@ public class MainActivity extends AppCompatActivity {
                         lng = intent.getDoubleExtra("lng", 0.0);
                         world.lat = lat;
                         world.lng = lng;
+
+                        profile.lat=lat;
+                        profile.lng=lng;
+
                         if (needSomethingTweet || needSomethingWorld) {
                             needSomethingWorld = false;
                             needSomethingTweet = false;

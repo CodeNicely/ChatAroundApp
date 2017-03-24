@@ -86,7 +86,9 @@ public class Comments_adapter extends BaseAdapter {
             getImage(comments.getJSONObject(position).getString("CommentorId"), false, user_img);
             commentor_name.setText(toProperCase(comments.getJSONObject(position).getString("CommentorName")));
             comment.setText(comments.getJSONObject(position).getString("Comment").replace("%20", " "));
-            SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss yyyy");
+//            SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss yyyy");
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
             Date date = sdf.parse(comments.getJSONObject(position).getString("TimeStamp"));
             long millis = date.getTime();
             long current_millis = (new Date()).getTime();

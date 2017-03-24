@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -25,10 +24,10 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.fame.plumbum.chataround.R;
+import com.fame.plumbum.chataround.add_restroom.view.AddRestroomActivity;
 import com.fame.plumbum.chataround.helper.SharedPrefs;
-import com.fame.plumbum.chataround.image_upload.model.data.AddRestroomData;
-import com.fame.plumbum.chataround.image_upload.view.AddRestroomView;
-import com.fame.plumbum.chataround.image_upload.view.UploadImageActivity;
+import com.fame.plumbum.chataround.add_restroom.model.data.AddRestroomData;
+import com.fame.plumbum.chataround.add_restroom.view.AddRestroomView;
 import com.fame.plumbum.chataround.restroom.model.RestRoomDetails;
 import com.fame.plumbum.chataround.restroom.presenter.RestRoomPresenter;
 import com.fame.plumbum.chataround.restroom.presenter.RestRoomPresenterImpl;
@@ -180,7 +179,7 @@ public class RestroomFragment extends Fragment implements
         addRestroom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), UploadImageActivity.class);
+                Intent intent = new Intent(getActivity(), AddRestroomActivity.class);
                 startActivity(intent);
             }
         });

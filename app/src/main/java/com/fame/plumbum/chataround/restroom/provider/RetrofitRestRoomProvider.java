@@ -1,12 +1,10 @@
 package com.fame.plumbum.chataround.restroom.provider;
 
 import com.fame.plumbum.chataround.helper.Urls;
+import com.fame.plumbum.chataround.pollution.provider.RetrofitCache;
 import com.fame.plumbum.chataround.restroom.OnRestRoomApiResponse;
 import com.fame.plumbum.chataround.restroom.api.RestroomRequestApi;
 import com.fame.plumbum.chataround.restroom.model.RestRoomData;
-import com.fame.plumbum.chataround.restroom.model.RestRoomDetails;
-
-import java.util.List;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -15,6 +13,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+
+import static com.fame.plumbum.chataround.pollution.provider.RetrofitCache.REWRITE_CACHE_CONTROL_INTERCEPTOR;
 
 /**
  * Created by meghal on 19/2/17.
@@ -28,7 +28,9 @@ public class RetrofitRestRoomProvider implements RestRoomProvider {
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
-        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor)
+        OkHttpClient client = new OkHttpClient.Builder()
+                .addInterceptor(REWRITE_CACHE_CONTROL_INTERCEPTOR)
+                .cache(RetrofitCache.provideCache())
                 .build();
 
 

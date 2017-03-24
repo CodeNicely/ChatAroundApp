@@ -1,8 +1,8 @@
 package com.fame.plumbum.chataround.news.presenter;
 
 import com.fame.plumbum.chataround.news.NewsFeedRequestCallback;
-import com.fame.plumbum.chataround.news.model.NewsListProvider;
-import com.fame.plumbum.chataround.news.model.data.NewsListData;
+import com.fame.plumbum.chataround.news.provider.NewsListProvider;
+import com.fame.plumbum.chataround.news.model.NewsListData;
 import com.fame.plumbum.chataround.news.view.NewsListFragment;
 
 /**
@@ -28,7 +28,6 @@ public class NewsListPresenterImpl implements NewsListPresenter {
                 newsListFragment.showProgressBar(false);
                 if (newsListData.isSuccess()) {
                     newsListFragment.setNewsList(newsListData.getNewsListDataDetailsList());
-                    newsListFragment.showMessage(newsListData.getMessage());
                 } else {
                     newsListFragment.showMessage(newsListData.getMessage());
                 }

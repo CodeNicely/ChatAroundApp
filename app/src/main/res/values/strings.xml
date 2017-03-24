@@ -26,5 +26,6 @@
     <string name="pollution_data_not_available">Sorry, Air Pollution data is not available for your
         location.Please ask the authorities to install an air pollution sensor in your city.</string>
     <string name="news_detail">News Detail</string>
-    <string name="toilet_data_not_available">Sorry ,our database is not showing any public toilets near you. If you see one, please add it using the button above.</string>
+    <string name="toilet_data_not_available">Sorry, our database is not showing a public toilet near
+        you. If you see one, please add it using the button above.</string>
 </resources>

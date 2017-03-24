@@ -156,7 +156,9 @@ public class Tweets_adapter extends BaseAdapter {
             getImage(posts.getJSONObject(position).getString("PosterId"), false, user_img);
             poster_name.setText(toProperCase(posts.getJSONObject(position).getString("PosterName").replace("%20", " ")));
             message.setText(posts.getJSONObject(position).getString("Post").replace("%20", " "));
-            SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss yyyy");
+//            SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss yyyy");
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
             Date date = sdf.parse(posts.getJSONObject(position).getString("TimeStamp"));
             long millis = date.getTime();
             long current_millis = (new Date()).getTime();
@@ -259,18 +261,15 @@ public class Tweets_adapter extends BaseAdapter {
                     public void onResponse(String response) {
                         try {
                             JSONObject json = new JSONObject(response);
-                            Log.d("Tweets Adapter ",json.toString());
+                            Log.d("Tweets Adapter ", json.toString());
                             if (json.getInt("Status") == 200) {
                                 image_name[0] = json.getString("ImageName");
-                                if (big)
-                                {
+                                if (big) {
                                     picassoBig(image_name[0], user_img);
-                                }
-                                else
-                                {
+                                } else {
                                     picassoSmall(image_name[0], user_img);
                                 }
-                            }else if(json.getInt("Status")==400){
+                            } else if (json.getInt("Status") == 400) {
 
                                 Toast.makeText(context, "Status 400 for ImageName Api", Toast.LENGTH_SHORT).show();
 

@@ -82,7 +82,9 @@ public class Chat_personal_adapter extends BaseAdapter {
             getImage(chatTableList.get(position).getRemote_id(), false, user_img);
             commentor_name.setText(toProperCase(chatTableList.get(position).getRemote_name().replace("%20", " ")));
         }
-        SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss yyyy");
+//        SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss yyyy");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
         Date date = new Date();
         try {
             date = sdf.parse(chatTableList.get(position).getTimestamp());

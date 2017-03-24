@@ -9,5 +9,6 @@
 
     <dimen name="padding_small">2dp</dimen>
     <dimen name="textSizeExtraSmall">12dp</dimen>
+    <dimen name="textSizeSmall">16dp</dimen>
     <dimen name="padding_medium">4dp</dimen>
 </resources>

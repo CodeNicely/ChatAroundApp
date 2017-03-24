@@ -99,8 +99,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
         sharedPrefs = new SharedPrefs(this);
 
-        if(sharedPrefs.isLoggedIn()){
-            Intent intent=new Intent(LoginActivity.this,MainActivity.class);
+        if (sharedPrefs.isLoggedIn()) {
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(intent);
             finish();
         }
@@ -252,7 +252,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     }
 
     private void signIn() {
-        Toast.makeText(this, "SignInButtonClicked", Toast.LENGTH_SHORT).show();
 
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -701,10 +700,10 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
         if (permissionsList.size() > 0) {
             if (permissionsNeeded.size() > 0) {
-                // Need Rationale
-                String message = "You need to grant access to " + permissionsNeeded.get(0);
+            /*    // Need Rationale
+                String message = "1 Mile makes use of your location data to provide you with your local resources. Please grant us access to - " + permissionsNeeded.get(0).substring(0, 1).toUpperCase() + permissionsNeeded.get(0).substring(1).toLowerCase();
                 for (int i = 1; i < permissionsNeeded.size(); i++)
-                    message = message + ", " + permissionsNeeded.get(i);
+                    message = message + ", " + permissionsNeeded.get(i).substring(0, 1).toUpperCase() + permissionsNeeded.get(1).substring(1).toLowerCase();
                 showMessageOKCancel(message,
                         new DialogInterface.OnClickListener() {
                             @Override
@@ -712,8 +711,10 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                                 ActivityCompat.requestPermissions(LoginActivity.this, permissionsList.toArray(new String[permissionsList.size()]),
                                         REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS);
                             }
-                        });
-                return;
+                        });*/
+                ActivityCompat.requestPermissions(LoginActivity.this, permissionsList.toArray(new String[permissionsList.size()]),
+                        REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS);
+//                return;
             }
             ActivityCompat.requestPermissions(this, permissionsList.toArray(new String[permissionsList.size()]),
                     REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS);

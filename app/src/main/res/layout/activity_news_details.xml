@@ -112,7 +112,7 @@
                     android:padding="4dp"
                     android:text="Description"
                     android:textColor="#424242"
-                    android:textSize="14dp"
+                    android:textSize="@dimen/textSizeSmall"
 
                     />
 

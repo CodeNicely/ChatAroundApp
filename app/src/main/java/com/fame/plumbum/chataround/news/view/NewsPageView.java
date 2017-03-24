@@ -1,7 +1,6 @@
 package com.fame.plumbum.chataround.news.view;
 
-import com.fame.plumbum.chataround.news.model.data.NewsListData;
-import com.fame.plumbum.chataround.news.model.data.NewsListDataDetails;
+import com.fame.plumbum.chataround.news.model.NewsListDataDetails;
 
 import java.util.List;
 

@@ -10,8 +10,6 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -26,8 +24,8 @@ import android.widget.Toast;
 
 import com.fame.plumbum.chataround.R;
 import com.fame.plumbum.chataround.helper.SharedPrefs;
-import com.fame.plumbum.chataround.news.model.RetrofitNewsListProvider;
-import com.fame.plumbum.chataround.news.model.data.NewsListDataDetails;
+import com.fame.plumbum.chataround.news.provider.RetrofitNewsListProvider;
+import com.fame.plumbum.chataround.news.model.NewsListDataDetails;
 import com.fame.plumbum.chataround.news.presenter.NewsListPresenter;
 import com.fame.plumbum.chataround.news.presenter.NewsListPresenterImpl;
 import com.google.android.gms.common.ConnectionResult;
@@ -43,7 +41,6 @@ import java.util.Locale;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.fame.plumbum.chataround.R.id.codenicely;
 import static com.fame.plumbum.chataround.R.id.recyclerView;
 
 /**
@@ -54,7 +51,9 @@ import static com.fame.plumbum.chataround.R.id.recyclerView;
  * Use the {@link NewsListFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class NewsListFragment extends Fragment implements NewsPageView,GoogleApiClient.ConnectionCallbacks,
+public class NewsListFragment extends Fragment implements
+        NewsPageView,
+        GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener {
     private NewsListPresenter newsListPresenter;

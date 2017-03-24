@@ -1,6 +1,6 @@
 package com.fame.plumbum.chataround.news;
 
-import com.fame.plumbum.chataround.news.model.data.NewsListData;
+import com.fame.plumbum.chataround.news.model.NewsListData;
 
 /**
  * Created by ramya on 10/3/17.

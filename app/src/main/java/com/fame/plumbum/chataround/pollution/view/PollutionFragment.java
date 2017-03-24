@@ -91,8 +91,8 @@ public class PollutionFragment extends Fragment implements
     @BindView(R.id.humidity)
     TextView humidity;
 
-    @BindView(R.id.wind)
-    TextView wind;
+    @BindView(R.id.humidity_description)
+    TextView humidity_description;
 
     @BindView(R.id.pollution_data_not_found_layout)
     CardView pollution_data_not_found_layout;
@@ -264,14 +264,14 @@ public class PollutionFragment extends Fragment implements
         distance = myLocation.distanceTo(sensorLocation) ;
 */
 
-        if (distance > 50) {
+        if (distance > 5000) {
 
             pollution_data_not_found_layout.setVisibility(View.VISIBLE);
-            pollution_data_not_found_message.append("\n\nYour distance from Nearest Sensor is - " +
+            /*pollution_data_not_found_message.append("\n\nYour distance from Nearest Sensor is - " +
                     String.valueOf(Math.round(distance)) + " Kms and Sensor Latitude Longitude is "
                     + String.valueOf(geo.get(0)) + "  " + String.valueOf(geo.get(1))
             );
-
+*/
             scrollView.setVisibility(View.GONE);
             return;
         } else {
@@ -324,16 +324,24 @@ public class PollutionFragment extends Fragment implements
 
         try {
             humidity.setText("Humidity - " + String.valueOf(airPollutionDetails.getData().getIaqi().getH().getV()));
+
+            if (airPollutionDetails.getData().getIaqi().getH().getV() < 30) {
+                humidity_description.setText(" May lead to eye, nose and throat discomfort, contact " +
+                        "lens irritation, dry skin, and static electricity buildup");
+            } else if (airPollutionDetails.getData().getIaqi().getH().getV() > 30 ||
+                    airPollutionDetails.getData().getIaqi().getH().getV() < 60) {
+                humidity_description.setText("Optimal");
+            } else if (airPollutionDetails.getData().getIaqi().getH().getV() > 60) {
+
+                humidity_description.setText(" May lead to physical discomfort, as sweat is not" +
+                        " allowed to readily evaporate from the body and mold growth");
+            }
+
         } catch (Exception e) {
             Log.e(TAG, e.getMessage());
 
         }
 
-        try {
-            wind.setText("Wind Speed - " + String.valueOf(airPollutionDetails.getData().getIaqi().getWd().getV()));
-        } catch (Exception e) {
-            Log.e(TAG, e.getMessage());
-        }
 
         circleView.setTitleText(String.valueOf(airPollutionDetails.getData().getAqi()) + "\n" + "AQI");
         aqi_health_notice.setText(healthStatement);
