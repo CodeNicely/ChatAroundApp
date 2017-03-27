@@ -12,12 +12,20 @@ public class ImageData {
     @Expose
     private String file;
 
+    private boolean footer;
+
     public ImageData() {
 
     }
 
+    public ImageData(String file, boolean footer) {
+        this.file = file;
+        this.footer = footer;
+    }
+
     public ImageData(String file) {
         this.file = file;
+        this.footer=false;
     }
 
     public static ImageData fromJson(JsonObject jsonObject) {
@@ -25,6 +33,14 @@ public class ImageData {
         ImageData imageData = new ImageData();
         imageData.file = jsonObject.get("file").getAsString();
         return imageData;
+    }
+
+    public boolean isFooter() {
+        return footer;
+    }
+
+    public void setFooter(boolean footer) {
+        this.footer = footer;
     }
 
     public String getFile() {

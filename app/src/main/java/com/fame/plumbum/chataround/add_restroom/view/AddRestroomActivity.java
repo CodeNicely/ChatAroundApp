@@ -16,6 +16,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
@@ -23,7 +24,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -31,9 +31,6 @@ import android.widget.Toast;
 
 import com.desmond.squarecamera.CameraActivity;
 import com.fame.plumbum.chataround.R;
-import com.fame.plumbum.chataround.helper.Keys;
-import com.fame.plumbum.chataround.helper.RxSchedulersHook;
-import com.fame.plumbum.chataround.helper.SharedPrefs;
 import com.fame.plumbum.chataround.add_restroom.model.ImageDataProviderImp;
 import com.fame.plumbum.chataround.add_restroom.model.RetrofitAddRestroomProvider;
 import com.fame.plumbum.chataround.add_restroom.model.data.AddRestroomData;
@@ -43,6 +40,9 @@ import com.fame.plumbum.chataround.add_restroom.presenter.AddRestroomPresenter;
 import com.fame.plumbum.chataround.add_restroom.presenter.AddRestroomPresenterImpl;
 import com.fame.plumbum.chataround.add_restroom.presenter.ImagePresenter;
 import com.fame.plumbum.chataround.add_restroom.presenter.ImagePresenterImpl;
+import com.fame.plumbum.chataround.helper.Keys;
+import com.fame.plumbum.chataround.helper.RxSchedulersHook;
+import com.fame.plumbum.chataround.helper.SharedPrefs;
 import com.fame.plumbum.chataround.services.UploadService;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -102,8 +102,6 @@ public class AddRestroomActivity extends Activity implements
 
     @BindView(R.id.galleryButton)
     Button galleryButton;
-    @BindView(R.id.cameraButton)
-    ImageView cameraButton;
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
 
@@ -173,11 +171,27 @@ public class AddRestroomActivity extends Activity implements
 
 
         StaggeredGridLayoutManager staggeredGridLayoutManager = new
-                StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
-        recyclerView.setLayoutManager(staggeredGridLayoutManager);
+                StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.HORIZONTAL);
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(
+                this,
+                LinearLayoutManager.HORIZONTAL,
+                false
+
+        );
+
+        linearLayoutManager.setStackFromEnd(true);
+
+        recyclerView.setLayoutManager(linearLayoutManager);
 //        recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(imageAdapter);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
+
+        List<ImageData> imageDataList = new ArrayList<>();
+        imageDataList.add(new ImageData(null, true));
+        imageAdapter.setData(imageDataList);
+        imageAdapter.notifyDataSetChanged();
+
         galleryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -187,19 +201,15 @@ public class AddRestroomActivity extends Activity implements
             }
         });
 
-        cameraButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-
-                imagePresenter.openCamera();
-            }
-
-        });
 
         uploadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                if(imageAdapter.getItemCount()<2){
+                    Toast.makeText(AddRestroomActivity.this, "Please add atleast 1 Image to Add a new Toilet", Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
                 Geocoder geocoder;
                 List<Address> addresses;
@@ -238,6 +248,11 @@ public class AddRestroomActivity extends Activity implements
 
             }
         });
+    }
+
+    public void openCamera() {
+        imagePresenter.openCamera();
+
     }
 
     @Override
@@ -341,6 +356,8 @@ public class AddRestroomActivity extends Activity implements
         Log.i(TAG, "Size :" + imageDataList.size());
         imageAdapter.setData(imageDataList);
         imageAdapter.notifyDataSetChanged();
+        recyclerView.smoothScrollToPosition(imageDataList.size()-1);
+
     }
 
     @Override
@@ -597,7 +614,7 @@ public class AddRestroomActivity extends Activity implements
 
                 if (knownName != null) {
 
-                    addressTextView.append(address);
+                    addressTextView.setText(address);
                     addressTextView.append(", " + city);
                     addressTextView.append(", " + state);
                     addressTextView.append(", " + country);
@@ -694,7 +711,7 @@ public class AddRestroomActivity extends Activity implements
 
             if (knownName != null) {
 
-                addressTextView.append(address);
+                addressTextView.setText(address);
                 addressTextView.append(", " + city);
                 addressTextView.append(", " + state);
                 addressTextView.append(", " + country);

@@ -12,6 +12,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.NestedScrollView;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -59,7 +60,9 @@ public class PollutionFragment extends Fragment implements
         PollutionView,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
-        LocationListener {
+        LocationListener,
+        SwipeRefreshLayout.OnRefreshListener {
+
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -99,6 +102,9 @@ public class PollutionFragment extends Fragment implements
 
     @BindView(R.id.pollution_data_not_found_message)
     TextView pollution_data_not_found_message;
+
+    @BindView(R.id.swipe_refresh_layout)
+    SwipeRefreshLayout swipeRefreshLayout;
 
 
     private GoogleApiClient mGoogleApiClient = null;
@@ -173,6 +179,38 @@ public class PollutionFragment extends Fragment implements
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(linearLayoutManager);
 
+        swipeRefreshLayout.setOnRefreshListener(this);
+        swipeRefreshLayout.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        swipeRefreshLayout.setRefreshing(true);
+
+                                        if (latitude != 0.0 && longitude != 0.0) {
+
+                                            pollutionPresenter.requestAirPollution(
+                                                    false,latitude, longitude);
+
+                                        }
+                                    }
+                                }
+        );
+
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                int topRowVerticalPosition =
+                        (recyclerView == null || recyclerView.getChildCount() == 0) ? 0 : recyclerView.getChildAt(0).getTop();
+                swipeRefreshLayout.setEnabled(topRowVerticalPosition >= 0);
+
+            }
+
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+        });
+
 
         return view;
     }
@@ -212,10 +250,13 @@ public class PollutionFragment extends Fragment implements
     @Override
     public void showLoader(boolean show) {
         if (show) {
+
+            swipeRefreshLayout.setRefreshing(true);
             progressBar.setVisibility(View.VISIBLE);
             scrollView.setVisibility(View.GONE);
 
         } else {
+            swipeRefreshLayout.setRefreshing(false);
             progressBar.setVisibility(View.GONE);
             scrollView.setVisibility(View.VISIBLE);
 
@@ -728,7 +769,7 @@ This Method is for Pressure that we are not going to use.
 
             new PollutionPresenterImpl(this,
                     new RetrofitPollutionProvider())
-                    .requestAirPollution(latitude, longitude);
+                    .requestAirPollution(false,latitude, longitude);
         }
 
     }
@@ -767,9 +808,17 @@ This Method is for Pressure that we are not going to use.
 
         new PollutionPresenterImpl(this,
                 new RetrofitPollutionProvider())
-                .requestAirPollution(latitude, longitude);
+                .requestAirPollution(true,latitude, longitude);
 
 
+    }
+
+    @Override
+    public void onRefresh() {
+
+        if (latitude != 0.0 && longitude != 0.0) {
+            pollutionPresenter.requestAirPollution(false,latitude, longitude);
+        }
     }
 
     /**

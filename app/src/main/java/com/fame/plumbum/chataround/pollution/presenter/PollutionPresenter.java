@@ -6,6 +6,6 @@ package com.fame.plumbum.chataround.pollution.presenter;
 
 public interface PollutionPresenter {
 
-    void requestAirPollution(double latitude, double longitude);
+    void requestAirPollution(boolean cache,double latitude, double longitude);
 
 }

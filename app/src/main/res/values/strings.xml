@@ -28,4 +28,5 @@
     <string name="news_detail">News Detail</string>
     <string name="toilet_data_not_available">Sorry, our database is not showing a public toilet near
         you. If you see one, please add it using the button above.</string>
+    <string name="add_photos">Add More Photos to the Restroom</string>
 </resources>

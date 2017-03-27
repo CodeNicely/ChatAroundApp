@@ -23,19 +23,27 @@ public class RetrofitPollutionProvider implements PollutionProvider {
 
 
     @Override
-    public void requestAirPollution(double latitude, double longitude, final OnAirPollutionReceived onAirPollutionReceived) {
+    public void requestAirPollution(boolean cache, double latitude, double longitude, final OnAirPollutionReceived onAirPollutionReceived) {
 
         String BASE_URL_POLLUTION_API = "https://api.waqi.info/feed/geo:" + String.valueOf(latitude)
                 + ";" + String.valueOf(longitude) + "/";
+        OkHttpClient client;
 
-        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        if (cache) {
+            client = new OkHttpClient.Builder()
+                    .addInterceptor(REWRITE_CACHE_CONTROL_INTERCEPTOR)
+                    .cache(RetrofitCache.provideCache())
+                    .build();
+        } else {
+            HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+            interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
-        OkHttpClient client = new OkHttpClient.Builder()
-                .addInterceptor(REWRITE_CACHE_CONTROL_INTERCEPTOR)
-                .cache(RetrofitCache.provideCache())
-                .build();
+            client = new OkHttpClient.Builder()
+                    .addInterceptor(interceptor)
+                    .cache(RetrofitCache.provideCache())
+                    .build();
 
+        }
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL_POLLUTION_API)

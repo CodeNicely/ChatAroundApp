@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -26,8 +27,6 @@ import android.widget.Toast;
 import com.fame.plumbum.chataround.R;
 import com.fame.plumbum.chataround.add_restroom.view.AddRestroomActivity;
 import com.fame.plumbum.chataround.helper.SharedPrefs;
-import com.fame.plumbum.chataround.add_restroom.model.data.AddRestroomData;
-import com.fame.plumbum.chataround.add_restroom.view.AddRestroomView;
 import com.fame.plumbum.chataround.restroom.model.RestRoomDetails;
 import com.fame.plumbum.chataround.restroom.presenter.RestRoomPresenter;
 import com.fame.plumbum.chataround.restroom.presenter.RestRoomPresenterImpl;
@@ -53,10 +52,10 @@ import butterknife.ButterKnife;
  */
 public class RestroomFragment extends Fragment implements
         RestRoomView,
-        AddRestroomView,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
-        LocationListener {
+        LocationListener,
+        SwipeRefreshLayout.OnRefreshListener {
 
 
     // TODO: Rename parameter arguments, choose names that match
@@ -90,6 +89,9 @@ public class RestroomFragment extends Fragment implements
 
     @BindView(R.id.restroom_data_not_found_layout)
     CardView restroom_data_not_found_layout;
+
+    @BindView(R.id.swipe_refresh_layout)
+    SwipeRefreshLayout swipeRefreshLayout;
 
 
     // TODO: Rename and change types of parameters
@@ -184,6 +186,39 @@ public class RestroomFragment extends Fragment implements
             }
         });
 
+
+        swipeRefreshLayout.setOnRefreshListener(this);
+        swipeRefreshLayout.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        swipeRefreshLayout.setRefreshing(true);
+
+                                        if (latitude != 0.0 && longitude != 0.0) {
+                                            restRoomPresenter.requestRestRooms(sharedPrefs.getUserId(),
+                                                    latitude,
+                                                    longitude
+                                            );
+                                        }
+                                    }
+                                }
+        );
+
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener(){
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                int topRowVerticalPosition =
+                        (recyclerView == null || recyclerView.getChildCount() == 0) ? 0 : recyclerView.getChildAt(0).getTop();
+                swipeRefreshLayout.setEnabled(topRowVerticalPosition >= 0);
+
+            }
+
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+        });
+
         return view;
     }
 
@@ -217,10 +252,11 @@ public class RestroomFragment extends Fragment implements
     @Override
     public void showLoader(boolean show) {
         if (show) {
-
+            swipeRefreshLayout.setRefreshing(true);
             recyclerView.setVisibility(View.GONE);
             progressBar.setVisibility(View.VISIBLE);
         } else {
+            swipeRefreshLayout.setRefreshing(false);
             progressBar.setVisibility(View.GONE);
             recyclerView.setVisibility(View.VISIBLE);
 
@@ -234,10 +270,6 @@ public class RestroomFragment extends Fragment implements
 
     }
 
-    @Override
-    public void onRestroomAdded(AddRestroomData addRestroomData) {
-
-    }
 
     @Override
     public void onReceived(List<RestRoomDetails> restRoomDetailsList) {
@@ -334,6 +366,15 @@ public class RestroomFragment extends Fragment implements
         restRoomPresenter.requestRestRooms(sharedPrefs.getUserId(), latitude, longitude);
 
 
+    }
+
+    @Override
+    public void onRefresh() {
+        if (latitude != 0.0 && longitude != 0.0) {
+
+            restRoomPresenter.requestRestRooms(sharedPrefs.getUserId(), latitude, longitude);
+
+        }
     }
 
 

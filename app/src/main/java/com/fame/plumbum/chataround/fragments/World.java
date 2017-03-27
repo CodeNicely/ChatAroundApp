@@ -9,6 +9,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -68,6 +69,22 @@ public class World extends Fragment implements SwipeRefreshLayout.OnRefreshListe
                 activity.needSomethingTweet = true;
             }
         });
+
+        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                int topRowVerticalPosition =
+                        (listView == null || listView.getChildCount() == 0) ? 0 : listView.getChildAt(0).getTop();
+                swipeRefreshLayout.setEnabled(topRowVerticalPosition >= 0);
+            }
+        });
+
+
         listView.addFooterView(load_more);
     }
 
@@ -77,11 +94,11 @@ public class World extends Fragment implements SwipeRefreshLayout.OnRefreshListe
 
         rootView = inflater.inflate(R.layout.frag_world, container, false);
 
-        ButterKnife.bind(this,rootView);
+        ButterKnife.bind(this, rootView);
 
         listView = (ListView) rootView.findViewById(R.id.world_tweets_list);
 
-        swipeRefreshLayout = (SwipeRefreshLayout)rootView.findViewById(R.id.swipe);
+        swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe);
         swipeRefreshLayout.setOnRefreshListener(this);
         swipeRefreshLayout.post(new Runnable() {
                                     @Override
@@ -95,8 +112,8 @@ public class World extends Fragment implements SwipeRefreshLayout.OnRefreshListe
         shout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(getContext() instanceof MainActivity){
-                    ((MainActivity)getContext()).actionShout();
+                if (getContext() instanceof MainActivity) {
+                    ((MainActivity) getContext()).actionShout();
                 }
             }
         });
@@ -114,13 +131,13 @@ public class World extends Fragment implements SwipeRefreshLayout.OnRefreshListe
                 mine.put(currentListOfPost[0].getJSONObject(i));
             TextView midText = (TextView) rootView.findViewById(R.id.midText);
             if (mine.length() > 0) {
-                if (count==0) {
+                if (count == 0) {
                     midText.setVisibility(View.GONE);
                     adapter = new Tweets_adapter(getContext(), mine, lat, lng);
                     listView.setAdapter(adapter);
                     listView.setVisibility(View.VISIBLE);
-                }else{
-                    for (int i = 0; i<mine.length(); i++)
+                } else {
+                    for (int i = 0; i < mine.length(); i++)
                         adapter.posts.put(mine.getJSONObject(i));
                     adapter.total = adapter.total + mine.length();
                     int index = listView.getFirstVisiblePosition();

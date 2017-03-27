@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -24,10 +25,10 @@ import android.widget.Toast;
 
 import com.fame.plumbum.chataround.R;
 import com.fame.plumbum.chataround.helper.SharedPrefs;
-import com.fame.plumbum.chataround.news.provider.RetrofitNewsListProvider;
 import com.fame.plumbum.chataround.news.model.NewsListDataDetails;
 import com.fame.plumbum.chataround.news.presenter.NewsListPresenter;
 import com.fame.plumbum.chataround.news.presenter.NewsListPresenterImpl;
+import com.fame.plumbum.chataround.news.provider.RetrofitNewsListProvider;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -41,8 +42,6 @@ import java.util.Locale;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.fame.plumbum.chataround.R.id.recyclerView;
-
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
@@ -55,21 +54,35 @@ public class NewsListFragment extends Fragment implements
         NewsPageView,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
-        LocationListener {
+        LocationListener,
+        SwipeRefreshLayout.OnRefreshListener {
     private NewsListPresenter newsListPresenter;
+
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
-    @BindView(recyclerView)
+
+    @BindView(R.id.recyclerView)
     RecyclerView recyclerview;
-    private SharedPrefs sharedPrefs;
-    private NewsListAdapter newsListAdapter;
+
+    @BindView(R.id.swipe_refresh_layout)
+    SwipeRefreshLayout swipeRefreshLayout;
+
     @BindView(R.id.layout_not_available)
     LinearLayout linearLayout;
+
+    private SharedPrefs sharedPrefs;
+    private NewsListAdapter newsListAdapter;
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
-    private Double latitude;
-    private Double longitude;
+    private double latitude;
+    private double longitude;
+    private String city;
+
+    private String state;
+
+    private String country;
+
     private Context context;
 
     // TODO: Rename parameter arguments, choose names that match
@@ -136,6 +149,40 @@ public class NewsListFragment extends Fragment implements
                 .setFastestInterval(1 * 1000); // 1 second, in milliseconds
 
         mGoogleApiClient.connect();
+
+        swipeRefreshLayout.setOnRefreshListener(this);
+        swipeRefreshLayout.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        swipeRefreshLayout.setRefreshing(true);
+
+                                        if (latitude != 0.0 && longitude != 0.0) {
+                                            newsListPresenter.getNews(false, sharedPrefs.getUserId(),
+                                                    city,
+                                                    state,
+                                                    country
+                                            );
+                                        }
+                                    }
+                                }
+        );
+
+
+        recyclerview.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                int topRowVerticalPosition =
+                        (recyclerView == null || recyclerView.getChildCount() == 0) ? 0 : recyclerView.getChildAt(0).getTop();
+                swipeRefreshLayout.setEnabled(topRowVerticalPosition >= 0);
+
+            }
+
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+        });
+
         return view;
 
     }
@@ -143,7 +190,7 @@ public class NewsListFragment extends Fragment implements
     private void initialise() {
         newsListPresenter = new NewsListPresenterImpl(this, new RetrofitNewsListProvider());
         sharedPrefs = new SharedPrefs(getContext());
-        context=getContext();
+        context = getContext();
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         newsListAdapter = new NewsListAdapter(getContext(), this);
         recyclerview.setLayoutManager(linearLayoutManager);
@@ -176,9 +223,11 @@ public class NewsListFragment extends Fragment implements
     @Override
     public void showProgressBar(boolean show) {
         if (show) {
+            swipeRefreshLayout.setRefreshing(true);
             progressBar.setVisibility(View.VISIBLE);
             recyclerview.setVisibility(View.GONE);
         } else {
+            swipeRefreshLayout.setRefreshing(false);
             progressBar.setVisibility(View.INVISIBLE);
             recyclerview.setVisibility(View.VISIBLE);
         }
@@ -204,6 +253,11 @@ public class NewsListFragment extends Fragment implements
         newsListAdapter.notifyDataSetChanged();
     }
 
+    @Override
+    public void onRefresh() {
+        newsListPresenter.getNews(false, sharedPrefs.getUserId(), city, state, country);
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -218,6 +272,7 @@ public class NewsListFragment extends Fragment implements
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+
     /**
      * If connected get lat and long
      */
@@ -251,12 +306,12 @@ public class NewsListFragment extends Fragment implements
             try {
                 addresses = geocoder.getFromLocation(latitude, longitude, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
                 String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
-                String city = addresses.get(0).getLocality();
-                String state = addresses.get(0).getAdminArea();
-                String country = addresses.get(0).getCountryName();
+                city = addresses.get(0).getLocality();
+                state = addresses.get(0).getAdminArea();
+                country = addresses.get(0).getCountryName();
                 String postalCode = addresses.get(0).getPostalCode();
                 String knownName = addresses.get(0).getFeatureName();
-                newsListPresenter.getNews(sharedPrefs.getUserId(), city,state,country);
+                newsListPresenter.getNews(true, sharedPrefs.getUserId(), city, state, country);
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -264,9 +319,11 @@ public class NewsListFragment extends Fragment implements
 
         }
     }
+
     @Override
     public void onConnectionSuspended(int i) {
     }
+
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
             /*
@@ -295,6 +352,7 @@ public class NewsListFragment extends Fragment implements
             Log.e("Error", "Location services connection failed with code " + connectionResult.getErrorCode());
         }
     }
+
     /**
      * If locationChanges change lat and long
      *
@@ -317,12 +375,12 @@ public class NewsListFragment extends Fragment implements
         try {
             addresses = geocoder.getFromLocation(latitude, longitude, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
             String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
-            String city = addresses.get(0).getLocality();
-            String state = addresses.get(0).getAdminArea();
-            String country = addresses.get(0).getCountryName();
+            city = addresses.get(0).getLocality();
+            state = addresses.get(0).getAdminArea();
+            country = addresses.get(0).getCountryName();
             String postalCode = addresses.get(0).getPostalCode();
             String knownName = addresses.get(0).getFeatureName();
-            newsListPresenter.getNews(sharedPrefs.getUserId(), city,state,country);
+            newsListPresenter.getNews(true, sharedPrefs.getUserId(), city, state, country);
 
         } catch (IOException e) {
             e.printStackTrace();

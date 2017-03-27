@@ -5,7 +5,9 @@ package com.fame.plumbum.chataround.news.presenter;
  */
 
 public interface NewsListPresenter {
-    void getNews(String userId,
+    void getNews(
+            boolean cache,
+            String userId,
                  String city,
                  String state,
                  String country

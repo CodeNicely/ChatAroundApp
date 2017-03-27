@@ -155,4 +155,6 @@ public class RestroomAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             ButterKnife.bind(this, itemView);
         }
     }
+
+
 }

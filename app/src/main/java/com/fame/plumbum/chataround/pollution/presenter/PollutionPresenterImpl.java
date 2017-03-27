@@ -20,10 +20,10 @@ public class PollutionPresenterImpl implements PollutionPresenter {
     }
 
     @Override
-    public void requestAirPollution(double latitude, double longitude) {
+    public void requestAirPollution(boolean cache,double latitude, double longitude) {
 
         pollutionView.showLoader(true);
-        pollutionProvider.requestAirPollution(latitude, longitude, new OnAirPollutionReceived() {
+        pollutionProvider.requestAirPollution(cache,latitude, longitude, new OnAirPollutionReceived() {
             @Override
             public void onSuccess(AirPollutionDetails airPollutionDetails) {
 

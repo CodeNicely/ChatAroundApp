@@ -26,16 +26,25 @@ public class RetrofitNewsListProvider implements NewsListProvider {
 
 
     @Override
-    public void getNewsList(String userId, String city, String state, String country, final NewsFeedRequestCallback newsFeedRequestCallback) {
+    public void getNewsList(boolean cache, String userId, String city, String state, String country, final NewsFeedRequestCallback newsFeedRequestCallback) {
 
-        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        OkHttpClient client;
 
-        OkHttpClient client = new OkHttpClient.Builder()
-                .addInterceptor(interceptor)
-                .addInterceptor(REWRITE_CACHE_CONTROL_INTERCEPTOR)
-                .cache(RetrofitCache.provideCache()).build();
+        if (cache) {
+            client = new OkHttpClient.Builder()
+                    .addInterceptor(REWRITE_CACHE_CONTROL_INTERCEPTOR)
+                    .cache(RetrofitCache.provideCache()).build();
+        } else {
 
+
+            HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+            interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+            client = new OkHttpClient.Builder()
+                    .addInterceptor(interceptor)
+                    .cache(RetrofitCache.provideCache()).build();
+
+        }
 
         Retrofit retrofit = new Retrofit.Builder().baseUrl(Urls.BASE_URL).client(client).
                 addConverterFactory(GsonConverterFactory.create()).build();

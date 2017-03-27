@@ -8,7 +8,7 @@ import com.fame.plumbum.chataround.pollution.OnAirPollutionReceived;
 
 public interface PollutionProvider {
 
-    void requestAirPollution(double latitude, double longitude, OnAirPollutionReceived onAirPollutionReceived);
+    void requestAirPollution(boolean cache,double latitude, double longitude, OnAirPollutionReceived onAirPollutionReceived);
 
 
 }

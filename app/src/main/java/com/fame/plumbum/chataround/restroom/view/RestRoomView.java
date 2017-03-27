@@ -16,4 +16,6 @@ public interface RestRoomView {
     void showMessage(String message);
 
     void onReceived(List<RestRoomDetails> restRoomDetailsList);
+
+
 }
