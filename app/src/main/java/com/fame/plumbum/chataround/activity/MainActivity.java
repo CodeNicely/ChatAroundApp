@@ -3,12 +3,15 @@ package com.fame.plumbum.chataround.activity;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -16,12 +19,11 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -70,99 +72,137 @@ public class MainActivity extends AppCompatActivity {
     SharedPreferences sp;
     public int count = 0;
     String token;
+    private boolean gps_enabled;
+    private boolean network_enabled;
+    static final int LOCATION_SETTINGS_REQUEST = 1;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.chat_window);
+        setContentView(R.layout.activity_main);
+        final ActionBar toolbar = getSupportActionBar();
 
+        toolbar.setTitle(R.string.app_name);
 
-        if (receiver == null) {
-            IntentFilter filter = new IntentFilter("Hello World");
-            receiver = new BroadcastReceiver() {
+        LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        try {
+            gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        } catch (Exception ex) {
+        }
+        try {
+            network_enabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+        } catch (Exception ex) {
+        }
+        if (!gps_enabled && !network_enabled) {
+            AlertDialog.Builder dialog = new AlertDialog.Builder(this, R.style.AlertDialogTheme);
+            dialog.setCancelable(false);
+            dialog.setMessage(getResources().getString(R.string.gps_network_not_enabled));
+            dialog.setPositiveButton(getResources().getString(R.string.open_location_settings), new DialogInterface.OnClickListener() {
                 @Override
-                public void onReceive(Context context, Intent intent) {
-                    if (intent.getAction().contentEquals("Hello World")) {
-                        lat = intent.getDoubleExtra("lat", 0.0);
-                        lng = intent.getDoubleExtra("lng", 0.0);
-                        world.lat = lat;
-                        world.lng = lng;
+                public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+                    Intent myIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
 
-                        profile.lat=lat;
-                        profile.lng=lng;
 
-                        if (needSomethingTweet || needSomethingWorld) {
-                            needSomethingWorld = false;
-                            needSomethingTweet = false;
-                            getAllPosts(count);
+                    startActivityForResult(myIntent, LOCATION_SETTINGS_REQUEST);
+                }
+            });
+            dialog.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+
+                @Override
+                public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+                    // TODO Auto-generated method stub
+                    finish();
+                }
+            });
+            dialog.show();
+        } else {
+
+            if (receiver == null) {
+                IntentFilter filter = new IntentFilter("Hello World");
+                receiver = new BroadcastReceiver() {
+                    @Override
+                    public void onReceive(Context context, Intent intent) {
+                        if (intent.getAction().contentEquals("Hello World")) {
+                            lat = intent.getDoubleExtra("lat", 0.0);
+                            lng = intent.getDoubleExtra("lng", 0.0);
+                            world.lat = lat;
+                            world.lng = lng;
+
+                            profile.lat = lat;
+                            profile.lng = lng;
+
+                            if (needSomethingTweet || needSomethingWorld) {
+                                needSomethingWorld = false;
+                                needSomethingTweet = false;
+                                getAllPosts(count);
+                            }
                         }
                     }
+                };
+                registerReceiver(receiver, filter);
+            }
+            sp = PreferenceManager.getDefaultSharedPreferences(this);
+            initFCM();
+            getSupportActionBar().setDisplayHomeAsUpEnabled(false); // remove the left caret
+            ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
+            setupViewPager(viewPager);
+
+            TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+            tabLayout.setupWithViewPager(viewPager);
+            tabLayout.getTabAt(0).setIcon(R.drawable.profile_512);
+            tabLayout.getTabAt(1).setIcon(R.drawable.world);
+            tabLayout.getTabAt(2).setIcon(R.drawable.restroom1);
+            tabLayout.getTabAt(3).setIcon(R.drawable.pollution1);
+            tabLayout.getTabAt(4).setIcon(R.drawable.newspaper);
+
+            viewPager.setOffscreenPageLimit(5);
+            viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                @Override
+                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+
+                    switch (position) {
+                        case 0:
+                            toolbar.setTitle("Profile");
+                            break;
+                        case 1:
+                            toolbar.setTitle("Shouts");
+                            break;
+                        case 2:
+                            toolbar.setTitle("Restrooms");
+
+                            break;
+                        case 3:
+                            toolbar.setTitle("Pollution Meter");
+
+                            break;
+                        case 4:
+                            toolbar.setTitle("News");
+
+                            break;
+                        default:
+                            toolbar.setTitle("Profile");
+
+                            break;
+                    }
+
+
                 }
-            };
-            registerReceiver(receiver, filter);
+
+                @Override
+                public void onPageSelected(int position) {
+
+
+                }
+
+                @Override
+                public void onPageScrollStateChanged(int state) {
+
+                }
+            });
+
+            viewPager.setCurrentItem(4);
         }
-        sp = PreferenceManager.getDefaultSharedPreferences(this);
-        initFCM();
-        final ActionBar toolbar = getSupportActionBar();
-        getSupportActionBar().setDisplayHomeAsUpEnabled(false); // remove the left caret
-        ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
-        setupViewPager(viewPager);
-
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(viewPager);
-        tabLayout.getTabAt(0).setIcon(R.drawable.profile_512);
-        tabLayout.getTabAt(1).setIcon(R.drawable.world);
-        tabLayout.getTabAt(2).setIcon(R.drawable.restroom1);
-        tabLayout.getTabAt(3).setIcon(R.drawable.pollution1);
-        tabLayout.getTabAt(4).setIcon(R.drawable.newspaper);
-
-        viewPager.setOffscreenPageLimit(5);
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-
-                switch (position) {
-                    case 0:
-                        toolbar.setTitle("Profile");
-                        break;
-                    case 1:
-                        toolbar.setTitle("Shouts");
-                        break;
-                    case 2:
-                        toolbar.setTitle("Restrooms");
-
-                        break;
-                    case 3:
-                        toolbar.setTitle("Pollution Meter");
-
-                        break;
-                    case 4:
-                        toolbar.setTitle("News");
-
-                        break;
-                    default:
-                        toolbar.setTitle("Profile");
-
-                        break;
-                }
-
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-
-
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
-
-        viewPager.setCurrentItem(4);
     }
 
     private void initFCM() {
@@ -464,5 +504,15 @@ public class MainActivity extends AppCompatActivity {
 
     }*/
 
+    protected void onActivityResult(int requestCode, int resultCode,
+                                    Intent data) {
+        if (requestCode == LOCATION_SETTINGS_REQUEST) {
+            // user is back from location settings - check if location services are now enabled
+
+            startActivity(new Intent(this, MainActivity.class));
+            finish();
+
+        }
+    }
 
 }

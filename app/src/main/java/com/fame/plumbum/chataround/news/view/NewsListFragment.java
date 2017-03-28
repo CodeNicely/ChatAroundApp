@@ -224,7 +224,8 @@ public class NewsListFragment extends Fragment implements
     public void showProgressBar(boolean show) {
         if (show) {
             swipeRefreshLayout.setRefreshing(true);
-            progressBar.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.GONE);
+
             recyclerview.setVisibility(View.GONE);
         } else {
             swipeRefreshLayout.setRefreshing(false);

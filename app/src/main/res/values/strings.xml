@@ -29,4 +29,7 @@
     <string name="toilet_data_not_available">Sorry, our database is not showing a public toilet near
         you. If you see one, please add it using the button above.</string>
     <string name="add_photos">Add More Photos to the Restroom</string>
+    <string name="gps_network_not_enabled">1 Mile requires your location to be turned on.</string>
+    <string name="open_location_settings">Open Location Setting</string>
+    <string name="cancel">Cancel</string>
 </resources>

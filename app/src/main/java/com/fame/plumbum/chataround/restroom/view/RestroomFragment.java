@@ -204,7 +204,7 @@ public class RestroomFragment extends Fragment implements
         );
 
 
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener(){
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 int topRowVerticalPosition =
@@ -254,7 +254,8 @@ public class RestroomFragment extends Fragment implements
         if (show) {
             swipeRefreshLayout.setRefreshing(true);
             recyclerView.setVisibility(View.GONE);
-            progressBar.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.GONE);
+
         } else {
             swipeRefreshLayout.setRefreshing(false);
             progressBar.setVisibility(View.GONE);

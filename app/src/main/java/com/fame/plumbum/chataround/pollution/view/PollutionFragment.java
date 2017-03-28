@@ -252,7 +252,7 @@ public class PollutionFragment extends Fragment implements
         if (show) {
 
             swipeRefreshLayout.setRefreshing(true);
-            progressBar.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.GONE);
             scrollView.setVisibility(View.GONE);
 
         } else {
@@ -305,7 +305,7 @@ public class PollutionFragment extends Fragment implements
         distance = myLocation.distanceTo(sensorLocation) ;
 */
 
-        if (distance > 5000) {
+        if (distance > 50) {
 
             pollution_data_not_found_layout.setVisibility(View.VISIBLE);
             /*pollution_data_not_found_message.append("\n\nYour distance from Nearest Sensor is - " +
