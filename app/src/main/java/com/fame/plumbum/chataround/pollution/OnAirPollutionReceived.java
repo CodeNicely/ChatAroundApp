@@ -1,6 +1,6 @@
 package com.fame.plumbum.chataround.pollution;
 
-import com.fame.plumbum.chataround.pollution.model.air_model.AirPollutionDetails;
+import com.fame.plumbum.chataround.pollution.model.AirPollutionDetails;
 
 /**
  * Created by meghal on 20/2/17.

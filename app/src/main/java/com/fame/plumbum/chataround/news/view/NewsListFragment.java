@@ -51,7 +51,7 @@ import butterknife.ButterKnife;
  * create an instance of this fragment.
  */
 public class NewsListFragment extends Fragment implements
-        NewsPageView,
+        NewsListView,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener,
@@ -218,6 +218,11 @@ public class NewsListFragment extends Fragment implements
     public void onDetach() {
         super.onDetach();
         mListener = null;
+
+        if (newsListPresenter != null) {
+            newsListPresenter.onDestroy();
+        }
+
     }
 
     @Override
@@ -306,12 +311,9 @@ public class NewsListFragment extends Fragment implements
 
             try {
                 addresses = geocoder.getFromLocation(latitude, longitude, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
-                String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
                 city = addresses.get(0).getLocality();
                 state = addresses.get(0).getAdminArea();
                 country = addresses.get(0).getCountryName();
-                String postalCode = addresses.get(0).getPostalCode();
-                String knownName = addresses.get(0).getFeatureName();
                 newsListPresenter.getNews(true, sharedPrefs.getUserId(), city, state, country);
 
             } catch (IOException e) {
@@ -375,18 +377,14 @@ public class NewsListFragment extends Fragment implements
 
         try {
             addresses = geocoder.getFromLocation(latitude, longitude, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
-            String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
             city = addresses.get(0).getLocality();
             state = addresses.get(0).getAdminArea();
             country = addresses.get(0).getCountryName();
-            String postalCode = addresses.get(0).getPostalCode();
-            String knownName = addresses.get(0).getFeatureName();
             newsListPresenter.getNews(true, sharedPrefs.getUserId(), city, state, country);
 
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-
 
 }

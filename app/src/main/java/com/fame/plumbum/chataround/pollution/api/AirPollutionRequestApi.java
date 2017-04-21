@@ -1,6 +1,6 @@
 package com.fame.plumbum.chataround.pollution.api;
 
-import com.fame.plumbum.chataround.pollution.model.air_model.AirPollutionDetails;
+import com.fame.plumbum.chataround.pollution.model.AirPollutionDetails;
 
 import retrofit2.Call;
 import retrofit2.http.GET;

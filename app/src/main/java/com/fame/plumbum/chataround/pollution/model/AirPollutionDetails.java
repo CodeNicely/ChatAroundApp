@@ -1,4 +1,4 @@
-package com.fame.plumbum.chataround.pollution.model.air_model;
+package com.fame.plumbum.chataround.pollution.model;
 
 /**
  * Created by meghal on 21/2/17.

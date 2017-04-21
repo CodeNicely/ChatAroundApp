@@ -13,4 +13,7 @@ public interface NewsListProvider {
                      String state,
                      String country,
                      NewsFeedRequestCallback newsFeedRequestCallback);
+
+    void onDestroy();
+
 }

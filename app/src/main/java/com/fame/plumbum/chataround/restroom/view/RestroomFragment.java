@@ -246,7 +246,10 @@ public class RestroomFragment extends Fragment implements
     public void onDetach() {
         super.onDetach();
         mListener = null;
-        onDestroy();
+//        onDestroy();
+        if (restRoomPresenter != null) {
+            restRoomPresenter.onDestroy();
+        }
     }
 
     @Override

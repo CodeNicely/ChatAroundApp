@@ -10,5 +10,6 @@ public interface PollutionProvider {
 
     void requestAirPollution(boolean cache,double latitude, double longitude, OnAirPollutionReceived onAirPollutionReceived);
 
+    void onDestroy();
 
 }

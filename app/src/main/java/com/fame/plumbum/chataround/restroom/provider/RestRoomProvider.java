@@ -10,5 +10,7 @@ public interface RestRoomProvider {
 
     void requestRestRooms(String user_id,double latitude, double langitude, OnRestRoomApiResponse onRestRoomApiResponse);
 
+    void onDestroy();
+
 
 }

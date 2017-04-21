@@ -3,7 +3,7 @@ package com.fame.plumbum.chataround.pollution.provider;
 import com.fame.plumbum.chataround.helper.Constants;
 import com.fame.plumbum.chataround.pollution.OnAirPollutionReceived;
 import com.fame.plumbum.chataround.pollution.api.AirPollutionRequestApi;
-import com.fame.plumbum.chataround.pollution.model.air_model.AirPollutionDetails;
+import com.fame.plumbum.chataround.pollution.model.AirPollutionDetails;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -21,6 +21,8 @@ import static com.fame.plumbum.chataround.pollution.provider.RetrofitCache.REWRI
 
 public class RetrofitPollutionProvider implements PollutionProvider {
 
+
+    private Call<AirPollutionDetails> call;
 
     @Override
     public void requestAirPollution(boolean cache, double latitude, double longitude, final OnAirPollutionReceived onAirPollutionReceived) {
@@ -53,7 +55,7 @@ public class RetrofitPollutionProvider implements PollutionProvider {
 
         AirPollutionRequestApi airPollutionRequestApi = retrofit.create(AirPollutionRequestApi.class);
 
-        Call<AirPollutionDetails> call = airPollutionRequestApi.requestAirPollution(Constants.AIR_POLLUTION_TOKEN);
+        call = airPollutionRequestApi.requestAirPollution(Constants.AIR_POLLUTION_TOKEN);
 
         call.enqueue(new Callback<AirPollutionDetails>() {
             @Override
@@ -68,6 +70,15 @@ public class RetrofitPollutionProvider implements PollutionProvider {
                 onAirPollutionReceived.onFailed("Failed to Connect To Servers");
             }
         });
+
+
+    }
+
+    @Override
+    public void onDestroy() {
+
+        if (call != null)
+            call.cancel();
 
     }
 }

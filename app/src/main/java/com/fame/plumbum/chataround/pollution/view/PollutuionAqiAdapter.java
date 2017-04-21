@@ -15,7 +15,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.fame.plumbum.chataround.R;
-import com.fame.plumbum.chataround.pollution.model.air_model.AirPollutionIndividualValue;
+import com.fame.plumbum.chataround.pollution.model.AirPollutionIndividualValue;
 
 import java.util.ArrayList;
 import java.util.List;

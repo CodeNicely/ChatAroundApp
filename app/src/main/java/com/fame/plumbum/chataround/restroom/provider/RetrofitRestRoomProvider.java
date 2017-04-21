@@ -21,6 +21,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class RetrofitRestRoomProvider implements RestRoomProvider {
 
     private Retrofit retrofit;
+    private Call<RestRoomData> call;
 
     public RetrofitRestRoomProvider() {
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
@@ -45,7 +46,7 @@ public class RetrofitRestRoomProvider implements RestRoomProvider {
     public void requestRestRooms(String user_id, double latitude, double langitude, final OnRestRoomApiResponse onRestRoomApiResponse) {
 
         RestroomRequestApi restroomRequestApi = retrofit.create(RestroomRequestApi.class);
-        Call<RestRoomData> call = restroomRequestApi.requestRestRooms(user_id, latitude, langitude);
+        call = restroomRequestApi.requestRestRooms(user_id, latitude, langitude);
         /*call.enqueue(new Callback<RestRoomData>() {
             @Override
             public void onResponse(Call<List<RestRoomDetails>> call, Response<List<RestRoomDetails>> response) {
@@ -72,5 +73,13 @@ public class RetrofitRestRoomProvider implements RestRoomProvider {
                 onRestRoomApiResponse.onFailure("Something Went Wrong");
             }
         });
+    }
+
+    @Override
+    public void onDestroy() {
+
+        if (call != null)
+            call.cancel();
+
     }
 }

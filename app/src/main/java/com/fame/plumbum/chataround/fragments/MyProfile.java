@@ -120,6 +120,8 @@ public class MyProfile extends Fragment implements
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+        context=getContext();
         rootView = inflater.inflate(R.layout.my_profile, container, false);
         listView = (ListView) rootView.findViewById(R.id.my_tweets_list);
         swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe);
@@ -508,9 +510,12 @@ public class MyProfile extends Fragment implements
 
                 phone_view.setText(city);
                 phone_view.append(", " + state);
+                Toast.makeText(context, "Got Location", Toast.LENGTH_SHORT).show();
 
 
             } catch (IOException e) {
+                Toast.makeText(context, "Got Error", Toast.LENGTH_SHORT).show();
+
                 Log.d("MyProfile ", "Exception");
                 e.printStackTrace();
             }
@@ -551,7 +556,11 @@ public class MyProfile extends Fragment implements
             phone_view.setText(city);
             phone_view.append(", " + state);
 
+            Toast.makeText(context, "Got Location", Toast.LENGTH_SHORT).show();
+
         } catch (IOException e) {
+            Toast.makeText(context, "Got Error", Toast.LENGTH_SHORT).show();
+
             Log.d("MyProfile ", "Exception");
             e.printStackTrace();
         }

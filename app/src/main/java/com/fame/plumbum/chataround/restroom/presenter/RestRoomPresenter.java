@@ -8,5 +8,6 @@ public interface RestRoomPresenter {
 
     void requestRestRooms(String user_id,double latitude, double langitude);
 
+    void onDestroy();
 
 }

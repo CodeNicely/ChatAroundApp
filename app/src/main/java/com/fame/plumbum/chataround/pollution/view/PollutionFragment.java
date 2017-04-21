@@ -26,9 +26,9 @@ import android.widget.Toast;
 
 import com.fame.plumbum.chataround.R;
 import com.fame.plumbum.chataround.helper.utils.DistanceUtils;
-import com.fame.plumbum.chataround.pollution.model.air_model.AirPollutionDetails;
-import com.fame.plumbum.chataround.pollution.model.air_model.AirPollutionIndividualAqi;
-import com.fame.plumbum.chataround.pollution.model.air_model.AirPollutionIndividualValue;
+import com.fame.plumbum.chataround.pollution.model.AirPollutionDetails;
+import com.fame.plumbum.chataround.pollution.model.AirPollutionIndividualAqi;
+import com.fame.plumbum.chataround.pollution.model.AirPollutionIndividualValue;
 import com.fame.plumbum.chataround.pollution.presenter.PollutionPresenter;
 import com.fame.plumbum.chataround.pollution.presenter.PollutionPresenterImpl;
 import com.fame.plumbum.chataround.pollution.provider.RetrofitPollutionProvider;
@@ -106,6 +106,7 @@ public class PollutionFragment extends Fragment implements
     @BindView(R.id.swipe_refresh_layout)
     SwipeRefreshLayout swipeRefreshLayout;
 
+    private Context context;
 
     private GoogleApiClient mGoogleApiClient = null;
     private Location mLastLocation;
@@ -154,10 +155,17 @@ public class PollutionFragment extends Fragment implements
         View view = inflater.inflate(R.layout.fragment_pollution, container, false);
         ButterKnife.bind(this, view);
 
+        try {
+            context = getContext();
+        } catch (Throwable e) {
+            context = null;
+            e.printStackTrace();
+        }
+
         pollutionPresenter = new PollutionPresenterImpl(this, new RetrofitPollutionProvider());
 
         if (mGoogleApiClient == null) {
-            mGoogleApiClient = new GoogleApiClient.Builder(getContext())
+            mGoogleApiClient = new GoogleApiClient.Builder(context)
                     .addConnectionCallbacks(this)
                     .addOnConnectionFailedListener(this)
                     .addApi(LocationServices.API)
@@ -176,7 +184,7 @@ public class PollutionFragment extends Fragment implements
 */
 
 
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
         recyclerView.setLayoutManager(linearLayoutManager);
 
         swipeRefreshLayout.setOnRefreshListener(this);
@@ -188,7 +196,7 @@ public class PollutionFragment extends Fragment implements
                                         if (latitude != 0.0 && longitude != 0.0) {
 
                                             pollutionPresenter.requestAirPollution(
-                                                    false,latitude, longitude);
+                                                    false, latitude, longitude);
 
                                         }
                                     }
@@ -245,6 +253,9 @@ public class PollutionFragment extends Fragment implements
     public void onDetach() {
         super.onDetach();
         mListener = null;
+        if (pollutionPresenter != null) {
+            pollutionPresenter.onDestroy();
+        }
     }
 
     @Override
@@ -266,7 +277,7 @@ public class PollutionFragment extends Fragment implements
     @Override
     public void showMessage(String message) {
 
-        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
 
     }
 
@@ -324,40 +335,42 @@ public class PollutionFragment extends Fragment implements
 
         double aqi = airPollutionDetails.getData().getAqi();
         String healthStatement = "";
+
         if (aqi < 50) {
 
-            circleView.setFillColor(ContextCompat.getColor(getContext(), R.color.good));
+
+            circleView.setFillColor(ContextCompat.getColor(context, R.color.good));
             healthStatement = "Air quality is considered satisfactory,and air pollution1 poses " +
                     "little or no risk";
 
         } else if (aqi > 50 && aqi <= 100) {
 
-            circleView.setFillColor(ContextCompat.getColor(getContext(), R.color.moderate));
+            circleView.setFillColor(ContextCompat.getColor(context, R.color.moderate));
             healthStatement = "Air quality is acceptable; however, for some pollutants there may be a " +
                     "moderate health concern for a very small number of people who are unusually " +
                     "sensitive to air pollution1.";
 
         } else if (aqi > 100 && aqi <= 150) {
 
-            circleView.setFillColor(ContextCompat.getColor(getContext(), R.color.sensitive));
+            circleView.setFillColor(ContextCompat.getColor(context, R.color.sensitive));
             healthStatement = "Members of sensitive groups may experience health effects. The " +
                     "general public is not likely to be affected.";
 
         } else if (aqi > 150 && aqi <= 200) {
 
-            circleView.setFillColor(ContextCompat.getColor(getContext(), R.color.unhealthy));
+            circleView.setFillColor(ContextCompat.getColor(context, R.color.unhealthy));
             healthStatement = "Everyone may begin to experience health effects; members of sensitive " +
                     "groups may experience more serious health effects.";
 
         } else if (aqi > 200 && aqi <= 300) {
 
-            circleView.setFillColor(ContextCompat.getColor(getContext(), R.color.very_unhealthy));
+            circleView.setFillColor(ContextCompat.getColor(context, R.color.very_unhealthy));
             healthStatement = "Health warnings of emergency conditions. The entire population is " +
                     "more likely to be affected.";
 
         } else if (aqi > 300) {
 
-            circleView.setFillColor(ContextCompat.getColor(getContext(), R.color.hazardous));
+            circleView.setFillColor(ContextCompat.getColor(context, R.color.hazardous));
             healthStatement = "Health alert: everyone may experience more serious health effects";
 
         }
@@ -390,7 +403,7 @@ public class PollutionFragment extends Fragment implements
 
 
         pollutuionAqiAdapter = new
-                PollutuionAqiAdapter(getContext(),
+                PollutuionAqiAdapter(context,
                 getIndividualAqiList(airPollutionDetails.getData().getIaqi()));
 
         List<AirPollutionIndividualValue> list = getIndividualAqiList(airPollutionDetails.
@@ -410,33 +423,33 @@ public class PollutionFragment extends Fragment implements
 
 
             double aqi = airPollutionIndividualAqi.getPm25().getV();
-            int color = ContextCompat.getColor(getContext(), R.color.white);
+            int color = ContextCompat.getColor(context, R.color.white);
 
 
             if (aqi < 30) {
 
-                color = ContextCompat.getColor(getContext(), R.color.good);
+                color = ContextCompat.getColor(context, R.color.good);
 
             } else if (aqi > 30 && aqi <= 60) {
 
-                color = ContextCompat.getColor(getContext(), R.color.moderate);
+                color = ContextCompat.getColor(context, R.color.moderate);
 
 
             } else if (aqi > 60 && aqi <= 90) {
 
-                color = ContextCompat.getColor(getContext(), R.color.sensitive);
+                color = ContextCompat.getColor(context, R.color.sensitive);
 
             } else if (aqi > 90 && aqi <= 120) {
 
-                color = ContextCompat.getColor(getContext(), R.color.unhealthy);
+                color = ContextCompat.getColor(context, R.color.unhealthy);
 
             } else if (aqi > 120 && aqi <= 250) {
 
-                color = ContextCompat.getColor(getContext(), R.color.very_unhealthy);
+                color = ContextCompat.getColor(context, R.color.very_unhealthy);
 
             } else if (aqi > 250) {
 
-                color = ContextCompat.getColor(getContext(), R.color.hazardous);
+                color = ContextCompat.getColor(context, R.color.hazardous);
 
             }
 
@@ -455,31 +468,31 @@ public class PollutionFragment extends Fragment implements
         if (airPollutionIndividualAqi.getPm10() != null) {
 
             double aqi = airPollutionIndividualAqi.getPm10().getV();
-            int color = ContextCompat.getColor(getContext(), R.color.white);
+            int color = ContextCompat.getColor(context, R.color.white);
             if (aqi < 50) {
 
-                color = ContextCompat.getColor(getContext(), R.color.good);
+                color = ContextCompat.getColor(context, R.color.good);
 
             } else if (aqi > 50 && aqi <= 100) {
 
-                color = ContextCompat.getColor(getContext(), R.color.moderate);
+                color = ContextCompat.getColor(context, R.color.moderate);
 
 
             } else if (aqi > 100 && aqi <= 250) {
 
-                color = ContextCompat.getColor(getContext(), R.color.sensitive);
+                color = ContextCompat.getColor(context, R.color.sensitive);
 
             } else if (aqi > 250 && aqi <= 350) {
 
-                color = ContextCompat.getColor(getContext(), R.color.unhealthy);
+                color = ContextCompat.getColor(context, R.color.unhealthy);
 
             } else if (aqi > 350 && aqi <= 430) {
 
-                color = ContextCompat.getColor(getContext(), R.color.very_unhealthy);
+                color = ContextCompat.getColor(context, R.color.very_unhealthy);
 
             } else if (aqi > 430) {
 
-                color = ContextCompat.getColor(getContext(), R.color.hazardous);
+                color = ContextCompat.getColor(context, R.color.hazardous);
 
             }
 
@@ -497,31 +510,31 @@ public class PollutionFragment extends Fragment implements
         if (airPollutionIndividualAqi.getO3() != null) {
 
             double aqi = airPollutionIndividualAqi.getO3().getV();
-            int color = ContextCompat.getColor(getContext(), R.color.white);
+            int color = ContextCompat.getColor(context, R.color.white);
             if (aqi < 50) {
 
-                color = ContextCompat.getColor(getContext(), R.color.good);
+                color = ContextCompat.getColor(context, R.color.good);
 
             } else if (aqi > 50 && aqi <= 100) {
 
-                color = ContextCompat.getColor(getContext(), R.color.moderate);
+                color = ContextCompat.getColor(context, R.color.moderate);
 
 
             } else if (aqi > 100 && aqi <= 168) {
 
-                color = ContextCompat.getColor(getContext(), R.color.sensitive);
+                color = ContextCompat.getColor(context, R.color.sensitive);
 
             } else if (aqi > 168 && aqi <= 208) {
 
-                color = ContextCompat.getColor(getContext(), R.color.unhealthy);
+                color = ContextCompat.getColor(context, R.color.unhealthy);
 
             } else if (aqi > 208 && aqi <= 748) {
 
-                color = ContextCompat.getColor(getContext(), R.color.very_unhealthy);
+                color = ContextCompat.getColor(context, R.color.very_unhealthy);
 
             } else if (aqi > 748) {
 
-                color = ContextCompat.getColor(getContext(), R.color.hazardous);
+                color = ContextCompat.getColor(context, R.color.hazardous);
 
             }
 
@@ -540,31 +553,31 @@ public class PollutionFragment extends Fragment implements
         if (airPollutionIndividualAqi.getNo2() != null) {
 
             double aqi = airPollutionIndividualAqi.getNo2().getV();
-            int color = ContextCompat.getColor(getContext(), R.color.white);
+            int color = ContextCompat.getColor(context, R.color.white);
             if (aqi < 40) {
 
-                color = ContextCompat.getColor(getContext(), R.color.good);
+                color = ContextCompat.getColor(context, R.color.good);
 
             } else if (aqi > 40 && aqi <= 80) {
 
-                color = ContextCompat.getColor(getContext(), R.color.moderate);
+                color = ContextCompat.getColor(context, R.color.moderate);
 
 
             } else if (aqi > 80 && aqi <= 180) {
 
-                color = ContextCompat.getColor(getContext(), R.color.sensitive);
+                color = ContextCompat.getColor(context, R.color.sensitive);
 
             } else if (aqi > 180 && aqi <= 280) {
 
-                color = ContextCompat.getColor(getContext(), R.color.unhealthy);
+                color = ContextCompat.getColor(context, R.color.unhealthy);
 
             } else if (aqi > 280 && aqi <= 400) {
 
-                color = ContextCompat.getColor(getContext(), R.color.very_unhealthy);
+                color = ContextCompat.getColor(context, R.color.very_unhealthy);
 
             } else if (aqi > 400) {
 
-                color = ContextCompat.getColor(getContext(), R.color.hazardous);
+                color = ContextCompat.getColor(context, R.color.hazardous);
 
             }
 
@@ -583,31 +596,31 @@ public class PollutionFragment extends Fragment implements
         if (airPollutionIndividualAqi.getCo() != null) {
 
             double aqi = airPollutionIndividualAqi.getCo().getV();
-            int color = ContextCompat.getColor(getContext(), R.color.white);
+            int color = ContextCompat.getColor(context, R.color.white);
             if (aqi < 1.0) {
 
-                color = ContextCompat.getColor(getContext(), R.color.good);
+                color = ContextCompat.getColor(context, R.color.good);
 
             } else if (aqi > 1.0 && aqi <= 2.0) {
 
-                color = ContextCompat.getColor(getContext(), R.color.moderate);
+                color = ContextCompat.getColor(context, R.color.moderate);
 
 
             } else if (aqi > 2.0 && aqi <= 10) {
 
-                color = ContextCompat.getColor(getContext(), R.color.sensitive);
+                color = ContextCompat.getColor(context, R.color.sensitive);
 
             } else if (aqi > 10 && aqi <= 17) {
 
-                color = ContextCompat.getColor(getContext(), R.color.unhealthy);
+                color = ContextCompat.getColor(context, R.color.unhealthy);
 
             } else if (aqi > 17 && aqi <= 34) {
 
-                color = ContextCompat.getColor(getContext(), R.color.very_unhealthy);
+                color = ContextCompat.getColor(context, R.color.very_unhealthy);
 
             } else if (aqi > 34) {
 
-                color = ContextCompat.getColor(getContext(), R.color.hazardous);
+                color = ContextCompat.getColor(context, R.color.hazardous);
 
             }
 
@@ -632,31 +645,31 @@ public class PollutionFragment extends Fragment implements
         if (airPollutionIndividualAqi.getS02() != null) {
 
             double aqi = airPollutionIndividualAqi.getS02().getV();
-            int color = ContextCompat.getColor(getContext(), R.color.white);
+            int color = ContextCompat.getColor(context, R.color.white);
             if (aqi < 40) {
 
-                color = ContextCompat.getColor(getContext(), R.color.good);
+                color = ContextCompat.getColor(context, R.color.good);
 
             } else if (aqi > 40 && aqi <= 80) {
 
-                color = ContextCompat.getColor(getContext(), R.color.moderate);
+                color = ContextCompat.getColor(context, R.color.moderate);
 
 
             } else if (aqi > 80 && aqi <= 380) {
 
-                color = ContextCompat.getColor(getContext(), R.color.sensitive);
+                color = ContextCompat.getColor(context, R.color.sensitive);
 
             } else if (aqi > 380 && aqi <= 800) {
 
-                color = ContextCompat.getColor(getContext(), R.color.unhealthy);
+                color = ContextCompat.getColor(context, R.color.unhealthy);
 
             } else if (aqi > 800 && aqi <= 1600) {
 
-                color = ContextCompat.getColor(getContext(), R.color.very_unhealthy);
+                color = ContextCompat.getColor(context, R.color.very_unhealthy);
 
             } else if (aqi > 1600) {
 
-                color = ContextCompat.getColor(getContext(), R.color.hazardous);
+                color = ContextCompat.getColor(context, R.color.hazardous);
 
             }
 
@@ -731,10 +744,10 @@ This Method is for Pressure that we are not going to use.
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        if (ActivityCompat.checkSelfPermission(getContext(),
+        if (ActivityCompat.checkSelfPermission(context,
                 Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(getContext(),
+                ActivityCompat.checkSelfPermission(context,
                         Manifest.permission.ACCESS_COARSE_LOCATION)
                         != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
@@ -769,7 +782,7 @@ This Method is for Pressure that we are not going to use.
 
             new PollutionPresenterImpl(this,
                     new RetrofitPollutionProvider())
-                    .requestAirPollution(false,latitude, longitude);
+                    .requestAirPollution(false, latitude, longitude);
         }
 
     }
@@ -808,7 +821,7 @@ This Method is for Pressure that we are not going to use.
 
         new PollutionPresenterImpl(this,
                 new RetrofitPollutionProvider())
-                .requestAirPollution(true,latitude, longitude);
+                .requestAirPollution(true, latitude, longitude);
 
 
     }
@@ -817,7 +830,7 @@ This Method is for Pressure that we are not going to use.
     public void onRefresh() {
 
         if (latitude != 0.0 && longitude != 0.0) {
-            pollutionPresenter.requestAirPollution(false,latitude, longitude);
+            pollutionPresenter.requestAirPollution(false, latitude, longitude);
         }
     }
 

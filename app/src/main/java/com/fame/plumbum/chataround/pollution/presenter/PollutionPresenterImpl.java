@@ -1,7 +1,7 @@
 package com.fame.plumbum.chataround.pollution.presenter;
 
 import com.fame.plumbum.chataround.pollution.OnAirPollutionReceived;
-import com.fame.plumbum.chataround.pollution.model.air_model.AirPollutionDetails;
+import com.fame.plumbum.chataround.pollution.model.AirPollutionDetails;
 import com.fame.plumbum.chataround.pollution.provider.PollutionProvider;
 import com.fame.plumbum.chataround.pollution.view.PollutionView;
 
@@ -20,10 +20,10 @@ public class PollutionPresenterImpl implements PollutionPresenter {
     }
 
     @Override
-    public void requestAirPollution(boolean cache,double latitude, double longitude) {
+    public void requestAirPollution(boolean cache, double latitude, double longitude) {
 
         pollutionView.showLoader(true);
-        pollutionProvider.requestAirPollution(cache,latitude, longitude, new OnAirPollutionReceived() {
+        pollutionProvider.requestAirPollution(cache, latitude, longitude, new OnAirPollutionReceived() {
             @Override
             public void onSuccess(AirPollutionDetails airPollutionDetails) {
 
@@ -41,8 +41,18 @@ public class PollutionPresenterImpl implements PollutionPresenter {
             @Override
             public void onFailed(String message) {
 
+                pollutionView.showLoader(false);
+                pollutionView.showMessage(message);
+
             }
         });
+
+    }
+
+    @Override
+    public void onDestroy() {
+
+        pollutionProvider.onDestroy();
 
     }
 }

@@ -13,7 +13,6 @@ import static com.bumptech.glide.gifdecoder.GifHeaderParser.TAG;
 public class MyApplication extends Application {
 
     private static Context context;
-    private static String fcm_token;
     @Override
     public void onCreate() {
         super.onCreate();

@@ -25,9 +25,11 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -201,6 +203,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
 
+
             viewPager.setCurrentItem(4);
         }
     }
@@ -234,6 +237,8 @@ public class MainActivity extends AppCompatActivity {
         adapter.addFragment(new RestroomFragment().newInstance("", ""), "RestRoomFragment");
         adapter.addFragment(pollutionFragment, "PollutionFragment");
         adapter.addFragment(newsListFragment, "NewsListFragment");
+
+        adapter.setPrimaryItem(null,4,null);
 
         upViewPager.setAdapter(adapter);
     }
@@ -316,6 +321,21 @@ public class MainActivity extends AppCompatActivity {
             mFragmentTitleList.add(title);
         }
 
+        /*@Override
+        public void setPrimaryItem(ViewGroup container, int position, Object object) {
+            super.setPrimaryItem(container, position, object);
+        }
+*/
+        @Override
+        public void setPrimaryItem(ViewGroup container, int position, Object object) {
+  /*          if (mobject != object) {
+                mObject=objet; //mObject is global variable in adapter
+                //You can update your based on your logic like below
+                View view == (LinearLayout) object;
+                form4(view);
+            }
+  */          super.setPrimaryItem(container, position, object);
+        }
         @Override
         public CharSequence getPageTitle(int position) {
             return null;

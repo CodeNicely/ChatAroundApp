@@ -1,4 +1,4 @@
-package com.fame.plumbum.chataround.pollution.model.air_model;
+package com.fame.plumbum.chataround.pollution.model;
 
 import java.util.List;
 

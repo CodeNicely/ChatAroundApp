@@ -43,9 +43,14 @@ public class RestRoomPresenterImpl implements RestRoomPresenter {
             @Override
             public void onFailure(String message) {
                 restRoomView.showLoader(false);
-                restRoomView.showMessage("Something Went Wrong");
+                restRoomView.showMessage(message);
             }
         });
 
+    }
+
+    @Override
+    public void onDestroy() {
+        restRoomProvider.onDestroy();
     }
 }

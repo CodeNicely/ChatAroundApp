@@ -21,9 +21,7 @@ import static com.fame.plumbum.chataround.pollution.provider.RetrofitCache.REWRI
  */
 
 public class RetrofitNewsListProvider implements NewsListProvider {
-    private static final String TAG = "NewsListProvider";
-    private NewsListRequestApi newsListRequestApi;
-
+    private Call<NewsListData> call;
 
     @Override
     public void getNewsList(boolean cache, String userId, String city, String state, String country, final NewsFeedRequestCallback newsFeedRequestCallback) {
@@ -49,7 +47,7 @@ public class RetrofitNewsListProvider implements NewsListProvider {
         Retrofit retrofit = new Retrofit.Builder().baseUrl(Urls.BASE_URL).client(client).
                 addConverterFactory(GsonConverterFactory.create()).build();
         NewsListRequestApi newsListRequestApi = retrofit.create(NewsListRequestApi.class);
-        Call<NewsListData> call = newsListRequestApi.getNewsList(userId, city, state, country);
+        call = newsListRequestApi.getNewsList(userId, city, state, country);
         call.enqueue(new Callback<NewsListData>() {
             @Override
             public void onResponse(Call<NewsListData> call, Response<NewsListData> response) {
@@ -61,5 +59,11 @@ public class RetrofitNewsListProvider implements NewsListProvider {
                 newsFeedRequestCallback.OnFailure(t.getMessage());
             }
         });
+    }
+
+    @Override
+    public void onDestroy() {
+        if (call != null)
+            call.cancel();
     }
 }

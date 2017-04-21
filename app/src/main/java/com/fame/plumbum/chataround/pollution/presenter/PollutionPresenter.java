@@ -8,4 +8,5 @@ public interface PollutionPresenter {
 
     void requestAirPollution(boolean cache,double latitude, double longitude);
 
+    void onDestroy();
 }
