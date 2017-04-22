@@ -18,6 +18,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.LoginEvent;
 import com.fame.plumbum.chataround.R;
 import com.fame.plumbum.chataround.helper.Urls;
 import com.google.android.gms.common.ConnectionResult;
@@ -106,6 +108,9 @@ public class SignUp extends AppCompatActivity{
                             }else if(jO.getString("Status").contentEquals("400")){
                                 Toast.makeText(SignUp.this, "Email  already registered", Toast.LENGTH_SHORT).show();
                             }
+
+                            Answers.getInstance().logLogin(new LoginEvent().putMethod("GooglePlus")
+                            .putSuccess(true));
                         } catch (JSONException ignored) {
                         }
 
@@ -115,6 +120,9 @@ public class SignUp extends AppCompatActivity{
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(SignUp.this, "Something went wrong", Toast.LENGTH_SHORT).show();
+                        Answers.getInstance().logLogin(new LoginEvent().putMethod("GooglePlus")
+                                .putSuccess(false));
+
                     }
                 }) {
             protected Map<String, String> getParams() throws com.android.volley.AuthFailureError {

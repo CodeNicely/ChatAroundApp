@@ -51,6 +51,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
  * Created by pankaj on 23/7/16.
  */
 public class Tweets_adapter extends BaseAdapter {
+    private static final int MAX_RETRIES = 5;
     private Context context;
     public JSONArray posts;
     public int total = 0;
@@ -191,8 +192,7 @@ public class Tweets_adapter extends BaseAdapter {
                         report_image.setBackgroundResource(R.drawable.thumbs_down_accent);
                     }
 
-                    RequestQueue queue = MySingleton.getInstance(context.getApplicationContext()).
-                            getRequestQueue();
+                    RequestQueue queue = MySingleton.getInstance(context.getApplicationContext()).getRequestQueue();
                     SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
                     StringRequest stringRequest = new StringRequest(Request.Method.GET, Urls.BASE_URL + "Like?UserId=" + sp.getString("uid", "") + "&PostId=" + posts.getJSONObject(position).getString("PostId") + "&UserName=" + sp.getString("user_name", "").replace(" ", "%20") + "&Latitude=" + lat + "&Longitude=" + lng,
                             new Response.Listener<String>() {
@@ -365,7 +365,7 @@ public class Tweets_adapter extends BaseAdapter {
                 return params;
             }
         };
-        myReq.setRetryPolicy(new DefaultRetryPolicy(5000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        myReq.setRetryPolicy(new DefaultRetryPolicy(10000, MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         RequestQueue requestQueue = Volley.newRequestQueue(context);
         requestQueue.add(myReq);
     }

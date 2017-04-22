@@ -1,5 +1,8 @@
 package com.fame.plumbum.chataround.restroom.presenter;
 
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.CustomEvent;
+import com.fame.plumbum.chataround.helper.Keys;
 import com.fame.plumbum.chataround.restroom.OnRestRoomApiResponse;
 import com.fame.plumbum.chataround.restroom.model.RestRoomData;
 import com.fame.plumbum.chataround.restroom.model.RestRoomDetails;
@@ -24,7 +27,7 @@ public class RestRoomPresenterImpl implements RestRoomPresenter {
     }
 
     @Override
-    public void requestRestRooms(String user_id, double latitude, double longitude) {
+    public void requestRestRooms(final String user_id, final double latitude, final double longitude) {
         restRoomView.showLoader(true);
         restRoomProvider.requestRestRooms(user_id, latitude, longitude, new OnRestRoomApiResponse() {
 
@@ -34,9 +37,23 @@ public class RestRoomPresenterImpl implements RestRoomPresenter {
                 if (restRoomData.isSuccess()) {
                     restRoomView.onReceived(restRoomData.getRestroom_list());
                     restRoomView.showLoader(false);
+                    Answers.getInstance().logCustom(new CustomEvent("Restroom Module Loading Successful")
+                            .putCustomAttribute(Keys.USER_EMAIL, user_id)
+                            .putCustomAttribute(Keys.KEY_LATITUDE,latitude)
+                            .putCustomAttribute(Keys.KEY_LONGITUDE,longitude)
+
+                    );
+
                 } else {
                     restRoomView.showMessage(restRoomData.getMessage());
                     restRoomView.showLoader(false);
+                    Answers.getInstance().logCustom(new CustomEvent("Restroom Module Loading Failed")
+                            .putCustomAttribute(Keys.USER_EMAIL, user_id)
+                            .putCustomAttribute(Keys.KEY_LATITUDE,latitude)
+                            .putCustomAttribute(Keys.KEY_LONGITUDE,longitude)
+
+                    );
+
                 }
             }
 

@@ -1,5 +1,8 @@
 package com.fame.plumbum.chataround.news.presenter;
 
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.CustomEvent;
+import com.fame.plumbum.chataround.helper.Keys;
 import com.fame.plumbum.chataround.news.NewsFeedRequestCallback;
 import com.fame.plumbum.chataround.news.model.NewsListData;
 import com.fame.plumbum.chataround.news.provider.NewsListProvider;
@@ -21,7 +24,7 @@ public class NewsListPresenterImpl implements NewsListPresenter {
 
 
     @Override
-    public void getNews(boolean cache, String userId, String city, String state, String country) {
+    public void getNews(boolean cache, final String userId, final String city, final String state, final String country) {
         newsListView.showProgressBar(true);
         newsListProvider.getNewsList(cache, userId, city, state, country, new NewsFeedRequestCallback() {
             @Override
@@ -29,8 +32,24 @@ public class NewsListPresenterImpl implements NewsListPresenter {
                 newsListView.showProgressBar(false);
                 if (newsListData.isSuccess()) {
                     newsListView.setNewsList(newsListData.getNewsListDataDetailsList());
+                    Answers.getInstance().logCustom(new CustomEvent("News Module Loading Successful")
+                            .putCustomAttribute(Keys.USER_EMAIL, userId)
+                            .putCustomAttribute(Keys.KEY_CITY,city)
+                            .putCustomAttribute(Keys.KEY_COUNTRY,country)
+                            .putCustomAttribute(Keys.KEY_STATE,state)
+
+                    );
+
                 } else {
                     newsListView.showMessage(newsListData.getMessage());
+                    Answers.getInstance().logCustom(new CustomEvent("News Module Loading Failed")
+                            .putCustomAttribute(Keys.USER_EMAIL, userId)
+                            .putCustomAttribute(Keys.KEY_CITY,city)
+                            .putCustomAttribute(Keys.KEY_COUNTRY,country)
+                            .putCustomAttribute(Keys.KEY_STATE,state)
+
+                    );
+
                 }
             }
 

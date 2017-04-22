@@ -1,29 +1,31 @@
 package com.fame.plumbum.chataround.helper;
 
-import android.app.Application;
 import android.content.Context;
-import android.util.Log;
+import android.support.multidex.MultiDexApplication;
 
-import static com.bumptech.glide.gifdecoder.GifHeaderParser.TAG;
+import com.crashlytics.android.Crashlytics;
+
+import io.fabric.sdk.android.Fabric;
 
 /**
  * Created by meghal on 11/10/16.
  */
 
-public class MyApplication extends Application {
+public class MyApplication extends MultiDexApplication {
 
     private static Context context;
+    private SharedPrefs sharedPrefs;
+
     @Override
     public void onCreate() {
         super.onCreate();
-        context=this;
-//        FontsOverride.setDefaultFont(this, "DEFAULT", "fonts/comfortaa.ttf");
-//        FontsOverride.setDefaultFont(this, "MONOSPACE", "fonts/homemade.ttf");
-//        FontsOverride.setDefaultFont(this, "SERIF", "fonts/nunito.ttf");
-//        FontsOverride.setDefaultFont(this, "SANS_SERIF", "fonts/patrick_hand.ttf");
-//        fcm_token = FirebaseInstanceId.getInstance().getToken();
+        context = this;
+
+        // TODO: Move this to where you establish a user session
+
 
     }
+
 
 
     public static Context getContext() {

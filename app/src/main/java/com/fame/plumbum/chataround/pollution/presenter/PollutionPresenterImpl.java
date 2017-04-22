@@ -1,5 +1,8 @@
 package com.fame.plumbum.chataround.pollution.presenter;
 
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.CustomEvent;
+import com.fame.plumbum.chataround.helper.Keys;
 import com.fame.plumbum.chataround.pollution.OnAirPollutionReceived;
 import com.fame.plumbum.chataround.pollution.model.AirPollutionDetails;
 import com.fame.plumbum.chataround.pollution.provider.PollutionProvider;
@@ -20,7 +23,7 @@ public class PollutionPresenterImpl implements PollutionPresenter {
     }
 
     @Override
-    public void requestAirPollution(boolean cache, double latitude, double longitude) {
+    public void requestAirPollution(boolean cache, final double latitude, final double longitude) {
 
         pollutionView.showLoader(true);
         pollutionProvider.requestAirPollution(cache, latitude, longitude, new OnAirPollutionReceived() {
@@ -31,9 +34,20 @@ public class PollutionPresenterImpl implements PollutionPresenter {
                     pollutionView.showLoader(false);
                     pollutionView.setData(airPollutionDetails);
 
+                    Answers.getInstance().logCustom(new CustomEvent("Pollution Module Loading Successful")
+                            .putCustomAttribute(Keys.KEY_LATITUDE,latitude)
+                            .putCustomAttribute(Keys.KEY_LONGITUDE,longitude)
+
+                    );
+
                 } else {
                     pollutionView.showLoader(false);
 
+                    Answers.getInstance().logCustom(new CustomEvent("Pollution Module Loading Failed")
+                            .putCustomAttribute(Keys.KEY_LATITUDE,latitude)
+                            .putCustomAttribute(Keys.KEY_LONGITUDE,longitude)
+
+                    );
 
                 }
             }

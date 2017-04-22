@@ -121,7 +121,7 @@ public class MyProfile extends Fragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        context=getContext();
+        context = getContext();
         rootView = inflater.inflate(R.layout.my_profile, container, false);
         listView = (ListView) rootView.findViewById(R.id.my_tweets_list);
         swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe);
@@ -415,13 +415,73 @@ public class MyProfile extends Fragment implements
         }
         activity.needSomethingTweet = true;
     }
+/*
+    public void getAllPosts(List<JSONObject> response, int count) {
+        try {
+//            JSONObject jO = new JSONObject(response);
+//            JSONArray currentListOfPost = jO.getJSONArray("Posts");
+//            JSONArray currentListOfPost = response;
+
+
+            JSONArray mine = new JSONArray();
+            DBHandler db = new DBHandler(getContext());
+            List<NotifTable> notifTables = db.getNotifs();
+            for (int i = 0; i < response.size(); i++) {
+                for (int j = 0; j < notifTables.size(); j++) {
+                    if (notifTables.get(j).getPost_Id().contentEquals(response.get(i).getString("PostId"))) {
+                        response.get(i).put("NLike", Integer.parseInt(response.get(i).getString("NLike")) + notifTables.get(j).getNLike());
+                        response.get(i).put("NComment", Integer.parseInt(response.get(i).getString("NComment")) + notifTables.get(j).getNComment());
+                        break;
+                    }
+                }
+            }
+
+            db.deleteNotif();
+
+            for (int i = 0; i < response.size(); i++) {
+                if (response.get(i).getString("PosterId").contentEquals(uid)) {
+                    if (!response.get(i).getString("NLike").contentEquals("0") || !response.get(i).getString("NComment").contentEquals("0")) {
+                        mine.put(response.get(i));
+                        db.addNotif(new NotifTable(response.get(i).getString("PostId"),
+                                Integer.parseInt(response.get(i).getString("NComment")),
+                                Integer.parseInt(response.get(i).getString("NLike"))));
+                    }
+                }
+            }
+            TextView midText = (TextView) rootView.findViewById(R.id.midText);
+            if (mine.length() > 0) {
+                if (count == 0) {
+                    midText.setVisibility(View.GONE);
+                    adapter = new Notifs(getContext(), mine);
+                    listView.setAdapter(adapter);
+                    listView.setVisibility(View.VISIBLE);
+                } else {
+                    for (int i = 0; i < mine.length(); i++)
+                        adapter.posts.put(mine.getJSONObject(i));
+                    adapter.total = adapter.total + mine.length();
+                    int index = listView.getFirstVisiblePosition();
+                    View v = listView.getChildAt(0);
+                    int top = (v == null) ? 0 : v.getTop();
+
+                    adapter.notifyDataSetChanged();
+                    listView.setSelectionFromTop(index, top);
+                }
+            } else {
+                listView.setVisibility(View.INVISIBLE);
+                midText.setVisibility(View.VISIBLE);
+            }
+        } catch (JSONException ignored) {
+        }
+    }*/
+
 
     public void getAllPosts(String response, int count) {
         try {
             JSONObject jO = new JSONObject(response);
+            JSONArray currentListOfPost = jO.getJSONArray("Posts");
+
+
             JSONArray mine = new JSONArray();
-            JSONArray currentListOfPost;
-            currentListOfPost = jO.getJSONArray("Posts");
             DBHandler db = new DBHandler(getContext());
             List<NotifTable> notifTables = db.getNotifs();
             for (int i = 0; i < currentListOfPost.length(); i++) {
@@ -500,17 +560,15 @@ public class MyProfile extends Fragment implements
 
             try {
                 addresses = geocoder.getFromLocation(latitude, longitude, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
-                String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
                 String city = addresses.get(0).getLocality();
                 String state = addresses.get(0).getAdminArea();
-                String country = addresses.get(0).getCountryName();
-                String postalCode = addresses.get(0).getPostalCode();
-                String knownName = addresses.get(0).getFeatureName();
+//                String country = addresses.get(0).getCountryName();
+//                String postalCode = addresses.get(0).getPostalCode();
+//                String knownName = addresses.get(0).getFeatureName();
 
 
                 phone_view.setText(city);
                 phone_view.append(", " + state);
-                Toast.makeText(context, "Got Location", Toast.LENGTH_SHORT).show();
 
 
             } catch (IOException e) {
@@ -546,17 +604,15 @@ public class MyProfile extends Fragment implements
 
         try {
             addresses = geocoder.getFromLocation(latitude, longitude, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
-            String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
+//            String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
             String city = addresses.get(0).getLocality();
             String state = addresses.get(0).getAdminArea();
             String country = addresses.get(0).getCountryName();
-            String postalCode = addresses.get(0).getPostalCode();
-            String knownName = addresses.get(0).getFeatureName();
+//            String postalCode = addresses.get(0).getPostalCode();
+//            String knownName = addresses.get(0).getFeatureName();
 
             phone_view.setText(city);
             phone_view.append(", " + state);
-
-            Toast.makeText(context, "Got Location", Toast.LENGTH_SHORT).show();
 
         } catch (IOException e) {
             Toast.makeText(context, "Got Error", Toast.LENGTH_SHORT).show();

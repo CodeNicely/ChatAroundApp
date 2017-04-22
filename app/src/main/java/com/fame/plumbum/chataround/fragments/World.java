@@ -13,6 +13,7 @@ import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.fame.plumbum.chataround.R;
 import com.fame.plumbum.chataround.activity.MainActivity;
@@ -21,6 +22,8 @@ import com.fame.plumbum.chataround.adapters.Tweets_adapter;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -122,11 +125,54 @@ public class World extends Fragment implements SwipeRefreshLayout.OnRefreshListe
     }
 
 
+/*
+    public void getAllPosts(List<JSONObject> response, int count) {
+        try {
+
+            Toast.makeText(getContext(), response.toString(), Toast.LENGTH_SHORT).show();
+//            JSONObject jO = new JSONObject(response);
+//            currentListOfPost[0] = jO.getJSONArray("Posts");
+
+            JSONArray mine = new JSONArray();
+//            currentListOfPost[0] = response;
+
+            for (int i = 0; i < response.size(); i++)
+                mine.put(response.get(i));
+            TextView midText = (TextView) rootView.findViewById(R.id.midText);
+            if (mine.length() > 0) {
+                if (count == 0) {
+                    midText.setVisibility(View.GONE);
+                    adapter = new Tweets_adapter(getContext(), mine, lat, lng);
+                    listView.setAdapter(adapter);
+                    listView.setVisibility(View.VISIBLE);
+                } else {
+                    for (int i = 0; i < mine.length(); i++)
+                        adapter.posts.put(mine.getJSONObject(i));
+                    adapter.total = adapter.total + mine.length();
+                    int index = listView.getFirstVisiblePosition();
+                    View v = listView.getChildAt(0);
+                    int top = (v == null) ? 0 : v.getTop();
+
+                    adapter.notifyDataSetChanged();
+                    listView.setSelectionFromTop(index, top);
+                }
+            } else {
+                listView.setVisibility(View.GONE);
+                midText.setVisibility(View.VISIBLE);
+            }
+        } catch (JSONException ignored) {
+        }
+    }
+*/
+
+
+
     public void getAllPosts(String response, int count) {
         try {
             JSONObject jO = new JSONObject(response);
-            JSONArray mine = new JSONArray();
             currentListOfPost[0] = jO.getJSONArray("Posts");
+            JSONArray mine = new JSONArray();
+
             for (int i = 0; i < currentListOfPost[0].length(); i++)
                 mine.put(currentListOfPost[0].getJSONObject(i));
             TextView midText = (TextView) rootView.findViewById(R.id.midText);

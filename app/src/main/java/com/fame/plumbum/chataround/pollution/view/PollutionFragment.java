@@ -24,7 +24,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.CustomEvent;
 import com.fame.plumbum.chataround.R;
+import com.fame.plumbum.chataround.helper.Keys;
 import com.fame.plumbum.chataround.helper.utils.DistanceUtils;
 import com.fame.plumbum.chataround.pollution.model.AirPollutionDetails;
 import com.fame.plumbum.chataround.pollution.model.AirPollutionIndividualAqi;
@@ -39,6 +42,7 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -318,6 +322,13 @@ public class PollutionFragment extends Fragment implements
 
         if (distance > 50) {
 
+            Answers.getInstance().logCustom(new CustomEvent("Pollution Data not available within 50 Kms")
+                    .putCustomAttribute(Keys.KEY_LATITUDE,latitude)
+                    .putCustomAttribute(Keys.KEY_LONGITUDE,longitude)
+
+            );
+
+
             pollution_data_not_found_layout.setVisibility(View.VISIBLE);
             /*pollution_data_not_found_message.append("\n\nYour distance from Nearest Sensor is - " +
                     String.valueOf(Math.round(distance)) + " Kms and Sensor Latitude Longitude is "
@@ -327,6 +338,14 @@ public class PollutionFragment extends Fragment implements
             scrollView.setVisibility(View.GONE);
             return;
         } else {
+
+
+            Answers.getInstance().logCustom(new CustomEvent("Pollution Data available")
+                    .putCustomAttribute(Keys.KEY_LATITUDE,latitude)
+                    .putCustomAttribute(Keys.KEY_LONGITUDE,longitude)
+
+            );
+
             pollution_data_not_found_layout.setVisibility(View.GONE);
             scrollView.setVisibility(View.VISIBLE);
 
@@ -765,21 +784,6 @@ This Method is for Pressure that we are not going to use.
             latitude = mLastLocation.getLatitude();
             longitude = mLastLocation.getLongitude();
 
-/*
-
-            Delhi
-            latitude=28.5223220;
-            longitude=77.1742630;
-*/
-
-/*
-
-            Korba
-
-            latitude=22.360133;
-            longitude=82.719884;
-*/
-
             new PollutionPresenterImpl(this,
                     new RetrofitPollutionProvider())
                     .requestAirPollution(false, latitude, longitude);
@@ -804,25 +808,13 @@ This Method is for Pressure that we are not going to use.
      */
     @Override
     public void onLocationChanged(Location location) {
+
         latitude = location.getLatitude();
         longitude = location.getLongitude();
-
-/*
-        Delhi
-        latitude=28.5223220;
-        longitude=77.1742630;
-*/
-
-
-/*
-        Korba
-        latitude=22.360133;
-        longitude=82.719884;*/
 
         new PollutionPresenterImpl(this,
                 new RetrofitPollutionProvider())
                 .requestAirPollution(true, latitude, longitude);
-
 
     }
 

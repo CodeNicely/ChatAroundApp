@@ -46,7 +46,6 @@ public class SplashScreenFragment extends Fragment implements SplashScreenView {
     TextView tag_line;
     @BindView(R.id.codeNicelyLogo)
     ImageView codenicely_logo;
-    private Handler handler;
     private SplashScreenPresenter splashScreenPresenter;
     private SharedPrefs sharedPrefs;
     // TODO: Rename parameter arguments, choose names that match

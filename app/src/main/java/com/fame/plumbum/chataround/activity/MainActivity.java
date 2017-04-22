@@ -1,5 +1,6 @@
 package com.fame.plumbum.chataround.activity;
 
+import android.Manifest;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -7,13 +8,17 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -29,7 +34,6 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,17 +44,26 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.CustomEvent;
 import com.fame.plumbum.chataround.MySingleton;
 import com.fame.plumbum.chataround.R;
 import com.fame.plumbum.chataround.fragments.MyProfile;
 import com.fame.plumbum.chataround.fragments.World;
 import com.fame.plumbum.chataround.helper.Keys;
+import com.fame.plumbum.chataround.helper.SharedPrefs;
 import com.fame.plumbum.chataround.helper.Urls;
 import com.fame.plumbum.chataround.image_viewer.ImageViewerActivity;
 import com.fame.plumbum.chataround.news.view.NewsDetailsActivity;
 import com.fame.plumbum.chataround.news.view.NewsListFragment;
 import com.fame.plumbum.chataround.pollution.view.PollutionFragment;
 import com.fame.plumbum.chataround.restroom.view.RestroomFragment;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.json.JSONException;
@@ -61,10 +74,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.fabric.sdk.android.Fabric;
+
 /**
  * Created by pankaj on 4/8/16.
  */
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements
+        GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener,
+        LocationListener {
+
+    private static final int MAX_RETRIES = 5;
+    private GoogleApiClient mGoogleApiClient;
+    private LocationRequest mLocationRequest;
+    private SharedPrefs sharedPrefs;
     private static final String TAG = "MainActivity";
     public double lat, lng;
     public boolean needSomethingTweet = false, needSomethingWorld = false;
@@ -82,6 +105,26 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        sharedPrefs = new SharedPrefs(this);
+
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                // The next two lines tell the new client that “this” current class will handle connection stuff
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                //fourth line adds the LocationServices API endpoint from GooglePlayServices
+                .addApi(LocationServices.API)
+                .build();
+
+        // Create the LocationRequest object
+        mLocationRequest = LocationRequest.create()
+                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+                .setInterval(10 * 1000)        // 10 seconds, in milliseconds
+                .setFastestInterval(1 * 1000); // 1 second, in milliseconds
+
+        mGoogleApiClient.connect();
+
+
         final ActionBar toolbar = getSupportActionBar();
 
         toolbar.setTitle(R.string.app_name);
@@ -119,7 +162,7 @@ public class MainActivity extends AppCompatActivity {
             dialog.show();
         } else {
 
-            if (receiver == null) {
+            /*if (receiver == null) {
                 IntentFilter filter = new IntentFilter("Hello World");
                 receiver = new BroadcastReceiver() {
                     @Override
@@ -142,7 +185,13 @@ public class MainActivity extends AppCompatActivity {
                     }
                 };
                 registerReceiver(receiver, filter);
-            }
+            }*/
+            Fabric.with(this, new Crashlytics());
+            logUser();
+
+            Answers.getInstance().logCustom(new CustomEvent("User Opened App"));
+
+
             sp = PreferenceManager.getDefaultSharedPreferences(this);
             initFCM();
             getSupportActionBar().setDisplayHomeAsUpEnabled(false); // remove the left caret
@@ -166,20 +215,51 @@ public class MainActivity extends AppCompatActivity {
                     switch (position) {
                         case 0:
                             toolbar.setTitle("Profile");
+                            Answers.getInstance().logCustom(new CustomEvent("User Swiped to Profile")
+                                    .putCustomAttribute(Keys.KEY_LATITUDE, lat)
+                                    .putCustomAttribute(Keys.KEY_LONGITUDE, lng)
+                                    .putCustomAttribute(Keys.USER_EMAIL, sharedPrefs.getEmail())
+                            );
+
                             break;
                         case 1:
                             toolbar.setTitle("Shouts");
+                            Answers.getInstance().logCustom(new CustomEvent("User Swiped to Shouts")
+                                    .putCustomAttribute(Keys.KEY_LATITUDE, lat)
+                                    .putCustomAttribute(Keys.KEY_LONGITUDE, lng)
+                                    .putCustomAttribute(Keys.USER_EMAIL, sharedPrefs.getEmail())
+
+                            );
+
                             break;
                         case 2:
                             toolbar.setTitle("Restrooms");
+                            Answers.getInstance().logCustom(new CustomEvent("User Swiped to Restroom")
+                                    .putCustomAttribute(Keys.KEY_LATITUDE, lat)
+                                    .putCustomAttribute(Keys.KEY_LONGITUDE, lng)
+                                    .putCustomAttribute(Keys.USER_EMAIL, sharedPrefs.getEmail())
+
+                            );
 
                             break;
                         case 3:
                             toolbar.setTitle("Pollution Meter");
+                            Answers.getInstance().logCustom(new CustomEvent("User Swiped to Pollution")
+                                    .putCustomAttribute(Keys.KEY_LATITUDE, lat)
+                                    .putCustomAttribute(Keys.KEY_LONGITUDE, lng)
+                                    .putCustomAttribute(Keys.USER_EMAIL, sharedPrefs.getEmail())
+
+                            );
 
                             break;
                         case 4:
                             toolbar.setTitle("News");
+                            Answers.getInstance().logCustom(new CustomEvent("User Swiped to News")
+                                    .putCustomAttribute(Keys.KEY_LATITUDE, lat)
+                                    .putCustomAttribute(Keys.KEY_LONGITUDE, lng)
+                                    .putCustomAttribute(Keys.USER_EMAIL, sharedPrefs.getEmail())
+
+                            );
 
                             break;
                         default:
@@ -206,6 +286,16 @@ public class MainActivity extends AppCompatActivity {
 
             viewPager.setCurrentItem(4);
         }
+
+
+    }
+
+    private void logUser() {
+        // TODO: Use the current user's information
+        // You can call any combination of these three methods
+        Crashlytics.setUserIdentifier(sharedPrefs.getUserId());
+        Crashlytics.setUserEmail(sharedPrefs.getEmail());
+        Crashlytics.setUserName(sharedPrefs.getUsername());
     }
 
     private void initFCM() {
@@ -238,15 +328,86 @@ public class MainActivity extends AppCompatActivity {
         adapter.addFragment(pollutionFragment, "PollutionFragment");
         adapter.addFragment(newsListFragment, "NewsListFragment");
 
-        adapter.setPrimaryItem(null,4,null);
+        adapter.setPrimaryItem(null, 4, null);
 
         upViewPager.setAdapter(adapter);
     }
 
+/*
+    public void getAllPosts(int counter) {
+        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+        OkHttpClient client = new OkHttpClient.Builder()
+                .addInterceptor(interceptor)
+//                .addInterceptor(REWRITE_CACHE_CONTROL_INTERCEPTOR)
+                .cache(RetrofitCache.provideCache())
+                .build();
+
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(Urls.BASE_URL)
+                .client(client)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        ShoutsRequestApi shoutsRequestApi = retrofit.create(ShoutsRequestApi.class);
+        Call<ShoutData1> call = shoutsRequestApi.requestShouts(profile.uid, counter, lat, lng);
+
+        call.enqueue(new Callback<ShoutData1>() {
+            @Override
+            public void onResponse(Call<ShoutData1> call, retrofit2.Response<ShoutData1> response) {
+
+                if (world != null && world.swipeRefreshLayout != null) {
+                    world.swipeRefreshLayout.setRefreshing(false);
+                }
+                if (profile != null && profile.swipeRefreshLayout != null) {
+                    profile.swipeRefreshLayout.setRefreshing(false);
+                }
+
+                if (response.body().getPosts().size() > 0) {
+                    if (world != null && world.swipeRefreshLayout != null) {
+                        world.getAllPosts(response.body().getPosts(), count);
+                    }
+                    if (profile != null && profile.swipeRefreshLayout != null) {
+                        profile.getAllPosts(response.body().getPosts(), count);
+                    }
+                } else {
+                    Toast.makeText(MainActivity.this, "No more posts found!", Toast.LENGTH_SHORT).show();
+                    needSomethingTweet = false;
+                    needSomethingWorld = false;
+                    if (count > 0) count -= 1;
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<ShoutData1> call, Throwable t) {
+                t.printStackTrace();
+
+                if (world != null && world.swipeRefreshLayout != null) {
+                    world.swipeRefreshLayout.setRefreshing(false);
+                }
+                if (profile != null && profile.swipeRefreshLayout != null) {
+                    profile.swipeRefreshLayout.setRefreshing(false);
+                }
+
+                Toast.makeText(MainActivity.this, "Error receiving data!"+t.getMessage(), Toast.LENGTH_SHORT).show();
+
+            }
+        });
+    }
+*/
+
     public void getAllPosts(int counter) {
         RequestQueue queue = MySingleton.getInstance(getApplicationContext()).
                 getRequestQueue();
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, Urls.BASE_URL + "ShowPost?UserId=" + profile.uid + "&Counter=" + counter + "&Latitude=" + lat + "&Longitude=" + lng,
+        StringRequest stringRequest = new
+                StringRequest(Request.Method.GET, Urls.BASE_URL +
+                "ShowPost?UserId=" + profile.uid +
+                "&Counter=" + counter +
+                "&Latitude=" + lat +
+                "&Longitude=" + lng,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -294,8 +455,78 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, "Error receiving data!", Toast.LENGTH_SHORT).show();
             }
         });
-        stringRequest.setRetryPolicy(new DefaultRetryPolicy(5000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(10000, MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         MySingleton.getInstance(MainActivity.this).addToRequestQueue(stringRequest);
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+
+        if (location == null) {
+            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+
+        } else {
+            //If everything went fine lets get latitude and longitude
+            lat = location.getLatitude();
+            lng = location.getLongitude();
+
+            world.lat = lat;
+            world.lng = lng;
+
+            profile.lat = lat;
+            profile.lng = lng;
+
+            if (needSomethingTweet || needSomethingWorld) {
+                needSomethingWorld = false;
+                needSomethingTweet = false;
+                getAllPosts(count);
+            }
+
+        }
+
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+
+        lat = location.getLatitude();
+        lng = location.getLongitude();
+
+        world.lat = lat;
+        world.lng = lng;
+
+        profile.lat = lat;
+        profile.lng = lng;
+
+        if (needSomethingTweet || needSomethingWorld) {
+            needSomethingWorld = false;
+            needSomethingTweet = false;
+            getAllPosts(count);
+        }
+
+
     }
 
     class ViewPagerAdapter extends FragmentPagerAdapter {
@@ -334,8 +565,10 @@ public class MainActivity extends AppCompatActivity {
                 View view == (LinearLayout) object;
                 form4(view);
             }
-  */          super.setPrimaryItem(container, position, object);
+  */
+            super.setPrimaryItem(container, position, object);
         }
+
         @Override
         public CharSequence getPageTitle(int position) {
             return null;
@@ -385,12 +618,21 @@ public class MainActivity extends AppCompatActivity {
                                 public void onResponse(String response) {
                                     Log.d(TAG, "Response " + response);
                                     needSomethingTweet = true;
-
+                                    Answers.getInstance().logCustom(new CustomEvent("Adding Shout Successful")
+                                            .putCustomAttribute(Keys.USER_EMAIL,sharedPrefs.getEmail())
+                                            .putCustomAttribute(Keys.KEY_LATITUDE,lat)
+                                            .putCustomAttribute(Keys.KEY_LONGITUDE,lng)
+                                    );
                                 }
                             }, new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
                             error.printStackTrace();
+                            Answers.getInstance().logCustom(new CustomEvent("Adding Shout Failed")
+                                    .putCustomAttribute(Keys.USER_EMAIL,sharedPrefs.getEmail())
+                                    .putCustomAttribute(Keys.KEY_LATITUDE,lat)
+                                    .putCustomAttribute(Keys.KEY_LONGITUDE,lng)
+                            );
                             Toast.makeText(MainActivity.this, "Error sending data!", Toast.LENGTH_SHORT).show();
                         }
                     });

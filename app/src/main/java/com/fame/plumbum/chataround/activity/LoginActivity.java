@@ -33,8 +33,12 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.LoginEvent;
 import com.fame.plumbum.chataround.LocationService;
 import com.fame.plumbum.chataround.R;
+import com.fame.plumbum.chataround.helper.Keys;
 import com.fame.plumbum.chataround.helper.SharedPrefs;
 import com.fame.plumbum.chataround.helper.Urls;
 import com.fame.plumbum.chataround.models.ImageSendData;
@@ -72,6 +76,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.fabric.sdk.android.Fabric;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -94,10 +99,10 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        facebookSDKInitialize();
         setContentView(R.layout.activity_login);
 
         sharedPrefs = new SharedPrefs(this);
+
 
         if (sharedPrefs.isLoggedIn()) {
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
@@ -122,9 +127,14 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         if (!isNetworkAvailable(this)) {
             Toast.makeText(this, "No Internet connection", Toast.LENGTH_SHORT).show();
             finish();
-        } else
+        } else {
             callNec();
+        }
+
+        Fabric.with(this, new Crashlytics());
+
     }
+
 
     private void callNec() {
         GoogleApiClient googleApiClient = null;
@@ -566,6 +576,12 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                                 sharedPrefs.setUsername(jO.getString("Name"));
 
                                 sendImage_one();
+
+                                Answers.getInstance().
+                                        logLogin(new LoginEvent().putMethod("GooglePlus")
+                                        .putSuccess(true)
+                                        );
+
 
                             } else if (jO.getString("Status").contentEquals("400")) {
                                 rl_progress.setVisibility(View.GONE);

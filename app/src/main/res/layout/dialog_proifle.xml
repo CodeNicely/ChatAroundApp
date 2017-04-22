@@ -91,5 +91,6 @@
         android:layout_marginTop="30dp"
         android:background="@color/colorPrimary"
         android:text="OKAY"
+        android:textColor="@color/white"
         android:textSize="18sp" />
 </LinearLayout>

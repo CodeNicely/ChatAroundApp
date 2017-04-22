@@ -23,6 +23,8 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.CustomEvent;
 import com.fame.plumbum.chataround.R;
 import com.fame.plumbum.chataround.helper.SharedPrefs;
 import com.fame.plumbum.chataround.news.model.NewsListDataDetails;
@@ -133,6 +135,10 @@ public class NewsListFragment extends Fragment implements
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_news, container, false);
         ButterKnife.bind(this, view);
+
+
+
+
         initialise();
         mGoogleApiClient = new GoogleApiClient.Builder(context)
                 // The next two lines tell the new client that “this” current class will handle connection stuff
@@ -186,6 +192,15 @@ public class NewsListFragment extends Fragment implements
         return view;
 
     }
+
+    // TODO: Move this method and use your own event name to track your key metrics
+    public void onKeyMetric() {
+        // TODO: Use your own string attributes to track common values over time
+        // TODO: Use your own number attributes to track median value over time
+        Answers.getInstance().logCustom(new CustomEvent("News Fragment Opened")
+                .putCustomAttribute("NewsFragment", 0));
+    }
+
 
     private void initialise() {
         newsListPresenter = new NewsListPresenterImpl(this, new RetrofitNewsListProvider());
@@ -299,17 +314,22 @@ public class NewsListFragment extends Fragment implements
             LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
         } else {
             //If everything went fine lets get latitude and longitude
-            latitude = location.getLatitude();
-            longitude = location.getLongitude();
 
            /* latitude=28.5223220;
             longitude=77.1742630;
 */
-            Geocoder geocoder;
-            List<Address> addresses;
-            geocoder = new Geocoder(context, Locale.getDefault());
+
 
             try {
+
+                latitude = location.getLatitude();
+                longitude = location.getLongitude();
+
+                Geocoder geocoder;
+                List<Address> addresses;
+                geocoder = new Geocoder(context, Locale.getDefault());
+
+
                 addresses = geocoder.getFromLocation(latitude, longitude, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
                 city = addresses.get(0).getLocality();
                 state = addresses.get(0).getAdminArea();
@@ -363,19 +383,22 @@ public class NewsListFragment extends Fragment implements
      */
     @Override
     public void onLocationChanged(Location location) {
-        latitude = location.getLatitude();
-        longitude = location.getLongitude();
+
 
 /*
         latitude=28.5223220;
         longitude=77.1742630;
 */
 
-        Geocoder geocoder;
-        List<Address> addresses;
-        geocoder = new Geocoder(context, Locale.getDefault());
+
 
         try {
+            latitude = location.getLatitude();
+            longitude = location.getLongitude();
+
+            Geocoder geocoder;
+            List<Address> addresses;
+            geocoder = new Geocoder(context, Locale.getDefault());
             addresses = geocoder.getFromLocation(latitude, longitude, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
             city = addresses.get(0).getLocality();
             state = addresses.get(0).getAdminArea();
@@ -386,5 +409,7 @@ public class NewsListFragment extends Fragment implements
             e.printStackTrace();
         }
     }
+
+
 
 }
