@@ -38,7 +38,6 @@ import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.LoginEvent;
 import com.fame.plumbum.chataround.LocationService;
 import com.fame.plumbum.chataround.R;
-import com.fame.plumbum.chataround.helper.Keys;
 import com.fame.plumbum.chataround.helper.SharedPrefs;
 import com.fame.plumbum.chataround.helper.Urls;
 import com.fame.plumbum.chataround.models.ImageSendData;
@@ -477,26 +476,28 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     @Override
     protected void onActivityResult(int requestCode, int responseCode, Intent intent) {
         super.onActivityResult(requestCode, responseCode, intent);
-        switch (requestCode) {
-            case 1000:
-                switch (responseCode) {
-                    case Activity.RESULT_OK:
-                        insertDummyContactWrapper();
-                        break;
-                    case Activity.RESULT_CANCELED:
-                        finish();
-                        break;
-                }
-                break;
-            case 999:
+        if (responseCode == RESULT_OK && intent != null) {
+            switch (requestCode) {
+                case 1000:
+                    switch (responseCode) {
+                        case Activity.RESULT_OK:
+                            insertDummyContactWrapper();
+                            break;
+                        case Activity.RESULT_CANCELED:
+                            finish();
+                            break;
+                    }
+                    break;
+                case 999:
 /*                GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(intent);
                 handleSignInResult(result);*/
-                GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(intent);
-                int statusCode = result.getStatus().getStatusCode();
-                Log.d(TAG, "Status Code Google Auth -" + String.valueOf(statusCode));
-                handleSignInResult(result);
+                    GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(intent);
+                    int statusCode = result.getStatus().getStatusCode();
+                    Log.d(TAG, "Status Code Google Auth -" + String.valueOf(statusCode));
+                    handleSignInResult(result);
 
-                break;
+                    break;
+            }
         }
     }
 
@@ -579,7 +580,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
                                 Answers.getInstance().
                                         logLogin(new LoginEvent().putMethod("GooglePlus")
-                                        .putSuccess(true)
+                                                .putSuccess(true)
                                         );
 
 

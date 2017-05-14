@@ -288,6 +288,9 @@ public class PollutionFragment extends Fragment implements
     @Override
     public void setData(AirPollutionDetails airPollutionDetails) {
 
+        if(!isAdded()){
+            return;
+        }
         List<Double> geo = airPollutionDetails.getData().getCity().getGeo();
 
         double distance1 = DistanceUtils.calculateDistanceBetweenTwoPoints(

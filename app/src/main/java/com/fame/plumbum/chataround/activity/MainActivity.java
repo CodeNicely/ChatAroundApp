@@ -200,12 +200,29 @@ public class MainActivity extends AppCompatActivity implements
 
             TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
             tabLayout.setupWithViewPager(viewPager);
-            tabLayout.getTabAt(0).setIcon(R.drawable.profile_512);
-            tabLayout.getTabAt(1).setIcon(R.drawable.world);
-            tabLayout.getTabAt(2).setIcon(R.drawable.restroom1);
-            tabLayout.getTabAt(3).setIcon(R.drawable.pollution1);
-            tabLayout.getTabAt(4).setIcon(R.drawable.newspaper);
 
+            if( viewPager.getAdapter().getCount()==5) {
+
+                if(tabLayout.getTabAt(0)!=null){
+                    tabLayout.getTabAt(0).setIcon(R.drawable.profile_512);
+                }
+
+                if(tabLayout.getTabAt(1)!=null) {
+                    tabLayout.getTabAt(1).setIcon(R.drawable.world);
+                }
+                if(tabLayout.getTabAt(2)!=null) {
+
+                    tabLayout.getTabAt(2).setIcon(R.drawable.restroom1);
+                }
+                if(tabLayout.getTabAt(3)!=null) {
+
+                    tabLayout.getTabAt(3).setIcon(R.drawable.pollution1);
+                }
+                if(tabLayout.getTabAt(4)!=null) {
+
+                    tabLayout.getTabAt(4).setIcon(R.drawable.newspaper);
+                }
+            }
             viewPager.setOffscreenPageLimit(5);
             viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                 @Override
@@ -514,12 +531,14 @@ public class MainActivity extends AppCompatActivity implements
         lat = location.getLatitude();
         lng = location.getLongitude();
 
-        world.lat = lat;
-        world.lng = lng;
-
-        profile.lat = lat;
-        profile.lng = lng;
-
+        if(world!=null) {
+            world.lat = lat;
+            world.lng = lng;
+        }
+        if(profile!=null) {
+            profile.lat = lat;
+            profile.lng = lng;
+        }
         if (needSomethingTweet || needSomethingWorld) {
             needSomethingWorld = false;
             needSomethingTweet = false;

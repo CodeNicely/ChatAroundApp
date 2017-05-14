@@ -56,7 +56,7 @@ public class RetrofitNewsListProvider implements NewsListProvider {
 
             @Override
             public void onFailure(Call<NewsListData> call, Throwable t) {
-                newsFeedRequestCallback.OnFailure(t.getMessage());
+                newsFeedRequestCallback.OnFailure("Unable to fetch News for your Location!");
             }
         });
     }

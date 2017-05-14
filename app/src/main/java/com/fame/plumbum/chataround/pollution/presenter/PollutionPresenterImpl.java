@@ -29,35 +29,39 @@ public class PollutionPresenterImpl implements PollutionPresenter {
         pollutionProvider.requestAirPollution(cache, latitude, longitude, new OnAirPollutionReceived() {
             @Override
             public void onSuccess(AirPollutionDetails airPollutionDetails) {
+                if (pollutionView != null) {
 
-                if (airPollutionDetails.getStatus().equals("ok")) {
-                    pollutionView.showLoader(false);
-                    pollutionView.setData(airPollutionDetails);
+                    if (airPollutionDetails.getStatus().equals("ok")) {
 
-                    Answers.getInstance().logCustom(new CustomEvent("Pollution Module Loading Successful")
-                            .putCustomAttribute(Keys.KEY_LATITUDE,latitude)
-                            .putCustomAttribute(Keys.KEY_LONGITUDE,longitude)
+                        pollutionView.showLoader(false);
+                        pollutionView.setData(airPollutionDetails);
 
-                    );
+                        Answers.getInstance().logCustom(new CustomEvent("Pollution Module Loading Successful")
+                                .putCustomAttribute(Keys.KEY_LATITUDE, latitude)
+                                .putCustomAttribute(Keys.KEY_LONGITUDE, longitude)
 
-                } else {
-                    pollutionView.showLoader(false);
+                        );
 
-                    Answers.getInstance().logCustom(new CustomEvent("Pollution Module Loading Failed")
-                            .putCustomAttribute(Keys.KEY_LATITUDE,latitude)
-                            .putCustomAttribute(Keys.KEY_LONGITUDE,longitude)
+                    } else {
+                        pollutionView.showLoader(false);
 
-                    );
+                        Answers.getInstance().logCustom(new CustomEvent("Pollution Module Loading Failed")
+                                .putCustomAttribute(Keys.KEY_LATITUDE, latitude)
+                                .putCustomAttribute(Keys.KEY_LONGITUDE, longitude)
 
+                        );
+
+                    }
                 }
             }
 
             @Override
             public void onFailed(String message) {
 
-                pollutionView.showLoader(false);
-                pollutionView.showMessage(message);
-
+                if (pollutionView != null) {
+                    pollutionView.showLoader(false);
+                    pollutionView.showMessage(message);
+                }
             }
         });
 

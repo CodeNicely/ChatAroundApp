@@ -41,7 +41,13 @@ public class NewsListPresenterImpl implements NewsListPresenter {
                     );
 
                 } else {
-                    newsListView.showMessage(newsListData.getMessage());
+                    if(newsListData.getMessage()!=null) {
+                        newsListView.showMessage(newsListData.getMessage());
+                    }else{
+                        newsListView.showMessage("Unable to fetch News for your Location!");
+
+                    }
+
                     Answers.getInstance().logCustom(new CustomEvent("News Module Loading Failed")
                             .putCustomAttribute(Keys.USER_EMAIL, userId)
                             .putCustomAttribute(Keys.KEY_CITY,city)
