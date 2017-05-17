@@ -201,24 +201,24 @@ public class MainActivity extends AppCompatActivity implements
             TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
             tabLayout.setupWithViewPager(viewPager);
 
-            if( viewPager.getAdapter().getCount()==5) {
+            if (viewPager.getAdapter().getCount() == 5) {
 
-                if(tabLayout.getTabAt(0)!=null){
+                if (tabLayout.getTabAt(0) != null) {
                     tabLayout.getTabAt(0).setIcon(R.drawable.profile_512);
                 }
 
-                if(tabLayout.getTabAt(1)!=null) {
+                if (tabLayout.getTabAt(1) != null) {
                     tabLayout.getTabAt(1).setIcon(R.drawable.world);
                 }
-                if(tabLayout.getTabAt(2)!=null) {
+                if (tabLayout.getTabAt(2) != null) {
 
                     tabLayout.getTabAt(2).setIcon(R.drawable.restroom1);
                 }
-                if(tabLayout.getTabAt(3)!=null) {
+                if (tabLayout.getTabAt(3) != null) {
 
                     tabLayout.getTabAt(3).setIcon(R.drawable.pollution1);
                 }
-                if(tabLayout.getTabAt(4)!=null) {
+                if (tabLayout.getTabAt(4) != null) {
 
                     tabLayout.getTabAt(4).setIcon(R.drawable.newspaper);
                 }
@@ -498,12 +498,15 @@ public class MainActivity extends AppCompatActivity implements
             lat = location.getLatitude();
             lng = location.getLongitude();
 
-            world.lat = lat;
-            world.lng = lng;
+            if (world != null) {
+                world.lat = lat;
+                world.lng = lng;
+            }
 
-            profile.lat = lat;
-            profile.lng = lng;
-
+            if (profile != null) {
+                profile.lat = lat;
+                profile.lng = lng;
+            }
             if (needSomethingTweet || needSomethingWorld) {
                 needSomethingWorld = false;
                 needSomethingTweet = false;
@@ -531,11 +534,11 @@ public class MainActivity extends AppCompatActivity implements
         lat = location.getLatitude();
         lng = location.getLongitude();
 
-        if(world!=null) {
+        if (world != null) {
             world.lat = lat;
             world.lng = lng;
         }
-        if(profile!=null) {
+        if (profile != null) {
             profile.lat = lat;
             profile.lng = lng;
         }
@@ -638,9 +641,9 @@ public class MainActivity extends AppCompatActivity implements
                                     Log.d(TAG, "Response " + response);
                                     needSomethingTweet = true;
                                     Answers.getInstance().logCustom(new CustomEvent("Adding Shout Successful")
-                                            .putCustomAttribute(Keys.USER_EMAIL,sharedPrefs.getEmail())
-                                            .putCustomAttribute(Keys.KEY_LATITUDE,lat)
-                                            .putCustomAttribute(Keys.KEY_LONGITUDE,lng)
+                                            .putCustomAttribute(Keys.USER_EMAIL, sharedPrefs.getEmail())
+                                            .putCustomAttribute(Keys.KEY_LATITUDE, lat)
+                                            .putCustomAttribute(Keys.KEY_LONGITUDE, lng)
                                     );
                                 }
                             }, new Response.ErrorListener() {
@@ -648,9 +651,9 @@ public class MainActivity extends AppCompatActivity implements
                         public void onErrorResponse(VolleyError error) {
                             error.printStackTrace();
                             Answers.getInstance().logCustom(new CustomEvent("Adding Shout Failed")
-                                    .putCustomAttribute(Keys.USER_EMAIL,sharedPrefs.getEmail())
-                                    .putCustomAttribute(Keys.KEY_LATITUDE,lat)
-                                    .putCustomAttribute(Keys.KEY_LONGITUDE,lng)
+                                    .putCustomAttribute(Keys.USER_EMAIL, sharedPrefs.getEmail())
+                                    .putCustomAttribute(Keys.KEY_LATITUDE, lat)
+                                    .putCustomAttribute(Keys.KEY_LONGITUDE, lng)
                             );
                             Toast.makeText(MainActivity.this, "Error sending data!", Toast.LENGTH_SHORT).show();
                         }

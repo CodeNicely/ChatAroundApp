@@ -137,8 +137,6 @@ public class NewsListFragment extends Fragment implements
         ButterKnife.bind(this, view);
 
 
-
-
         initialise();
         mGoogleApiClient = new GoogleApiClient.Builder(context)
                 // The next two lines tell the new client that “this” current class will handle connection stuff
@@ -257,7 +255,10 @@ public class NewsListFragment extends Fragment implements
 
     @Override
     public void showMessage(String message) {
-        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+
+        if (getContext() != null) {
+            Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -391,7 +392,6 @@ public class NewsListFragment extends Fragment implements
 */
 
 
-
         try {
             latitude = location.getLatitude();
             longitude = location.getLongitude();
@@ -409,7 +409,6 @@ public class NewsListFragment extends Fragment implements
             e.printStackTrace();
         }
     }
-
 
 
 }
