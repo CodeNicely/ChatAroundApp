@@ -1,42 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/news_card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="1dp"
+    android:layout_margin="2dp"
     android:clickable="true"
     app:cardCornerRadius="2dp"
-    app:contentPadding="@dimen/padding_medium">
+    app:cardBackgroundColor="@color/colorPrimary"
+    >
 
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/border_button">
+        >
 
         <RelativeLayout
             android:id="@+id/imageLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone">
+            android:background="#000000">
 
             <ImageView
                 android:id="@+id/image"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:src="@drawable/modi"
+                android:alpha="0.5"
+                />
 
             <ProgressBar
                 android:id="@+id/progressBar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true" />
+                android:layout_centerInParent="true"
+
+                />
+            <TextView
+                android:id="@+id/NewsSmallDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_margin="3dp"
+                android:gravity="center"
+                android:padding="@dimen/padding_small"
+                android:text="The relationship between India and Palestine is taking a new step."
+                android:textAlignment="center"
+                android:textColor="#FFFFFF"
+                android:textSize="15dp"
+                android:layout_alignBottom="@+id/image"
+                android:visibility="gone"
+                />
+
+            <TextView
+                android:id="@+id/newsLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/image"
+                android:layout_marginBottom="4dp"
+                android:layout_marginLeft="4dp"
+                android:layout_weight="1"
+                android:fontFamily="sans-serif-condensed"
+                android:padding="4dp"
+                android:text="FEATURES"
+                android:textColor="@color/colorAccent"
+                android:textSize="20dp" />
+
+            <TextView
+                android:id="@+id/newSource"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/image"
+                android:layout_marginBottom="4dp"
+                android:layout_toRightOf="@id/newsLabel"
+                android:fontFamily="serif-monospace"
+                android:padding="4dp"
+                android:text="NewsSource"
+                android:textColor="#FFFFFF"
+                android:textSize="22dp" />
+
         </RelativeLayout>
+
+
+
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:weightSum="10">
+            android:weightSum="10"
+            android:id="@+id/layout"
+            android:layout_below="@+id/imageLayout"
+
+            >
 
             <TextView
                 android:id="@+id/newsTitle"
@@ -46,19 +104,25 @@
                 android:layout_centerHorizontal="true"
                 android:layout_margin="4dp"
                 android:layout_weight="1"
+                android:fontFamily="sans-serif-condensed"
                 android:padding="4dp"
-                android:text="title"
-                android:textColor="@color/colorPrimaryDark"
-                android:textSize="20dp" />
+                android:text="The relationship between India and Palestine."
+                android:textColor="#FFFFFF"
+
+                android:textSize="25dp" />
 
             <ImageView
                 android:padding="4dp"
                 android:layout_gravity="center"
-                android:src="@drawable/ic_keyboard_arrow_right_black_36dp"
+                android:src="@drawable/back"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="9" />
+                android:layout_weight="9"
+                android:visibility="gone"
+                />
         </LinearLayout>
+
+
 
         <LinearLayout
             android:id="@+id/news_layout"
@@ -66,10 +130,10 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:orientation="horizontal"
+            android:layout_below="@+id/imageLayout"
+            android:weightSum="2"
             android:visibility="gone"
-            android:weightSum="2">
-
-
+            >
             <TextView
                 android:id="@+id/newsAuthor"
                 android:layout_width="wrap_content"
@@ -78,7 +142,7 @@
                 android:layout_weight="1"
                 android:padding="4dp"
                 android:text="News Author"
-                android:textColor="#424242"
+                android:textColor="#E2CFCA"
                 android:textSize="@dimen/textSizeExtraSmall" />
 
 
@@ -91,38 +155,11 @@
                 android:gravity="end"
                 android:padding="4dp"
                 android:text="News Timestamp"
-                android:textColor="#424242"
-
+                android:textColor="#E2CFCA"
                 />
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/NewsSmallDescription"
-            android:layout_width="wrap_content"
-            android:layout_height="200dp"
-            android:layout_below="@+id/news_layout"
-            android:layout_centerHorizontal="true"
-            android:layout_gravity="center"
-            android:layout_margin="12dp"
-            android:gravity="center"
-            android:padding="@dimen/padding_small"
-            android:text="Description"
-            android:textColor="@color/colorAccent"
-            android:textSize="@dimen/textSizeSmall"
-            android:visibility="gone" />
 
-        <TextView
-            android:id="@+id/newSource"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/NewsSmallDescription"
-            android:layout_margin="2dp"
-            android:gravity="center"
-            android:padding="2dp"
-            android:text="News Source"
-            android:textColor="#877409"
-            android:textSize="@dimen/textSizeExtraSmall"
-            android:visibility="gone" />
     </RelativeLayout>
 
 </android.support.v7.widget.CardView>
