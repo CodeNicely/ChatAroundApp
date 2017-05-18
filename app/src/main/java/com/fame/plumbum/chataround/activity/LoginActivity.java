@@ -2,6 +2,7 @@ package com.fame.plumbum.chataround.activity;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -14,6 +15,7 @@ import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -25,6 +27,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -809,4 +812,18 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
     }
+
+
+    public void showDialog(){
+        final Dialog dialog= new Dialog(this);
+        dialog.setContentView(R.layout.dialog_referal);
+        TextView referal_code = (TextView)dialog.findViewById(R.id.referal);
+        dialog.setTitle("Referal Code");
+        dialog.show();
+        String code= referal_code.getText().toString();
+
+
+
+    }
+
 }
