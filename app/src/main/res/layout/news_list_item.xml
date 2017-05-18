@@ -8,7 +8,7 @@
     android:layout_margin="2dp"
     android:clickable="true"
     app:cardCornerRadius="2dp"
-    app:cardBackgroundColor="@color/colorPrimary"
+    app:cardBackgroundColor="#000000"
     >
 
     <RelativeLayout
@@ -27,7 +27,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
-                android:src="@drawable/modi"
+                android:src="@drawable/trump"
                 android:alpha="0.5"
                 />
 
@@ -36,7 +36,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-
+                android:visibility="gone"
                 />
             <TextView
                 android:id="@+id/NewsSmallDescription"
@@ -54,74 +54,68 @@
                 android:visibility="gone"
                 />
 
-            <TextView
-                android:id="@+id/newsLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/image"
-                android:layout_marginBottom="4dp"
-                android:layout_marginLeft="4dp"
-                android:layout_weight="1"
-                android:fontFamily="sans-serif-condensed"
-                android:padding="4dp"
-                android:text="FEATURES"
-                android:textColor="@color/colorAccent"
-                android:textSize="20dp" />
 
-            <TextView
-                android:id="@+id/newSource"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:orientation="vertical"
                 android:layout_alignBottom="@+id/image"
-                android:layout_marginBottom="4dp"
-                android:layout_toRightOf="@id/newsLabel"
-                android:fontFamily="serif-monospace"
                 android:padding="4dp"
-                android:text="NewsSource"
-                android:textColor="#FFFFFF"
-                android:textSize="22dp" />
+                android:layout_margin="4dp"
+
+                >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    >
+
+                    <TextView
+                        android:id="@+id/newsLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-condensed"
+                        android:textScaleX="0.7"
+                        android:text="FEATURES"
+                        android:textColor="#F7D410"
+                        android:textSize="15dp" />
+
+                    <TextView
+                        android:id="@+id/newSource"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_toRightOf="@id/newsLabel"
+                        android:fontFamily="sans-serif-condensed"
+                        android:text="NewsSource"
+                        android:textColor="#FFFFFF"
+                        android:textScaleX="0.8"
+                        android:textSize="15dp"
+                        android:paddingLeft="10dp"
+                        />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/newsTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/imageLayout"
+                    android:layout_centerHorizontal="true"
+                    android:layout_weight="1"
+                    android:fontFamily="sans-serif-condensed"
+                    android:text="The relationship between India and Palestine."
+                    android:textColor="#FFFFFF"
+                    android:textScaleX="0.9"
+                    android:textSize="22dp"
+                    android:lineSpacingExtra="0.2dp"
+
+                    />
+
+            </LinearLayout>
+
 
         </RelativeLayout>
-
-
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="10"
-            android:id="@+id/layout"
-            android:layout_below="@+id/imageLayout"
-
-            >
-
-            <TextView
-                android:id="@+id/newsTitle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/imageLayout"
-                android:layout_centerHorizontal="true"
-                android:layout_margin="4dp"
-                android:layout_weight="1"
-                android:fontFamily="sans-serif-condensed"
-                android:padding="4dp"
-                android:text="The relationship between India and Palestine."
-                android:textColor="#FFFFFF"
-
-                android:textSize="25dp" />
-
-            <ImageView
-                android:padding="4dp"
-                android:layout_gravity="center"
-                android:src="@drawable/back"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="9"
-                android:visibility="gone"
-                />
-        </LinearLayout>
-
 
 
         <LinearLayout
