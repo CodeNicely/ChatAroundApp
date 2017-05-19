@@ -18,9 +18,14 @@ public class AddRestroomRequestData {
     private boolean male;
     private boolean female;
     private boolean disabled;
+    private String mobile;
 
 
-    public AddRestroomRequestData(String username, double latitude, double langitude, String address, String city, String state, String country, String postalCode, String knownName, boolean male, boolean female, boolean disabled) {
+    public AddRestroomRequestData(String username, double latitude, double langitude, String address,
+                                  String city, String state, String country, String postalCode,
+                                  String knownName, boolean male, boolean female, boolean disabled,
+                                  String mobile
+                                  ) {
         this.username = username;
         this.latitude = latitude;
         this.langitude = langitude;
@@ -33,6 +38,11 @@ public class AddRestroomRequestData {
         this.male = male;
         this.female = female;
         this.disabled = disabled;
+        this.mobile=mobile;
+    }
+
+    public String getMobile() {
+        return mobile;
     }
 
     public String getUsername() {

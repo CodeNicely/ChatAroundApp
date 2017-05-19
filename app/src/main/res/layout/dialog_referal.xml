@@ -1,19 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="10dp"
+    app:cardCornerRadius="5dp"
+    app:contentPadding="5dp"
     android:layout_centerInParent="true"
-    >
-
-    <android.support.v7.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:cardCornerRadius="10dp"
-        android:layout_margin="10dp"
-        app:contentPadding="5dp"
 
         >
         <LinearLayout
@@ -24,22 +18,35 @@
             >
 
             <TextView
+                android:id="@+id/heading"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#202020"
+                android:padding="6dp"
+                android:gravity="center"
+                android:text="Reference"
+                android:textColor="#FFFFFF"
+                android:textSize="24sp" />
+
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/password_label"
                 android:textSize="20dp"
-                android:padding="4dp"
+                android:paddingTop="25dp"
                 android:text="Enter Referal Code(If Any)"
                 android:gravity="center"
+                android:textColor="#000000"
+                android:textScaleX="1"
                 />
-            <TextView
+            <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/referal"
                 android:textSize="20dp"
-                android:text=""
+                android:hint="NUMBER"
                 android:gravity="center"
-
+                android:padding="15dp"
                 />
 
             <LinearLayout
@@ -47,10 +54,11 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:weightSum="2"
+                android:paddingTop="5dp"
                 >
 
-                <Button
-                    android:layout_width="match_parent"
+                <com.rey.material.widget.Button
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/proceed"
                     android:layout_weight="1"
@@ -60,9 +68,10 @@
                     android:textColor="@color/white"
                     android:layout_marginEnd="2.5dp"
                     android:layout_marginStart="2.5dp"
+                    android:textScaleX="0.8"
                     />
-                <Button
-                    android:layout_width="match_parent"
+                <com.rey.material.widget.Button
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/skip"
                     android:text="SKIP"
@@ -72,8 +81,8 @@
                     android:textColor="@color/white"
                     android:layout_marginEnd="2.5dp"
                     android:layout_marginStart="2.5dp"
+                    android:textScaleX="0.8"
                     />
-
             </LinearLayout>
 
 
@@ -81,5 +90,3 @@
 
 
     </android.support.v7.widget.CardView>
-
-</FrameLayout>
