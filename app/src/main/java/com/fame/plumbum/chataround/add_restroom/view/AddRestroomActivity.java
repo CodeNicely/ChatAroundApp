@@ -24,6 +24,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -94,6 +95,7 @@ public class AddRestroomActivity extends Activity implements
     private ProgressDialog progressDialog;
     private List<Uri> uriList = new ArrayList<>();
     private AddRestroomPresenter addRestroomPresenter;
+    private String mobile;
 
     private double latitude;
     private double longitude;
@@ -134,6 +136,9 @@ public class AddRestroomActivity extends Activity implements
 
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
+
+    @BindView(R.id.mobile)
+    EditText txt_mobile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -211,6 +216,10 @@ public class AddRestroomActivity extends Activity implements
                     return;
                 }
 
+                mobile=txt_mobile.getText().toString();
+
+
+
                 Geocoder geocoder;
                 List<Address> addresses;
                 geocoder = new Geocoder(AddRestroomActivity.this, Locale.getDefault());
@@ -224,22 +233,33 @@ public class AddRestroomActivity extends Activity implements
                     String postalCode = addresses.get(0).getPostalCode();
                     String knownName = addresses.get(0).getFeatureName();
 
-                    AddRestroomRequestData addRestroomRequestData = new AddRestroomRequestData(
-                            sharedPrefs.getUsername(),
-                            latitude,
-                            longitude,
-                            address,
-                            city,
-                            state,
-                            country,
-                            postalCode,
-                            knownName,
-                            male.isChecked(),
-                            female.isChecked(),
-                            disabled.isChecked()
-                    );
+                    mobile="123456790";
+                    if (mobile.equals(null) || mobile.equals("") || mobile.length()!=10)
+                    {
+                        txt_mobile.setError("Please Enter Valid Mobile No!");
+                        txt_mobile.requestFocus();
+                    }
 
-                    addRestroomPresenter.addRestroom(addRestroomRequestData);
+                    else
+                    {
+                        AddRestroomRequestData addRestroomRequestData = new AddRestroomRequestData(
+                                sharedPrefs.getUsername(),
+                                latitude,
+                                longitude, address,
+                                city,
+                                state,
+                                country,
+                                postalCode,
+                                knownName,
+                                male.isChecked(),
+                                female.isChecked(),
+                                disabled.isChecked(),
+                                mobile);
+                        addRestroomPresenter.addRestroom(addRestroomRequestData);
+
+                    }
+
+
 
                 } catch (IOException e) {
                     e.printStackTrace();

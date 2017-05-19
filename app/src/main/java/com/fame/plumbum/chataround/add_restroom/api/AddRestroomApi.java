@@ -28,7 +28,8 @@ public interface AddRestroomApi {
             @Field("knownName") String knownName,
             @Field("male") boolean male,
             @Field("female") boolean female,
-            @Field("disabled") boolean disabled
+            @Field("disabled") boolean disabled,
+            @Field("mobile")String mobile
 
     );
 
