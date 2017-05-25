@@ -55,23 +55,23 @@ public class NewsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         final NewsViewHolder newsViewHolder = (NewsViewHolder) holder;
 
         newsViewHolder.newsTitle.setText(newsListDataDetails.getTitle());
-       /* if (newsListDataDetails.getImage() != null) {
+        if (newsListDataDetails.getImage() != null) {
 
             newsViewHolder.imageView.setVisibility(View.VISIBLE);
             imageLoader.loadImage(newsListDataDetails.getImage(), newsViewHolder.imageView, newsViewHolder.progressBar);
         } else {
             newsViewHolder.imageView.setVisibility(View.GONE);
             newsViewHolder.progressBar.setVisibility(View.GONE);
-        }*/
+        }
 
-/*        if (newsListDataDetails.getSource() == null) {
+        if (newsListDataDetails.getSource() == null) {
             newsViewHolder.newsSource.setVisibility(View.GONE);
         } else {
             newsViewHolder.newsSource.setText(newsListDataDetails.getSource());
 
             newsViewHolder.newsSource.setVisibility(View.VISIBLE);
-        }*/
-/*
+        }
+
 
         if (newsListDataDetails.getAuthor() == null) {
             newsViewHolder.newsAuthor.setVisibility(View.GONE);
@@ -80,9 +80,6 @@ public class NewsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
             newsViewHolder.newsAuthor.setVisibility(View.VISIBLE);
         }
-*/
-
-
 //        newsViewHolder.newsDescription.setText(newsListDataDetails.getBody_small());
 //        newsViewHolder.news_published_timestamp.setText(newsListDataDetails.getPublished_at());
 //        newsViewHolder.newsAuthor.setText(newsListDataDetails.getAuthor());

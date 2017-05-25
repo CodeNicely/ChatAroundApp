@@ -6,18 +6,20 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:clickable="true"
-    app:cardCornerRadius="2dp"
-    app:cardBackgroundColor="#FFFFFF"
-    android:layout_margin="4dp"
-    android:layout_marginLeft="4dp"
-    app:contentPadding="4dp"
-    android:background="@drawable/border_button"
+    app:cardCornerRadius="@dimen/padding_medium"
+    app:cardBackgroundColor="@color/white_100_percent"
+    android:layout_margin="@dimen/padding_medium"
+    android:layout_marginLeft="@dimen/padding_medium"
+    app:contentPadding="@dimen/padding_medium"
+
     >
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:background="@drawable/border_button"
+        >
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -41,8 +43,8 @@
                     android:fontFamily="sans-serif-condensed"
                     android:lineSpacingExtra="0.2dp"
                     android:text="The relationship between India and Palestine."
-                    android:textColor="#000000"
-                    android:textSize="20dp" />
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/text_size_medium" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -58,7 +60,7 @@
                         android:text="FEATURES"
                         android:textColor="#F7D410"
                         android:textScaleX="0.7"
-                        android:textSize="12dp"
+                        android:textSize="@dimen/textSizeExtraSmall"
 
                         />
 
@@ -73,7 +75,7 @@
                         android:text="NewsSource"
                         android:textColor="#655F5F"
                         android:textScaleX="0.8"
-                        android:textSize="12dp"
+                        android:textSize="@dimen/textSizeExtraSmall"
 
                         />
                 </LinearLayout>
