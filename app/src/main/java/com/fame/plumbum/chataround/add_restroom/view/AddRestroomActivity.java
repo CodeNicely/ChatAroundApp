@@ -233,15 +233,14 @@ public class AddRestroomActivity extends Activity implements
                     String postalCode = addresses.get(0).getPostalCode();
                     String knownName = addresses.get(0).getFeatureName();
 
+/*
                     mobile="123456790";
                     if (mobile.equals(null) || mobile.equals("") || mobile.length()!=10)
                     {
                         txt_mobile.setError("Please Enter Valid Mobile No!");
                         txt_mobile.requestFocus();
                     }
-
-                    else
-                    {
+*/
                         AddRestroomRequestData addRestroomRequestData = new AddRestroomRequestData(
                                 sharedPrefs.getUsername(),
                                 latitude,
@@ -257,7 +256,6 @@ public class AddRestroomActivity extends Activity implements
                                 mobile);
                         addRestroomPresenter.addRestroom(addRestroomRequestData);
 
-                    }
 
 
 
