@@ -6,11 +6,11 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:clickable="true"
-    app:cardCornerRadius="@dimen/padding_medium"
+    app:cardCornerRadius="@dimen/padding_small"
     app:cardBackgroundColor="@color/white_100_percent"
     android:layout_margin="@dimen/padding_medium"
     android:layout_marginLeft="@dimen/padding_medium"
-    app:contentPadding="@dimen/padding_medium"
+
 
     >
 
@@ -18,7 +18,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="@drawable/border_button"
+        android:background="@drawable/border_news_item"
+        android:paddingTop="@dimen/padding_large"
+        android:paddingLeft="@dimen/padding_large"
         >
 
         <LinearLayout
@@ -58,7 +60,7 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="sans-serif-condensed"
                         android:text="FEATURES"
-                        android:textColor="#F7D410"
+                        android:textColor="@color/dark_yellow"
                         android:textScaleX="0.7"
                         android:textSize="@dimen/textSizeExtraSmall"
 
@@ -71,9 +73,9 @@
                         android:layout_gravity="right"
                         android:layout_toRightOf="@id/newsLabel"
                         android:fontFamily="sans-serif-condensed"
-                        android:paddingLeft="7dp"
+                        android:paddingLeft="@dimen/padding_large"
                         android:text="NewsSource"
-                        android:textColor="#655F5F"
+                        android:textColor="@color/colorAccentGrey"
                         android:textScaleX="0.8"
                         android:textSize="@dimen/textSizeExtraSmall"
 
@@ -85,7 +87,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="News Author"
-                    android:textColor="#655F5F"
+                    android:textColor="@color/colorAccentGrey"
                     android:fontFamily="sans-serif-condensed"
                     android:textSize="@dimen/textSizeExtraSmall"
                     android:layout_alignParentBottom="true"
