@@ -54,7 +54,7 @@ public class NewsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         final NewsViewHolder newsViewHolder = (NewsViewHolder) holder;
 
-        newsViewHolder.newsTitle.setText(newsListDataDetails.getTitle()+".....");
+        newsViewHolder.newsTitle.setText(newsListDataDetails.getTitle());
         if (newsListDataDetails.getImage() != null) {
 
             newsViewHolder.imageView.setVisibility(View.VISIBLE);
