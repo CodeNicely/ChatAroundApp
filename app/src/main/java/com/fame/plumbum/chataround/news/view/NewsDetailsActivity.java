@@ -79,7 +79,7 @@ public class NewsDetailsActivity extends AppCompatActivity {
             String image_url = bundle.getString(Keys.NEWS_IMAGE);
             String title = bundle.getString(Keys.NEWS_TITLE);
             String timestamp = bundle.getString(Keys.NEWS_TIMESTAMP);
-            String news_url = bundle.getString(Keys.NEWS_URL);
+            final String news_url = bundle.getString(Keys.NEWS_URL);
 
             if (image_url != null) {
                 news_image.setVisibility(View.VISIBLE);
@@ -131,7 +131,7 @@ public class NewsDetailsActivity extends AppCompatActivity {
             textViewNewsLink.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Uri uri = Uri.parse("https://www.google.com");
+                    Uri uri = Uri.parse(news_url);
 
                     // create an intent builder
                     CustomTabsIntent.Builder intentBuilder = new CustomTabsIntent.Builder();
@@ -142,7 +142,6 @@ public class NewsDetailsActivity extends AppCompatActivity {
                     intentBuilder.setSecondaryToolbarColor(ContextCompat.getColor(getBaseContext(), R.color.colorPrimaryDark));
 
                     // set start and exit animations
-                    intentBuilder.setStartAnimations(getBaseContext(), android.R.anim.slide_in_left, R.anim.fab_slide_in_from_right);
                     intentBuilder.setExitAnimations(getBaseContext(), android.R.anim.slide_in_left,
                             android.R.anim.slide_out_right);
 
