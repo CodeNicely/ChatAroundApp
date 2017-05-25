@@ -2,6 +2,7 @@ package com.fame.plumbum.chataround.activity;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -14,6 +15,7 @@ import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -23,8 +25,12 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -42,6 +48,11 @@ import com.fame.plumbum.chataround.helper.SharedPrefs;
 import com.fame.plumbum.chataround.helper.Urls;
 import com.fame.plumbum.chataround.models.ImageSendData;
 import com.fame.plumbum.chataround.queries.ServerAPI;
+import com.fame.plumbum.chataround.referal_code.model.MockReferalProvider;
+import com.fame.plumbum.chataround.referal_code.model.ReferalProvider;
+import com.fame.plumbum.chataround.referal_code.model.RetrofitReferalProvider;
+import com.fame.plumbum.chataround.referal_code.presenter.ReferalPresenter;
+import com.fame.plumbum.chataround.referal_code.presenter.ReferalPresenterImpl;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -101,6 +112,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         setContentView(R.layout.activity_login);
 
         sharedPrefs = new SharedPrefs(this);
+//        if(!sharedPrefs.isFirstTimeUser())
+//            showDialog();
 
 
         if (sharedPrefs.isLoggedIn()) {
@@ -809,4 +822,61 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
     }
+
+
+    public void showDialog(){
+        final Dialog dialog= new Dialog(this);
+        dialog.setContentView(R.layout.dialog_referal);
+        final EditText referal_code = (EditText)dialog.findViewById(R.id.referal);
+        Button proceed = (Button)dialog.findViewById(R.id.proceed);
+        Button skip = (Button)dialog.findViewById(R.id.skip);
+        dialog.setTitle("Referal Code");
+        dialog.setCancelable(false);
+//        final ReferalPresenter referalPresenter = new ReferalPresenterImpl(new RetrofitReferalProvider(), this);
+        final ReferalPresenter referalPresenter = new ReferalPresenterImpl(new MockReferalProvider(), this);
+        dialog.show();
+
+        proceed.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String code= referal_code.getText().toString();
+                if(code.equals("") || code.equals(null))
+                {
+                    referal_code.setError("Empty Field");
+                    referal_code.requestFocus();
+                }
+                else if(code.length()==10)
+                {
+                    referal_code.setError("Enter 10 chars");
+                    referal_code.requestFocus();
+                }
+                else{
+                    referalPresenter.requestReferal(code);
+                    hideKeyboard();
+                    dialog.dismiss();
+                }
+
+            }
+
+        });
+
+        skip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sharedPrefs.setFirstTimeUser(true);
+                dialog.dismiss();
+            }
+        });
+
+
+
+    }
+    private void hideKeyboard() {
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
+
 }

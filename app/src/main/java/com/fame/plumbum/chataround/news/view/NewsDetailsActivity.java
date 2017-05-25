@@ -1,13 +1,17 @@
 package com.fame.plumbum.chataround.news.view;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.customtabs.CustomTabsClient;
+import android.support.customtabs.CustomTabsIntent;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
 import com.fame.plumbum.chataround.R;
 import com.fame.plumbum.chataround.helper.Keys;
 import com.fame.plumbum.chataround.helper.image_loader.GlideImageLoader;
@@ -42,6 +46,10 @@ public class NewsDetailsActivity extends AppCompatActivity {
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
+    @BindView(R.id.news_link)
+    TextView textViewNewsLink;
+    private CustomTabsClient mClient;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,7 +79,7 @@ public class NewsDetailsActivity extends AppCompatActivity {
             String image_url = bundle.getString(Keys.NEWS_IMAGE);
             String title = bundle.getString(Keys.NEWS_TITLE);
             String timestamp = bundle.getString(Keys.NEWS_TIMESTAMP);
-
+            String news_url = bundle.getString(Keys.NEWS_URL);
 
             if (image_url != null) {
                 news_image.setVisibility(View.VISIBLE);
@@ -112,8 +120,40 @@ public class NewsDetailsActivity extends AppCompatActivity {
                 news_timestamp.setText(timestamp);
             } else {
                 news_timestamp.setVisibility(View.GONE);
+            }if (news_url != null) {
+                textViewNewsLink.setVisibility(View.VISIBLE);
+                textViewNewsLink.setText("For more details visit -");
+                textViewNewsLink.append(news_url);
+            } else {
+                textViewNewsLink.setVisibility(View.GONE);
             }
 
+            textViewNewsLink.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Uri uri = Uri.parse("https://www.google.com");
+
+                    // create an intent builder
+                    CustomTabsIntent.Builder intentBuilder = new CustomTabsIntent.Builder();
+
+                    // Begin customizing
+                    // set toolbar colors
+                    intentBuilder.setToolbarColor(ContextCompat.getColor(getBaseContext(), R.color.colorPrimary));
+                    intentBuilder.setSecondaryToolbarColor(ContextCompat.getColor(getBaseContext(), R.color.colorPrimaryDark));
+
+                    // set start and exit animations
+                    intentBuilder.setStartAnimations(getBaseContext(), android.R.anim.slide_in_left, R.anim.fab_slide_in_from_right);
+                    intentBuilder.setExitAnimations(getBaseContext(), android.R.anim.slide_in_left,
+                            android.R.anim.slide_out_right);
+
+                    // build custom tabs intent
+                    CustomTabsIntent customTabsIntent = intentBuilder.build();
+
+                    // launch the url
+                    customTabsIntent.intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    customTabsIntent.launchUrl(getBaseContext(), uri);
+                }
+            });
         }
     }
 }

@@ -6,6 +6,7 @@
     <!--<color name="colorAccent">#FF4081</color>-->
     <color name="colorAccent">#F7D410</color>
     <color name="colorAccentBlue">#4F7CAC</color>
+    <color name="colorAccentGrey">#655F5F</color>
 
     <color name="transparent">#00000000</color>
 
@@ -13,10 +14,13 @@
 
     <color name="good">#BB00E400</color>
     <color name="moderate">#BBFFFF00</color>
+    <color name="dark_yellow">#D6B212</color>
     <color name="sensitive">#BBFF7E00</color>
     <color name="unhealthy">#BBFF0000</color>
     <color name="very_unhealthy">#BB8F3F97</color>
     <color name="hazardous">#BB7E0023</color>
+
+    #655F5F
 
 
     <color name="gray">#DCDCDC</color>

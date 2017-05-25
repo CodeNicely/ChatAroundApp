@@ -127,6 +127,17 @@
                     android:text="News Source"
                     android:textColor="#877409"
                     android:textSize="@dimen/textSizeExtraSmall" />
+                <TextView
+                    android:id="@+id/news_link"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/newSource"
+                    android:layout_margin="2dp"
+                    android:gravity="center"
+                    android:padding="2dp"
+                    android:text="News Link"
+                    android:textColor="#877409"
+                    android:textSize="@dimen/textSizeExtraSmall" />
             </RelativeLayout>
         </ScrollView>
 
