@@ -94,7 +94,9 @@ public class NewsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                             newsListDataDetails.getSource(),
                             newsListDataDetails.getBody(),
                             newsListDataDetails.getAuthor(),
-                            newsListDataDetails.getPublished_at());
+                            newsListDataDetails.getPublished_at(),
+                            newsListDataDetails.getUrl()
+                    );
                 }
             }
         });

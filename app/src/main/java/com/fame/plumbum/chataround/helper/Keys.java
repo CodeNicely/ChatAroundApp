@@ -19,6 +19,7 @@ public class Keys {
     public static final java.lang.String NEWS_IMAGE ="news_image" ;
     public static final java.lang.String NEWS_TITLE ="news_title" ;
     public static final java.lang.String NEWS_TIMESTAMP ="news_Timestamp" ;
+    public static final java.lang.String NEWS_URL ="news_url" ;
     public static final String KEY_LATITUDE ="latitude" ;
     public static final String KEY_LONGITUDE ="longitude" ;
     public static final String USER_EMAIL = "user_email" ;
