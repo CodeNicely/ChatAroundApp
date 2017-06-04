@@ -34,7 +34,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public class RetrofitFileUploader implements FileUploader {
 
-    private static final String TAG = "RetrofitFileUploader";
+    private static final String TAG = "RetrofitImageUploader";
     private Retrofit retrofit;
     private HttpLoggingInterceptor interceptor;
     private ImageUploadApi imageUploadApi;

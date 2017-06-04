@@ -108,7 +108,7 @@ public class ImagePresenterImpl implements ImagePresenter {
                                public void onNext(ImageData imageData) {
 
 
-//                                   eventBus.post(new ImageEvent(imageData.getFile()));
+//                                   eventBus.post(new PhotoEvent(imageData.getFile()));
                                    //             EventBus.getDefault().post(String.valueOf(imageData.getFile()));
 
                                    imageDataList.add(imageData);

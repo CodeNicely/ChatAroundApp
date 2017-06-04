@@ -32,4 +32,9 @@
     <string name="gps_network_not_enabled">1 Mile requires your location to be turned on.</string>
     <string name="open_location_settings">Open Location Setting</string>
     <string name="cancel">Cancel</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="add_photo">Add Photo</string>
+    <string name="uploadPhoto">Upload Photo</string>
 </resources>

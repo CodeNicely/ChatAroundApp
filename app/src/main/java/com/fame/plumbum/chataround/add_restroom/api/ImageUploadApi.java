@@ -3,7 +3,7 @@ package com.fame.plumbum.chataround.add_restroom.api;
 
 import com.fame.plumbum.chataround.helper.Urls;
 import com.fame.plumbum.chataround.add_restroom.model.data.FileUploadData;
-import com.fame.plumbum.chataround.services.UploadService;
+import com.fame.plumbum.chataround.services.UploadRestroomImageService;
 
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -13,7 +13,7 @@ import retrofit2.http.POST;
 import retrofit2.http.Part;
 
 /**
- * This is api for uploading images to server and it is called from {@link UploadService}
+ * This is api for uploading images to server and it is called from {@link UploadRestroomImageService}
  * Created by Meghal on 5/27/2016.
  */
 public interface ImageUploadApi {

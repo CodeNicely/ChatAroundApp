@@ -43,7 +43,7 @@ import com.fame.plumbum.chataround.add_restroom.presenter.ImagePresenterImpl;
 import com.fame.plumbum.chataround.helper.Keys;
 import com.fame.plumbum.chataround.helper.RxSchedulersHook;
 import com.fame.plumbum.chataround.helper.SharedPrefs;
-import com.fame.plumbum.chataround.services.UploadService;
+import com.fame.plumbum.chataround.services.UploadRestroomImageService;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -81,7 +81,7 @@ public class AddRestroomActivity extends Activity implements
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
-    private static final String TAG = "AddRestroomActivity";
+    private static final String TAG = "AddImageActivity";
     private static final int CAMERA_REQUEST_ID = 1100;
     private static final String FILE_KEY = "IMAGE_KEY";
     private static final String LIST_KEY = "Image_List";
@@ -140,7 +140,7 @@ public class AddRestroomActivity extends Activity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
         ButterKnife.bind(this);
-        UploadService.ACTIVITY_DESTROYED = false;
+        UploadRestroomImageService.ACTIVITY_DESTROYED = false;
 
         toolbar.setTitle(R.string.add_restroom);
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
@@ -259,9 +259,9 @@ public class AddRestroomActivity extends Activity implements
     protected void onDestroy() {
         super.onDestroy();
 
-        UploadService.ACTIVITY_DESTROYED = true;
-        if (UploadService.QUEUE_EMPTY) {
-            Intent i = new Intent(this, UploadService.class);
+        UploadRestroomImageService.ACTIVITY_DESTROYED = true;
+        if (UploadRestroomImageService.QUEUE_EMPTY) {
+            Intent i = new Intent(this, UploadRestroomImageService.class);
             stopService(i);
         }
     }
@@ -473,7 +473,7 @@ public class AddRestroomActivity extends Activity implements
         if (image != null) {
             outState.putString(FILE_KEY, image.getPath());
             List<ImageData> imageDataList;
-            imageDataList = imagePresenter.getImageDataList();
+            imageDataList = imagePresenter.getImage_list();
             JsonArray jsonArray = new JsonArray();
 
             for (int i = 0; i < imageDataList.size(); i++) {
@@ -482,7 +482,7 @@ public class AddRestroomActivity extends Activity implements
 
             outState.putString(LIST_KEY, jsonArray.toString());
         }
-//        outState.putString(LIST_KEY, imagePresenter.getImageDataList().toString());
+//        outState.putString(LIST_KEY, imagePresenter.getImage_list().toString());
     }
 */
 /*
@@ -553,7 +553,7 @@ public class AddRestroomActivity extends Activity implements
     @Override
     public void onRestroomAdded(AddRestroomData addRestroomData) {
 
-        Intent uploadServiceIntent = new Intent(AddRestroomActivity.this, UploadService.class);
+        Intent uploadServiceIntent = new Intent(AddRestroomActivity.this, UploadRestroomImageService.class);
         uploadServiceIntent.putExtra(Keys.KEY_RESTROOM_ID, addRestroomData.getRestroom_id());
         getApplicationContext().startService(uploadServiceIntent);
 

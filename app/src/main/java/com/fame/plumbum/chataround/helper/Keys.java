@@ -25,4 +25,6 @@ public class Keys {
     public static final String KEY_CITY ="city" ;
     public static final String KEY_COUNTRY = "country";
     public static final String KEY_STATE ="state" ;
+    public static final java.lang.String KEY_USER_ID ="userId" ;
+    public static final java.lang.String KEY_USER_MOBILE ="mobile" ;
 }
