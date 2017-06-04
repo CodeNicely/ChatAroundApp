@@ -131,7 +131,7 @@ public class AddImageActivity extends Activity implements
         ButterKnife.bind(this);
         UploadRestroomImageService.ACTIVITY_DESTROYED = false;
 
-        toolbar.setTitle(R.string.add_restroom);
+        toolbar.setTitle(R.string.add_photo);
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -194,7 +194,7 @@ public class AddImageActivity extends Activity implements
 
                     if (uriList.size() > 0) {
                         imagePresenter.onImagesUpload(uriList);
-//                        finish();
+                        finish();
 //                        showMessage("Photo Added Successfully to this location and this is currently under review");
                     }else{
                         showMessage("Please add a photo to continue");

@@ -14,6 +14,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v4.widget.TextViewCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -22,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.fame.plumbum.chataround.R;
@@ -91,6 +93,9 @@ public class GalleryFragment extends Fragment implements GalleryView, GoogleApiC
 
     @BindView(R.id.swipe_refresh_layout)
     SwipeRefreshLayout swipeRefreshLayout;
+
+    @BindView(R.id.photos_not_available)
+    TextView photos_not_available_layout;
 
     private Context context;
 
@@ -229,6 +234,12 @@ public class GalleryFragment extends Fragment implements GalleryView, GoogleApiC
 
     @Override
     public void onGalleryData(List<ImageData> imageDataList) {
+        if(imageDataList.size()==0){
+            photos_not_available_layout.setVisibility(View.VISIBLE);
+        }else{
+            photos_not_available_layout.setVisibility(View.GONE);
+
+        }
         galleryAdapter.setData(imageDataList);
         galleryAdapter.notifyDataSetChanged();
     }

@@ -264,7 +264,19 @@ public class MainActivity extends AppCompatActivity implements
                             );
 
                             break;
+
                         case 3:
+                            toolbar.setTitle("Gallery");
+                            Answers.getInstance().logCustom(new CustomEvent("User Swiped to Gallery")
+                                    .putCustomAttribute(Keys.KEY_LATITUDE, lat)
+                                    .putCustomAttribute(Keys.KEY_LONGITUDE, lng)
+                                    .putCustomAttribute(Keys.USER_EMAIL, sharedPrefs.getEmail())
+
+                            );
+
+                            break;
+
+                        case 4:
                             toolbar.setTitle("Pollution Meter");
                             Answers.getInstance().logCustom(new CustomEvent("User Swiped to Pollution")
                                     .putCustomAttribute(Keys.KEY_LATITUDE, lat)
@@ -274,7 +286,7 @@ public class MainActivity extends AppCompatActivity implements
                             );
 
                             break;
-                        case 4:
+                        case 5:
                             toolbar.setTitle("News");
                             Answers.getInstance().logCustom(new CustomEvent("User Swiped to News")
                                     .putCustomAttribute(Keys.KEY_LATITUDE, lat)

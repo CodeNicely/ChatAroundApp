@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.fame.plumbum.chataround.R;
+import com.fame.plumbum.chataround.activity.MainActivity;
 import com.fame.plumbum.chataround.gallery.model.ImageData;
 import com.fame.plumbum.chataround.helper.Urls;
 import com.fame.plumbum.chataround.helper.image_loader.GlideImageLoader;
@@ -47,14 +48,21 @@ public class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
 
-        ImageData imageData=imageDataList.get(position);
+        final ImageData imageData=imageDataList.get(position);
 
         GalleryViewHolder galleryViewHolder=(GalleryViewHolder)holder;
 
         imageLoader.loadImage(Urls.BASE_URL + "ImageReturn?ImageName=" + imageData.getImage_url(),galleryViewHolder.imageView,galleryViewHolder.progressBar);
+        galleryViewHolder.imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
+                ((MainActivity) context).openImageViewer(imageData.getImage_url(), position);
+
+            }
+        });
     }
 
     @Override

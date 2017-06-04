@@ -82,7 +82,7 @@
                         android:layout_margin="4dp"
                         android:gravity="center"
                         android:padding="4dp"
-                        android:text="@string/add_restroom"
+                        android:text="@string/add_photo"
                         android:textColor="@color/black"
                         android:textSize="@dimen/text_size_large" />
 
@@ -91,7 +91,9 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:gravity="center"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:visibility="gone"
+                        >
 
                         <ImageView
                             android:layout_width="24dp"

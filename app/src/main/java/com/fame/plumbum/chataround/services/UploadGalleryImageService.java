@@ -129,6 +129,7 @@ public class UploadGalleryImageService extends Service {
                             startForeground(NOTIFICATION_ID, showNotification());
                             UploadImages = false;
                             uploadImages();
+                            showMessage("Photo uploaded successfully, It will be verified within 48 hours.");
                         } else {
                             showMessage("Photo uploading Failed " + imageUploadData.getMessage() +
                                     ". Please try again");
