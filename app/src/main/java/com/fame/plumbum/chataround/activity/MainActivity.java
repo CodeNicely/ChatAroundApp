@@ -777,7 +777,7 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     public void openNewsDetails(String newsTitle, String image, String newsSource,
-                                String newsDescription, String newsAuthor, String newsTimestamp) {
+                                String newsDescription, String newsAuthor, String newsTimestamp,String newsUrl) {
         Intent newsDetailsActivityIntent = new Intent(this, NewsDetailsActivity.class);
 
 
@@ -788,7 +788,7 @@ public class MainActivity extends AppCompatActivity implements
         bundle.putString(Keys.NEWS_DESCRIPTION, newsDescription);
         bundle.putString(Keys.NEWS_AUTHOR, newsAuthor);
         bundle.putString(Keys.NEWS_TIMESTAMP, newsTimestamp);
-
+        bundle.putString(Keys.NEWS_URL,newsUrl);
         newsDetailsActivityIntent.putExtras(bundle);
 
         startActivity(newsDetailsActivityIntent);

@@ -1,64 +1,163 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/news_card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="1dp"
     android:clickable="true"
-    app:cardCornerRadius="2dp"
-    app:contentPadding="@dimen/padding_medium">
+    app:cardCornerRadius="@dimen/padding_small"
+    app:cardBackgroundColor="@color/white_100_percent"
+    android:layout_margin="@dimen/padding_medium"
+    android:layout_marginLeft="@dimen/padding_medium"
 
-    <RelativeLayout
+
+    >
+
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/border_button">
-
-        <RelativeLayout
-            android:id="@+id/imageLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone">
-
-            <ImageView
-                android:id="@+id/image"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <ProgressBar
-                android:id="@+id/progressBar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true" />
-        </RelativeLayout>
+        android:orientation="vertical"
+        android:background="@drawable/border_news_item"
+        android:paddingTop="@dimen/padding_large"
+        android:paddingLeft="@dimen/padding_large"
+        >
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:weightSum="10">
+            android:weightSum="2">
 
-            <TextView
-                android:id="@+id/newsTitle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/imageLayout"
-                android:layout_centerHorizontal="true"
-                android:layout_margin="4dp"
-                android:layout_weight="1"
-                android:padding="4dp"
-                android:text="title"
-                android:textColor="@color/colorPrimaryDark"
-                android:textSize="20dp" />
-
-            <ImageView
-                android:padding="4dp"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_keyboard_arrow_right_black_36dp"
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="9" />
+                android:layout_alignBottom="@+id/image"
+                android:layout_weight="1"
+                >
+
+                <TextView
+                    android:id="@+id/newsTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_centerHorizontal="true"
+                    android:layout_weight="1"
+                    android:fontFamily="sans-serif-condensed"
+                    android:lineSpacingExtra="0.2dp"
+                    android:text="The relationship between India and Palestine asdasdasdasasdasdadasdasdasdasdasdasdasdasdasdasdasdasdasd."
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/text_size_medium"
+                    android:maxLines="4"
+                    android:ellipsize="end"
+                    android:paddingRight="@dimen/padding_medium"
+                    android:layout_above="@+id/newsAuthor"
+                    />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_above="@+id/newsAuthor"
+                    android:visibility="invisible"
+                    >
+
+                    <TextView
+                        android:id="@+id/newsLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-condensed"
+                        android:text="FEATURES"
+                        android:textColor="@color/dark_yellow"
+                        android:textScaleX="0.7"
+                        android:textSize="@dimen/textSizeExtraSmall"
+
+                        />
+
+                    <TextView
+                        android:id="@+id/newSource"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right"
+                        android:layout_toRightOf="@id/newsLabel"
+                        android:fontFamily="sans-serif-condensed"
+                        android:paddingLeft="@dimen/padding_large"
+                        android:text="NewsSource"
+                        android:textColor="@color/colorAccentGrey"
+                        android:textScaleX="0.8"
+                        android:textSize="@dimen/textSizeExtraSmall"
+
+                        />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/newsAuthor"
+                    android:layout_marginTop="@dimen/padding_small"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="News Author"
+                    android:textColor="@color/colorAccentGrey"
+                    android:fontFamily="sans-serif-condensed"
+                    android:textSize="@dimen/textSizeExtraSmall"
+                    android:layout_alignParentBottom="true"
+                    android:textScaleX="0.8"
+                    />
+
+
+            </RelativeLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:minHeight="108dp"
+                >
+
+                <RelativeLayout
+                    android:id="@+id/imageLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    >
+
+                    <ImageView
+                        android:id="@+id/image"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:adjustViewBounds="true"
+                        android:src="@drawable/trump"
+
+                        />
+
+                    <ProgressBar
+                        android:id="@+id/progressBar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:visibility="gone" />
+
+                    <TextView
+                        android:id="@+id/NewsSmallDescription"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@+id/image"
+                        android:layout_centerHorizontal="true"
+                        android:layout_margin="3dp"
+                        android:gravity="center"
+                        android:padding="@dimen/padding_small"
+                        android:text="The relationship between India and Palestine is taking a new step."
+                        android:textAlignment="center"
+                        android:textColor="#FFFFFF"
+                        android:textSize="15dp"
+                        android:visibility="gone" />
+
+                </RelativeLayout>
+
+
+            </LinearLayout>
+
         </LinearLayout>
+
+
 
         <LinearLayout
             android:id="@+id/news_layout"
@@ -69,19 +168,6 @@
             android:visibility="gone"
             android:weightSum="2">
 
-
-            <TextView
-                android:id="@+id/newsAuthor"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="4dp"
-                android:layout_weight="1"
-                android:padding="4dp"
-                android:text="News Author"
-                android:textColor="#424242"
-                android:textSize="@dimen/textSizeExtraSmall" />
-
-
             <TextView
                 android:id="@+id/timestamp"
                 android:layout_width="wrap_content"
@@ -91,38 +177,10 @@
                 android:gravity="end"
                 android:padding="4dp"
                 android:text="News Timestamp"
-                android:textColor="#424242"
-
-                />
+                android:textColor="#E2CFCA" />
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/NewsSmallDescription"
-            android:layout_width="wrap_content"
-            android:layout_height="200dp"
-            android:layout_below="@+id/news_layout"
-            android:layout_centerHorizontal="true"
-            android:layout_gravity="center"
-            android:layout_margin="12dp"
-            android:gravity="center"
-            android:padding="@dimen/padding_small"
-            android:text="Description"
-            android:textColor="@color/colorAccent"
-            android:textSize="@dimen/textSizeSmall"
-            android:visibility="gone" />
 
-        <TextView
-            android:id="@+id/newSource"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/NewsSmallDescription"
-            android:layout_margin="2dp"
-            android:gravity="center"
-            android:padding="2dp"
-            android:text="News Source"
-            android:textColor="#877409"
-            android:textSize="@dimen/textSizeExtraSmall"
-            android:visibility="gone" />
-    </RelativeLayout>
+    </LinearLayout>
 
 </android.support.v7.widget.CardView>

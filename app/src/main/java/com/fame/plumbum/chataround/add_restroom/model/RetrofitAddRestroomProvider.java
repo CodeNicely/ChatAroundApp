@@ -53,7 +53,8 @@ public class RetrofitAddRestroomProvider implements AddRestroomProvider {
                 addRestroomRequestData.getKnownName(),
                 addRestroomRequestData.isMale(),
                 addRestroomRequestData.isFemale(),
-                addRestroomRequestData.isDisabled()
+                addRestroomRequestData.isDisabled(),
+                addRestroomRequestData.getMobile()
         );
 
         call.enqueue(new Callback<AddRestroomData>() {

@@ -16,6 +16,7 @@ public class SharedPrefs {
     private static final String KEY_EMAIL = "email";
     private static final String KEY_USER_ID = "userId";
     private static String TAG = "Shared Preference";
+    private static final String KEY_FIRST_TIME_USER = "firstTimeUser" ;
 
     // Shared Preferences
     SharedPreferences pref;
@@ -24,6 +25,7 @@ public class SharedPrefs {
 
     // shared pref mode
     int PRIVATE_MODE = 0;
+
 
     public SharedPrefs(Context context) {
         this._context = context;
@@ -43,6 +45,18 @@ public class SharedPrefs {
     public boolean isLoggedIn() {
         return pref.getBoolean(KEY_IS_LOGGEDIN, false);
     }
+
+    public void setFirstTimeUser(boolean isFirstTimeUser) {
+
+        editor.putBoolean(KEY_FIRST_TIME_USER, isFirstTimeUser);
+        editor.commit();
+    }
+
+    public boolean isFirstTimeUser() {
+        return pref.getBoolean(KEY_FIRST_TIME_USER, false);
+    }
+
+
 
     public String getUsername() {
         return pref.getString(KEY_USERNAME, "Not Available");

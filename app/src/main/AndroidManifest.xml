@@ -113,7 +113,16 @@
             android:name=".activity.MainActivity"
             android:label="Shouts"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme" >
+
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN" />-->
+
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
+
+            </activity>
+
         <activity android:name="com.theartofdev.edmodo.cropper.CropImageActivity" />
         <activity
             android:name=".add_restroom.view.AddRestroomActivity"
@@ -131,7 +140,9 @@
         <activity android:name=".splash_screen.view.SplashScreenActivity" />
         <activity
             android:name=".news.view.NewsDetailsActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar" >
+
+            </activity>
     </application>
 
 </manifest>
