@@ -1,8 +1,8 @@
-package com.fame.plumbum.chataround.add_restroom.api;
+package com.fame.plumbum.chataround.add_photos.api;
 
 
+import com.fame.plumbum.chataround.add_photos.model.data.ImageUploadData;
 import com.fame.plumbum.chataround.helper.Urls;
-import com.fame.plumbum.chataround.add_restroom.model.data.FileUploadData;
 import com.fame.plumbum.chataround.services.UploadRestroomImageService;
 
 import okhttp3.MultipartBody;
@@ -26,7 +26,11 @@ public interface ImageUploadApi {
      * @return
      */
     @Multipart
-    @POST(Urls.SUB_URL_IMAGE_UPLOAD_API)
-    Call<FileUploadData> uploadImage(@Part("userId") RequestBody user_id,
-                                     @Part("restroomId") RequestBody restroom_id, @Part MultipartBody.Part file);
+    @POST(Urls.SUB_URL_PHOTO_UPLOAD_API)
+    Call<ImageUploadData> uploadImage(@Part("userId") RequestBody user_id,
+                                      @Part("mobile") RequestBody restroom_id,
+                                      @Part("latitude") RequestBody latitude,
+                                      @Part("longitude") RequestBody longitude,
+                                      @Part MultipartBody.Part file);
+
 }

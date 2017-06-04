@@ -32,7 +32,7 @@ import java.io.File;
  * This class is used for uploading images to server using Service.
  * Created by Meghal on 5/30/2016.
  */
-public class UploadService extends Service {
+public class UploadRestroomImageService extends Service {
 
     private static final String TAG = "Upload Service";
     private MyQueue<ImageData> myQueue = new MyQueue<>();
@@ -113,7 +113,7 @@ public class UploadService extends Service {
     }
 
     /**
-     * This method is used to upload image and is called by method {@link UploadService#uploadImages()}
+     * This method is used to upload image and is called by method {@link UploadRestroomImageService#uploadImages()}
      * after getting a single image from Queue.
      *
      * @param imageData

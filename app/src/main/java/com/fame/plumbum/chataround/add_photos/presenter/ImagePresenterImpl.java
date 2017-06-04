@@ -1,12 +1,13 @@
-package com.fame.plumbum.chataround.add_restroom.presenter;
+package com.fame.plumbum.chataround.add_photos.presenter;
 
 import android.net.Uri;
+import android.util.Log;
 
-import com.fame.plumbum.chataround.add_restroom.model.FileProvider;
-import com.fame.plumbum.chataround.add_restroom.model.ImageDataProvider;
-import com.fame.plumbum.chataround.add_restroom.model.data.ImageData;
-import com.fame.plumbum.chataround.add_restroom.model.data.ImageEvent;
-import com.fame.plumbum.chataround.add_restroom.view.UploadImageView;
+import com.fame.plumbum.chataround.add_photos.model.FileProvider;
+import com.fame.plumbum.chataround.add_photos.model.ImageDataProvider;
+import com.fame.plumbum.chataround.add_photos.model.data.ImageData;
+import com.fame.plumbum.chataround.add_photos.model.data.PhotoEvent;
+import com.fame.plumbum.chataround.add_photos.view.UploadImageView;
 import com.fame.plumbum.chataround.helper.RxSchedulersHook;
 
 import org.greenrobot.eventbus.EventBus;
@@ -27,7 +28,6 @@ public class ImagePresenterImpl implements ImagePresenter {
     private static final String TAG = "ImagePresenterImpl";
     private UploadImageView uploadImageView;
     private ImageDataProvider imageDataProvider;
-    private List<ImageData> imageDataList = new ArrayList<>();
     private RxSchedulersHook rxSchedulersHook;
     private EventBus eventBus;
 
@@ -55,7 +55,6 @@ public class ImagePresenterImpl implements ImagePresenter {
                                public void onCompleted() {
 
 
-                                   uploadImageView.setData(imageDataList);
 
                                }
 
@@ -67,8 +66,8 @@ public class ImagePresenterImpl implements ImagePresenter {
                                @Override
                                public void onNext(ImageData imageData) {
 
-
-                                   eventBus.post(new ImageEvent(imageData.getFile()));
+                                   Log.d(TAG,"On next onImagesUpload");
+                                   eventBus.post(new PhotoEvent(imageData.getFile()));
                                    //             EventBus.getDefault().post(String.valueOf(imageData.getFile()));
 //                                   imageDataList.add(imageData);
                                }
@@ -80,10 +79,12 @@ public class ImagePresenterImpl implements ImagePresenter {
     @Override
     public void onImagesSelected(final List<Uri> imageUriList) {
 
-        if (imageDataList.size() != 0) {
+//        if (imageDataList.size() != 0) {
+//
+//            imageDataList.remove(imageDataList.size() - 1);
+//        }
+        final List<ImageData> imageDataList = new ArrayList<>();
 
-            imageDataList.remove(imageDataList.size() - 1);
-        }
         Observable.from(imageUriList).flatMap(new Func1<Uri, Observable<ImageData>>() {
             @Override
             public Observable<ImageData> call(Uri uri) {
@@ -150,7 +151,7 @@ public class ImagePresenterImpl implements ImagePresenter {
 
     }
 
-    @Override
+/*    @Override
     public List<ImageData> getImageDataList() {
         return imageDataList;
     }
@@ -158,7 +159,7 @@ public class ImagePresenterImpl implements ImagePresenter {
     @Override
     public void setImageDataList(List<ImageData> imageDataList) {
         this.imageDataList = imageDataList;
-    }
+    }*/
 }
 /*
   observable.observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.newThread())

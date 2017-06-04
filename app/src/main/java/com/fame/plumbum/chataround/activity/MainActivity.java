@@ -51,6 +51,7 @@ import com.fame.plumbum.chataround.MySingleton;
 import com.fame.plumbum.chataround.R;
 import com.fame.plumbum.chataround.fragments.MyProfile;
 import com.fame.plumbum.chataround.fragments.World;
+import com.fame.plumbum.chataround.gallery.view.GalleryFragment;
 import com.fame.plumbum.chataround.helper.Keys;
 import com.fame.plumbum.chataround.helper.SharedPrefs;
 import com.fame.plumbum.chataround.helper.Urls;
@@ -201,7 +202,7 @@ public class MainActivity extends AppCompatActivity implements
             TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
             tabLayout.setupWithViewPager(viewPager);
 
-            if (viewPager.getAdapter().getCount() == 5) {
+            if (viewPager.getAdapter().getCount() == 6) {
 
                 if (tabLayout.getTabAt(0) != null) {
                     tabLayout.getTabAt(0).setIcon(R.drawable.profile_512);
@@ -216,14 +217,18 @@ public class MainActivity extends AppCompatActivity implements
                 }
                 if (tabLayout.getTabAt(3) != null) {
 
-                    tabLayout.getTabAt(3).setIcon(R.drawable.pollution1);
+                    tabLayout.getTabAt(3).setIcon(R.drawable.gallery);
                 }
                 if (tabLayout.getTabAt(4) != null) {
 
-                    tabLayout.getTabAt(4).setIcon(R.drawable.newspaper);
+                    tabLayout.getTabAt(4).setIcon(R.drawable.pollution1);
+                }
+                if (tabLayout.getTabAt(5) != null) {
+
+                    tabLayout.getTabAt(5).setIcon(R.drawable.newspaper);
                 }
             }
-            viewPager.setOffscreenPageLimit(5);
+            viewPager.setOffscreenPageLimit(6);
             viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                 @Override
                 public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -259,7 +264,19 @@ public class MainActivity extends AppCompatActivity implements
                             );
 
                             break;
+
                         case 3:
+                            toolbar.setTitle("Gallery");
+                            Answers.getInstance().logCustom(new CustomEvent("User Swiped to Gallery")
+                                    .putCustomAttribute(Keys.KEY_LATITUDE, lat)
+                                    .putCustomAttribute(Keys.KEY_LONGITUDE, lng)
+                                    .putCustomAttribute(Keys.USER_EMAIL, sharedPrefs.getEmail())
+
+                            );
+
+                            break;
+
+                        case 4:
                             toolbar.setTitle("Pollution Meter");
                             Answers.getInstance().logCustom(new CustomEvent("User Swiped to Pollution")
                                     .putCustomAttribute(Keys.KEY_LATITUDE, lat)
@@ -269,7 +286,7 @@ public class MainActivity extends AppCompatActivity implements
                             );
 
                             break;
-                        case 4:
+                        case 5:
                             toolbar.setTitle("News");
                             Answers.getInstance().logCustom(new CustomEvent("User Swiped to News")
                                     .putCustomAttribute(Keys.KEY_LATITUDE, lat)
@@ -336,12 +353,14 @@ public class MainActivity extends AppCompatActivity implements
         world = new World();
         RestroomFragment restroomFragment = new RestroomFragment();
         PollutionFragment pollutionFragment = new PollutionFragment();
+        GalleryFragment galleryFragment=new GalleryFragment();
         NewsListFragment newsListFragment = new NewsListFragment();
 
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(profile, "My Profile");
         adapter.addFragment(world, "World");
-        adapter.addFragment(new RestroomFragment().newInstance("", ""), "RestRoomFragment");
+        adapter.addFragment(RestroomFragment.newInstance("", ""), "RestRoomFragment");
+        adapter.addFragment(galleryFragment, "GalleryFragment");
         adapter.addFragment(pollutionFragment, "PollutionFragment");
         adapter.addFragment(newsListFragment, "NewsListFragment");
 

@@ -1,4 +1,4 @@
-package com.fame.plumbum.chataround.add_restroom.view;
+package com.fame.plumbum.chataround.add_photos.view;
 
 import android.Manifest;
 import android.app.Activity;
@@ -24,26 +24,26 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.desmond.squarecamera.CameraActivity;
 import com.fame.plumbum.chataround.R;
-import com.fame.plumbum.chataround.add_restroom.model.ImageDataProviderImp;
-import com.fame.plumbum.chataround.add_restroom.model.RetrofitAddRestroomProvider;
-import com.fame.plumbum.chataround.add_restroom.model.data.AddRestroomData;
-import com.fame.plumbum.chataround.add_restroom.model.data.AddRestroomRequestData;
-import com.fame.plumbum.chataround.add_restroom.model.data.ImageData;
-import com.fame.plumbum.chataround.add_restroom.presenter.AddRestroomPresenter;
-import com.fame.plumbum.chataround.add_restroom.presenter.AddRestroomPresenterImpl;
-import com.fame.plumbum.chataround.add_restroom.presenter.ImagePresenter;
-import com.fame.plumbum.chataround.add_restroom.presenter.ImagePresenterImpl;
+import com.fame.plumbum.chataround.add_photos.model.ImageDataProviderImp;
+import com.fame.plumbum.chataround.add_photos.model.data.ImageData;
+import com.fame.plumbum.chataround.add_photos.model.data.ImageUploadData;
+import com.fame.plumbum.chataround.add_photos.presenter.ImagePresenter;
+import com.fame.plumbum.chataround.add_photos.presenter.ImagePresenterImpl;
 import com.fame.plumbum.chataround.helper.Keys;
 import com.fame.plumbum.chataround.helper.RxSchedulersHook;
 import com.fame.plumbum.chataround.helper.SharedPrefs;
+import com.fame.plumbum.chataround.helper.image_loader.GlideImageLoader;
+import com.fame.plumbum.chataround.helper.image_loader.ImageLoader;
+import com.fame.plumbum.chataround.services.UploadGalleryImageService;
 import com.fame.plumbum.chataround.services.UploadRestroomImageService;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -70,9 +70,9 @@ import java.util.Locale;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class AddRestroomActivity extends Activity implements
+public class AddImageActivity extends Activity implements
         UploadImageView,
-        AddRestroomView,
+        AddImageView,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener {
@@ -90,34 +90,18 @@ public class AddRestroomActivity extends Activity implements
     private File image;
     private boolean CAMERA_REQUEST = false;
     private boolean GALLERY_REQUEST = false;
-    private ImageAdapter imageAdapter;
     private ImagePresenter imagePresenter;
     private ProgressDialog progressDialog;
     private List<Uri> uriList = new ArrayList<>();
-    private AddRestroomPresenter addRestroomPresenter;
-    private String mobile;
 
     private double latitude;
     private double longitude;
 
     private SharedPrefs sharedPrefs;
 
-    @BindView(R.id.galleryButton)
-    Button galleryButton;
-    @BindView(R.id.recyclerView)
-    RecyclerView recyclerView;
 
     @BindView(R.id.uploadButton)
     Button uploadButton;
-
-    @BindView(R.id.male)
-    CheckBox male;
-
-    @BindView(R.id.female)
-    CheckBox female;
-
-    @BindView(R.id.disabled)
-    CheckBox disabled;
 
     @BindView(R.id.restroom_address)
     TextView addressTextView;
@@ -137,17 +121,17 @@ public class AddRestroomActivity extends Activity implements
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
 
-    @BindView(R.id.mobile)
-    EditText txt_mobile;
+    @BindView(R.id.imageView)
+    ImageView imageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_camera);
+        setContentView(R.layout.activity_add_photos);
         ButterKnife.bind(this);
         UploadRestroomImageService.ACTIVITY_DESTROYED = false;
 
-        toolbar.setTitle(R.string.add_restroom);
+        toolbar.setTitle(R.string.add_photo);
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -187,82 +171,40 @@ public class AddRestroomActivity extends Activity implements
 
         linearLayoutManager.setStackFromEnd(true);
 
-        recyclerView.setLayoutManager(linearLayoutManager);
-//        recyclerView.setHasFixedSize(true);
-        recyclerView.setAdapter(imageAdapter);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-
-        List<ImageData> imageDataList = new ArrayList<>();
-        imageDataList.add(new ImageData(null, true));
-        imageAdapter.setData(imageDataList);
-        imageAdapter.notifyDataSetChanged();
-
-        galleryButton.setOnClickListener(new View.OnClickListener() {
+        imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-
-                imagePresenter.openGallery();
+                imagePresenter.openCamera();
             }
         });
-
 
         uploadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                if(imageAdapter.getItemCount()<2){
-                    Toast.makeText(AddRestroomActivity.this, "Please add atleast 1 Image to Add a new Toilet", Toast.LENGTH_SHORT).show();
-                    return;
-                }
 
-                mobile=txt_mobile.getText().toString();
+                if(latitude!=0.0 && longitude!=0.0){
+
+                    Intent uploadServiceIntent = new Intent(AddImageActivity.this, UploadGalleryImageService.class);
+                    uploadServiceIntent.putExtra(Keys.KEY_USER_MOBILE,"8109109457" );
+                    uploadServiceIntent.putExtra(Keys.KEY_LATITUDE,latitude );
+                    uploadServiceIntent.putExtra(Keys.KEY_LONGITUDE,longitude );
+                    getApplicationContext().startService(uploadServiceIntent);
 
 
-
-                Geocoder geocoder;
-                List<Address> addresses;
-                geocoder = new Geocoder(AddRestroomActivity.this, Locale.getDefault());
-
-                try {
-                    addresses = geocoder.getFromLocation(latitude, longitude, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
-                    String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
-                    String city = addresses.get(0).getLocality();
-                    String state = addresses.get(0).getAdminArea();
-                    String country = addresses.get(0).getCountryName();
-                    String postalCode = addresses.get(0).getPostalCode();
-                    String knownName = addresses.get(0).getFeatureName();
-
-/*
-                    mobile="123456790";
-                    if (mobile.equals(null) || mobile.equals("") || mobile.length()!=10)
-                    {
-                        txt_mobile.setError("Please Enter Valid Mobile No!");
-                        txt_mobile.requestFocus();
+                    if (uriList.size() > 0) {
+                        imagePresenter.onImagesUpload(uriList);
+                        finish();
+//                        showMessage("Photo Added Successfully to this location and this is currently under review");
+                    }else{
+                        showMessage("Please add a photo to continue");
                     }
-*/
-                        AddRestroomRequestData addRestroomRequestData = new AddRestroomRequestData(
-                                sharedPrefs.getUsername(),
-                                latitude,
-                                longitude, address,
-                                city,
-                                state,
-                                country,
-                                postalCode,
-                                knownName,
-                                male.isChecked(),
-                                female.isChecked(),
-                                disabled.isChecked(),
-                                mobile);
-                        addRestroomPresenter.addRestroom(addRestroomRequestData);
 
 
 
-
-                } catch (IOException e) {
-                    e.printStackTrace();
+                }else{
+                    showMessage("Please turn on your GPS to continue, We are unable to fetch your current location");
                 }
-
 
             }
         });
@@ -312,8 +254,6 @@ public class AddRestroomActivity extends Activity implements
         imagePresenter = new ImagePresenterImpl(this
                 , new ImageDataProviderImp(getApplicationContext())
                 , new RxSchedulersHook(), EventBus.getDefault());
-        addRestroomPresenter = new AddRestroomPresenterImpl(this, new RetrofitAddRestroomProvider());
-        imageAdapter = new ImageAdapter(this);
     }
 
     @Override
@@ -334,7 +274,7 @@ public class AddRestroomActivity extends Activity implements
                     uriList.add(data.getData());
                 }
                 break;
-            case RESULT_LOAD_IMAGE:
+           /* case RESULT_LOAD_IMAGE:
 
                 if (resultCode == Activity.RESULT_OK) {
 
@@ -354,29 +294,21 @@ public class AddRestroomActivity extends Activity implements
                         uriList.add(data.getData());
                     }
                 }
-                break;
+                break;*/
             default:
                 break;
         }
 
 
         if (uriList.size() > 0) {
-            this.uriList.addAll(uriList);
+            this.uriList=uriList;
             imagePresenter.onImagesSelected(uriList);
         }
 
 
     }
 
-    @Override
-    public void setData(List<ImageData> imageDataList) {
-        //    constructImageUploader(imageDataList);
-        Log.i(TAG, "Size :" + imageDataList.size());
-        imageAdapter.setData(imageDataList);
-        imageAdapter.notifyDataSetChanged();
-        recyclerView.smoothScrollToPosition(imageDataList.size()-1);
 
-    }
 
     @Override
     public void showCamera() {
@@ -482,6 +414,15 @@ public class AddRestroomActivity extends Activity implements
 
         return GALLERY_REQUEST;
     }
+
+    @Override
+    public void setData(List<ImageData> imageDataList) {
+
+
+        Glide.with(this).load(imageDataList.get(0).getFile()).into(imageView);
+        // Do nothing for now
+
+    }
 /*
 
     @Override
@@ -569,15 +510,12 @@ public class AddRestroomActivity extends Activity implements
     }
 
     @Override
-    public void onRestroomAdded(AddRestroomData addRestroomData) {
+    public void onImageAdded(ImageUploadData imageUploadData) {
 
-        Intent uploadServiceIntent = new Intent(AddRestroomActivity.this, UploadRestroomImageService.class);
-        uploadServiceIntent.putExtra(Keys.KEY_RESTROOM_ID, addRestroomData.getRestroom_id());
+        Intent uploadServiceIntent = new Intent(AddImageActivity.this, UploadGalleryImageService.class);
+        uploadServiceIntent.putExtra(Keys.KEY_RESTROOM_ID, imageUploadData.getMessage());
         getApplicationContext().startService(uploadServiceIntent);
 
-
-        imageAdapter.setData(new ArrayList<ImageData>());
-        imageAdapter.notifyDataSetChanged();
 
         if (uriList.size() > 0) {
             imagePresenter.onImagesUpload(uriList);
@@ -618,7 +556,7 @@ public class AddRestroomActivity extends Activity implements
                     + " , " + longitude);
             Geocoder geocoder;
             List<Address> addresses;
-            geocoder = new Geocoder(AddRestroomActivity.this, Locale.getDefault());
+            geocoder = new Geocoder(AddImageActivity.this, Locale.getDefault());
 
             try {
                 addresses = geocoder.getFromLocation(latitude, longitude, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
@@ -711,40 +649,6 @@ public class AddRestroomActivity extends Activity implements
         latitude = location.getLatitude();
         longitude = location.getLongitude();
 
-
-        latitudeLongitude.setText("Current Location - " + String.valueOf(latitude)
-                + " , " + longitude);
-        Geocoder geocoder;
-        List<Address> addresses;
-        geocoder = new Geocoder(AddRestroomActivity.this, Locale.getDefault());
-
-        try {
-            addresses = geocoder.getFromLocation(latitude, longitude, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
-            String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
-            String city = addresses.get(0).getLocality();
-            String state = addresses.get(0).getAdminArea();
-            String country = addresses.get(0).getCountryName();
-            String postalCode = addresses.get(0).getPostalCode();
-            String knownName = addresses.get(0).getFeatureName();
-
-            if (knownName != null) {
-
-                addressTextView.setText(address);
-                addressTextView.append(", " + city);
-                addressTextView.append(", " + state);
-                addressTextView.append(", " + country);
-
-
-            } else {
-                addressTextView.setText(address);
-
-            }
-
-            showRestroomAddLayout(true);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
     }
 

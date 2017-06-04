@@ -1,16 +1,11 @@
-package com.fame.plumbum.chataround.add_restroom.model;
+package com.fame.plumbum.chataround.add_photos.model;
 
 import android.util.Log;
 
-
-import com.fame.plumbum.chataround.helper.Keys;
+import com.fame.plumbum.chataround.add_photos.UploadCallback;
+import com.fame.plumbum.chataround.add_photos.api.ImageUploadApi;
+import com.fame.plumbum.chataround.add_photos.model.data.ImageUploadData;
 import com.fame.plumbum.chataround.helper.Urls;
-import com.fame.plumbum.chataround.add_restroom.UploadCallback;
-import com.fame.plumbum.chataround.add_restroom.api.ImageUploadApi;
-import com.fame.plumbum.chataround.add_restroom.model.data.FileUploadData;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.File;
 import java.util.concurrent.TimeUnit;
@@ -29,10 +24,10 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * This is retrofit client implementation of calling api
- * it implements {@link FileUploader}
+ * it implements {@link ImageUploader}
  * Created by Meghal on 5/27/2016.
  */
-public class RetrofitFileUploader implements FileUploader {
+public class RetrofitImageUploader implements ImageUploader {
 
     private static final String TAG = "RetrofitImageUploader";
     private Retrofit retrofit;
@@ -43,7 +38,7 @@ public class RetrofitFileUploader implements FileUploader {
      * In constructor we are initializing HttpLoggingInterceptor and Retrofit
      * to optimize code , as we dont want the variable to get initialized again and again
      */
-    public RetrofitFileUploader() {
+    public RetrofitImageUploader() {
         interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         OkHttpClient client = new OkHttpClient.Builder().retryOnConnectionFailure(true)
@@ -59,7 +54,7 @@ public class RetrofitFileUploader implements FileUploader {
     }
 
     @Override
-    public void uploadImage(String user_id, String restroom_id, File file, final UploadCallback uploadCallback) {
+    public void uploadImage(String user_id,String mobile, double latitude,double longitude, File file, final UploadCallback uploadCallback) {
 
 /*
         Retrofit retrofit = new Retrofit.Builder().baseUrl("http://photoshoto.me")
@@ -77,14 +72,14 @@ public class RetrofitFileUploader implements FileUploader {
 
 
         Log.i(TAG, "Retrofit file uploader called ");
-        JSONObject jsonObject = new JSONObject();
-        try {
-            jsonObject.put(Keys.KEY_ADMIN_TOKEN, user_id);
-            jsonObject.put(Keys.KEY_ORDER_ID, restroom_id);
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+//        JSONObject jsonObject = new JSONObject();
+//        try {
+//            jsonObject.put(Keys.KEY_ADMIN_TOKEN, user_id);
+//            jsonObject.put(Keys.KEY_ORDER_ID, mobile);
+//
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
 
 
         RequestBody fbody = RequestBody.create(MediaType.parse("multipart/form-data"), file);
@@ -92,19 +87,27 @@ public class RetrofitFileUploader implements FileUploader {
         RequestBody userId =
                 RequestBody.create(
                         MediaType.parse("multipart/form-data"), user_id);
-        RequestBody restroomId =
+        RequestBody mobile1 =
                 RequestBody.create(
-                        MediaType.parse("multipart/form-data"), String.valueOf(restroom_id));
+                        MediaType.parse("multipart/form-data"), String.valueOf(mobile));
+
+        RequestBody latitude1 =
+                RequestBody.create(
+                        MediaType.parse("multipart/form-data"), String.valueOf(latitude));
+        RequestBody longitude1 =
+                RequestBody.create(
+                        MediaType.parse("multipart/form-data"), String.valueOf(longitude));
+
 
         MultipartBody.Part body =
                 MultipartBody.Part.createFormData("file", file.getName(), fbody);
 
 
-        Call<FileUploadData> call = imageUploadApi.uploadImage(userId, restroomId, body);
-        call.enqueue(new Callback<FileUploadData>() {
+        Call<ImageUploadData> call = imageUploadApi.uploadImage(userId, mobile1,latitude1,longitude1, body);
+        call.enqueue(new Callback<ImageUploadData>() {
 
             @Override
-            public void onResponse(Call<FileUploadData> call, Response<FileUploadData> response) {
+            public void onResponse(Call<ImageUploadData> call, Response<ImageUploadData> response) {
 
                 Log.i(TAG, "On Response" + response.message() + response.body());
 
@@ -113,7 +116,7 @@ public class RetrofitFileUploader implements FileUploader {
             }
 
             @Override
-            public void onFailure(Call<FileUploadData> call, Throwable t) {
+            public void onFailure(Call<ImageUploadData> call, Throwable t) {
 
                 Log.i(TAG, "On Failure");
 
