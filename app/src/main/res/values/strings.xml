@@ -37,5 +37,12 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="add_photo">Add Photo</string>
     <string name="uploadPhoto">Upload Photo</string>
-    <string name="photos_not_available">It seems like no photos available near your location, Please add photos by clicking on above button!</string>
+    <string name="photos_not_available">It seems there are no images around your location. Please add an image that is unique to your location (a landmark, for example) using the button above.</string>
+    <string name="mock_location_message">Please disable mock location for using this app</string>
+    <string name="mock_location_title">Mock location is turned ON!</string>
+    <string name="shoutToggle">Shouts</string>
+    <string name="toiletToggle">Toilets</string>
+    <string name="galleryToggle">Gallery</string>
+    <string name="pollutionToggle">Pollution</string>
+    <string name="newsToggle">News</string>
 </resources>

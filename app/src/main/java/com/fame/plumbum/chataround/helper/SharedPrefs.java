@@ -16,7 +16,14 @@ public class SharedPrefs {
     private static final String KEY_EMAIL = "email";
     private static final String KEY_USER_ID = "userId";
     private static String TAG = "Shared Preference";
-    private static final String KEY_FIRST_TIME_USER = "firstTimeUser" ;
+    private static final String KEY_FIRST_TIME_USER = "firstTimeUser";
+
+    private static final String KEY_SHOUTS_MODULE = "shoutsModule";
+    private static final String KEY_TOILET_MODULE = "toiletModule";
+    private static final String KEY_GALLERY_MODULE = "galleryModule";
+    private static final String KEY_POLLUTION_MODULE = "pollutionModule";
+    private static final String KEY_NEWS_MODULE = "newsModule";
+
 
     // Shared Preferences
     SharedPreferences pref;
@@ -39,13 +46,68 @@ public class SharedPrefs {
         editor.putBoolean(KEY_IS_LOGGEDIN, isLoggedIn);
         // commit changes
         editor.commit();
-        Log.d(TAG, "User login session modified!");
     }
 
     public boolean isLoggedIn() {
         return pref.getBoolean(KEY_IS_LOGGEDIN, false);
     }
 
+
+
+    public boolean isShouts() {
+        return pref.getBoolean(KEY_SHOUTS_MODULE, true);
+    }
+
+    public void setShouts(boolean set) {
+
+        editor.putBoolean(KEY_SHOUTS_MODULE, set);
+        editor.commit();
+
+    }
+
+    public boolean isToilet() {
+        return pref.getBoolean(KEY_TOILET_MODULE, true);
+    }
+
+    public void setToilet(boolean set) {
+
+        editor.putBoolean(KEY_TOILET_MODULE, set);
+        editor.commit();
+
+    }
+
+    public boolean isGallery() {
+        return pref.getBoolean(KEY_GALLERY_MODULE, true);
+    }
+
+    public void setGalleryShouts(boolean set) {
+
+        editor.putBoolean(KEY_GALLERY_MODULE, set);
+        editor.commit();
+
+    }
+
+    public boolean isPullution() {
+        return pref.getBoolean(KEY_POLLUTION_MODULE, true);
+    }
+
+    public void setPollution(boolean set) {
+
+        editor.putBoolean(KEY_POLLUTION_MODULE, set);
+        editor.commit();
+
+    }
+
+    public boolean isNews() {
+        return pref.getBoolean(KEY_NEWS_MODULE, true);
+    }
+
+    public void setNews(boolean set) {
+
+        editor.putBoolean(KEY_NEWS_MODULE, set);
+        editor.commit();
+
+    }
     public void setFirstTimeUser(boolean isFirstTimeUser) {
 
         editor.putBoolean(KEY_FIRST_TIME_USER, isFirstTimeUser);
@@ -55,7 +117,6 @@ public class SharedPrefs {
     public boolean isFirstTimeUser() {
         return pref.getBoolean(KEY_FIRST_TIME_USER, false);
     }
-
 
 
     public String getUsername() {

@@ -824,12 +824,12 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     }
 
 
-    public void showDialog(){
-        final Dialog dialog= new Dialog(this);
+    public void showDialog() {
+        final Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.dialog_referal);
-        final EditText referal_code = (EditText)dialog.findViewById(R.id.referal);
-        Button proceed = (Button)dialog.findViewById(R.id.proceed);
-        Button skip = (Button)dialog.findViewById(R.id.skip);
+        final EditText referal_code = (EditText) dialog.findViewById(R.id.referal);
+        Button proceed = (Button) dialog.findViewById(R.id.proceed);
+        Button skip = (Button) dialog.findViewById(R.id.skip);
         dialog.setTitle("Referal Code");
         dialog.setCancelable(false);
 //        final ReferalPresenter referalPresenter = new ReferalPresenterImpl(new RetrofitReferalProvider(), this);
@@ -839,18 +839,14 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         proceed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String code= referal_code.getText().toString();
-                if(code.equals("") || code.equals(null))
-                {
+                String code = referal_code.getText().toString();
+                if (code.equals("") || code.equals(null)) {
                     referal_code.setError("Empty Field");
                     referal_code.requestFocus();
-                }
-                else if(code.length()==10)
-                {
+                } else if (code.length() == 10) {
                     referal_code.setError("Enter 10 chars");
                     referal_code.requestFocus();
-                }
-                else{
+                } else {
                     referalPresenter.requestReferal(code);
                     hideKeyboard();
                     dialog.dismiss();
@@ -869,8 +865,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         });
 
 
-
     }
+
     private void hideKeyboard() {
         View view = this.getCurrentFocus();
         if (view != null) {

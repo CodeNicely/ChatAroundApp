@@ -30,10 +30,10 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
-    <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">
+ <!--   <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">
         <item name="android:windowBackground">@drawable/splash</item>
     </style>
-
+-->
     <style name="MyMaterialTheme" parent="MyMaterialTheme.Base">
 
     </style>
@@ -46,5 +46,19 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+ <!--   <style name="MySwitch" parent="AppTheme">
+        &lt;!&ndash; active thumb & track color (30% transparency) &ndash;&gt;
+        <item name="colorControlActivated">@color/black</item>
 
+        &lt;!&ndash; inactive thumb color &ndash;&gt;
+
+        <item name="colorSwitchThumbNormal">@color/colorAccent</item>
+
+
+
+        &lt;!&ndash; inactive track color (30% transparency) &ndash;&gt;
+        <item name="android:colorForeground">@color/colorAccentGrey</item>
+
+
+    </style>-->
 </resources>

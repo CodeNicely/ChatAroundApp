@@ -1,7 +1,9 @@
 {
   "project_info": {
     "project_number": "675990547882",
-    "project_id": "mile-c581d"
+    "firebase_url": "https://mile-c581d.firebaseio.com",
+    "project_id": "mile-c581d",
+    "storage_bucket": "mile-c581d.appspot.com"
   },
   "client": [
     {
@@ -12,6 +14,10 @@
         }
       },
       "oauth_client": [
+        {
+          "client_id": "675990547882-i8kleaqbcpdl082rmau97k5jfesl74q8.apps.googleusercontent.com",
+          "client_type": 3
+        },
         {
           "client_id": "675990547882-6m46upf43o14fg7ods809dluv7vhst7g.apps.googleusercontent.com",
           "client_type": 1,
@@ -35,11 +41,16 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "675990547882-i8kleaqbcpdl082rmau97k5jfesl74q8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
-          "status": 1
+          "status": 2
         }
       }
     }

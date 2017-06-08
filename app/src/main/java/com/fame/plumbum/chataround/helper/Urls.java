@@ -20,7 +20,8 @@ public class Urls {
     public static final String REFERAL_CODE="Referal";
 
 //    public static String BASE_URL = "http://163.53.72.247:8765/";
-//    public static String BASE_URL = "http://192.168.0.111:5000/"; // Local Server
+//    public static String BASE_URL = "http://192.168.0.101:5000/"; // Local Server
 
 
 }
+

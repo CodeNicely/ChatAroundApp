@@ -7,5 +7,5 @@ package com.fame.plumbum.chataround.gallery.presenter;
 public interface GalleryPresenter {
 
     void getImages(String userId, String mobile, double latitude, double longitude);
-
+    void onDestroy();
 }

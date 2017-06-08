@@ -29,9 +29,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,6 +48,7 @@ import com.fame.plumbum.chataround.activity.MainActivity;
 import com.fame.plumbum.chataround.adapters.Notifs;
 import com.fame.plumbum.chataround.database.DBHandler;
 import com.fame.plumbum.chataround.database.NotifTable;
+import com.fame.plumbum.chataround.helper.SharedPrefs;
 import com.fame.plumbum.chataround.helper.Urls;
 import com.fame.plumbum.chataround.models.ImageSendData;
 import com.fame.plumbum.chataround.queries.ServerAPI;
@@ -68,6 +71,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -112,6 +117,25 @@ public class MyProfile extends Fragment implements
     private double latitude;
     private double longitude;
 
+    private SharedPrefs sharedPrefs;
+
+    @BindView(R.id.shoutSwitch)
+    Switch shoutSwitch;
+
+    @BindView(R.id.toiletSwitch)
+    Switch toiletSwitch;
+
+
+    @BindView(R.id.gallerySwitch)
+    Switch gallerySwitch;
+
+
+    @BindView(R.id.pollutionSwitch)
+    Switch pollutionSwitch;
+
+    @BindView(R.id.newsSwitch)
+    Switch newsSwitch;
+
     @Override
     public void onRefresh() {
         activity.needSomethingTweet = true;
@@ -123,8 +147,15 @@ public class MyProfile extends Fragment implements
 
         context = getContext();
         rootView = inflater.inflate(R.layout.my_profile, container, false);
+
+        ButterKnife.bind(this,rootView);
+
+
         listView = (ListView) rootView.findViewById(R.id.my_tweets_list);
         swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe);
+
+        sharedPrefs=new SharedPrefs(context);
+
         swipeRefreshLayout.setOnRefreshListener(this);
         swipeRefreshLayout.post(new Runnable() {
                                     @Override
@@ -164,7 +195,56 @@ public class MyProfile extends Fragment implements
 
         mGoogleApiClient.connect();
 
+        shoutSwitch.setChecked(sharedPrefs.isShouts());
+        toiletSwitch.setChecked(sharedPrefs.isToilet());
+        gallerySwitch.setChecked(sharedPrefs.isGallery());
+        pollutionSwitch.setChecked(sharedPrefs.isPullution());
+        newsSwitch.setChecked(sharedPrefs.isNews());
+
+
+        shoutSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                sharedPrefs.setShouts(isChecked);
+                reloadTabs();
+            }
+        });
+
+        toiletSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                sharedPrefs.setToilet(isChecked);
+                reloadTabs();
+            }
+        });
+        gallerySwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                sharedPrefs.setGalleryShouts(isChecked);
+                reloadTabs();
+            }
+        });
+        pollutionSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                sharedPrefs.setPollution(isChecked);
+                reloadTabs();
+            }
+        });
+        newsSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                sharedPrefs.setNews(isChecked);
+                reloadTabs();
+            }
+        });
+
+
         return rootView;
+    }
+
+    void reloadTabs(){
+        ((MainActivity)getActivity()).reloadViewPager();
     }
 
     @Override
@@ -560,7 +640,7 @@ public class MyProfile extends Fragment implements
 
             try {
                 addresses = geocoder.getFromLocation(latitude, longitude, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
-                if(addresses.size()>0) {
+                if (addresses.size() > 0) {
                     String city = addresses.get(0).getLocality();
                     String state = addresses.get(0).getAdminArea();
 //                String country = addresses.get(0).getCountryName();
@@ -570,7 +650,7 @@ public class MyProfile extends Fragment implements
 
                     phone_view.setText(city);
                     phone_view.append(", " + state);
-                }else{
+                } else {
                     Toast.makeText(context, "Unable to fetch location!", Toast.LENGTH_SHORT).show();
                 }
 
@@ -608,7 +688,7 @@ public class MyProfile extends Fragment implements
         try {
             addresses = geocoder.getFromLocation(latitude, longitude, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
 //            String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
-            if(addresses.size()>0) {
+            if (addresses.size() > 0) {
                 String city = addresses.get(0).getLocality();
                 String state = addresses.get(0).getAdminArea();
 //                String country = addresses.get(0).getCountryName();
@@ -618,7 +698,7 @@ public class MyProfile extends Fragment implements
 
                 phone_view.setText(city);
                 phone_view.append(", " + state);
-            }else{
+            } else {
                 Toast.makeText(context, "Unable to fetch location!", Toast.LENGTH_SHORT).show();
             }
 

@@ -9,5 +9,5 @@ import com.fame.plumbum.chataround.gallery.OnGalleryApiResponse;
 public interface GalleryProvider {
 
     void getImages(String userId,String mobile,double latitude, double longitude, OnGalleryApiResponse onGalleryApiResponse);
-
+    void onDestroy();
 }

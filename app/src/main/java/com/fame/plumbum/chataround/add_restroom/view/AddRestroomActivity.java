@@ -4,6 +4,8 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ClipData;
+import android.content.ComponentName;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
@@ -11,10 +13,14 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.NestedScrollView;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -32,6 +38,8 @@ import android.widget.Toast;
 
 import com.desmond.squarecamera.CameraActivity;
 import com.fame.plumbum.chataround.R;
+import com.fame.plumbum.chataround.activity.MainActivity;
+import com.fame.plumbum.chataround.add_photos.view.AddImageActivity;
 import com.fame.plumbum.chataround.add_restroom.model.ImageDataProviderImp;
 import com.fame.plumbum.chataround.add_restroom.model.RetrofitAddRestroomProvider;
 import com.fame.plumbum.chataround.add_restroom.model.data.AddRestroomData;
@@ -80,6 +88,7 @@ public class AddRestroomActivity extends Activity implements
 
     //Define a request code to send to Google Play services
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
+    private static final int MOCK_LOCATION_OFF_REQUEST = 201;
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
     private static final String TAG = "AddImageActivity";
@@ -93,6 +102,7 @@ public class AddRestroomActivity extends Activity implements
     private ImageAdapter imageAdapter;
     private ImagePresenter imagePresenter;
     private ProgressDialog progressDialog;
+
     private List<Uri> uriList = new ArrayList<>();
     private AddRestroomPresenter addRestroomPresenter;
     private String mobile;
@@ -355,6 +365,12 @@ public class AddRestroomActivity extends Activity implements
                     }
                 }
                 break;
+            case MOCK_LOCATION_OFF_REQUEST:
+
+                Intent intent=new Intent(AddRestroomActivity.this,AddRestroomActivity.class);
+                startActivity(intent);
+                finish();
+                break;
             default:
                 break;
         }
@@ -591,6 +607,7 @@ public class AddRestroomActivity extends Activity implements
     /**
      * If connected get lat and long
      */
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
     @Override
     public void onConnected(Bundle bundle) {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -609,6 +626,10 @@ public class AddRestroomActivity extends Activity implements
             LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
 
         } else {
+
+            if(isMockLocation(location)){
+                return;
+            }
             //If everything went fine lets get latitude and longitude
             latitude = location.getLatitude();
             longitude = location.getLongitude();
@@ -706,8 +727,12 @@ public class AddRestroomActivity extends Activity implements
      *
      * @param location
      */
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
     @Override
     public void onLocationChanged(Location location) {
+        if(isMockLocation(location)){
+            return;
+        }
         latitude = location.getLatitude();
         longitude = location.getLongitude();
 
@@ -747,5 +772,47 @@ public class AddRestroomActivity extends Activity implements
         }
 
     }
+
+
+
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
+    public boolean isMockLocation(Location location) {
+        if (location.isFromMockProvider()) {
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder(this,R.style.AlertDialogTheme);
+            alertDialog
+                    .setTitle(R.string.mock_location_title)
+                    .setMessage(R.string.mock_location_message)
+                    .setCancelable(false)
+                    .setPositiveButton("Okay", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                            try {
+                                Intent intent = new Intent(Settings.ACTION_APPLICATION_DEVELOPMENT_SETTINGS);
+                                ComponentName componentName = intent.resolveActivity(getPackageManager());
+                                if (componentName == null) {
+                                    Toast.makeText(getApplicationContext(), "No Activity to handle Intent action", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    startActivityForResult(intent,MOCK_LOCATION_OFF_REQUEST);
+                                }
+                            } catch (Exception e) {
+
+                                Toast.makeText(AddRestroomActivity.this, "Error " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    })
+                    .setNegativeButton("Exit", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            finish();
+                        }
+                    }).show();
+
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 
 }

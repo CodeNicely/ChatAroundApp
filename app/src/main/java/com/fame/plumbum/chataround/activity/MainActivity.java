@@ -3,6 +3,7 @@ package com.fame.plumbum.chataround.activity;
 import android.Manifest;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -12,16 +13,18 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
@@ -49,6 +52,8 @@ import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
 import com.fame.plumbum.chataround.MySingleton;
 import com.fame.plumbum.chataround.R;
+import com.fame.plumbum.chataround.add_restroom.view.AddRestroomActivity;
+import com.fame.plumbum.chataround.base.BaseActivity;
 import com.fame.plumbum.chataround.fragments.MyProfile;
 import com.fame.plumbum.chataround.fragments.World;
 import com.fame.plumbum.chataround.gallery.view.GalleryFragment;
@@ -84,8 +89,16 @@ public class MainActivity extends AppCompatActivity implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener {
+    private static final int MOCK_LOCATION_OFF_REQUEST = 201;
 
     private static final int MAX_RETRIES = 5;
+    private static final int FRAGMENT_TYPE_PROFILE = 0;
+    private static final int FRAGMENT_TYPE_SHOUTS = 1;
+    private static final int FRAGMENT_TYPE_TOILET = 2;
+    private static final int FRAGMENT_TYPE_GALLERY = 3;
+    private static final int FRAGMENT_TYPE_POLLUTIOMN = 4;
+    private static final int FRAGMENT_TYPE_NEWS = 5;
+
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
     private SharedPrefs sharedPrefs;
@@ -101,6 +114,12 @@ public class MainActivity extends AppCompatActivity implements
     private boolean gps_enabled;
     private boolean network_enabled;
     static final int LOCATION_SETTINGS_REQUEST = 1;
+
+    private ViewPagerAdapter adapter;
+
+    private ViewPager viewPager;
+    private ActionBar toolbar;
+    private TabLayout tabLayout;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -126,7 +145,7 @@ public class MainActivity extends AppCompatActivity implements
         mGoogleApiClient.connect();
 
 
-        final ActionBar toolbar = getSupportActionBar();
+        toolbar = getSupportActionBar();
 
         toolbar.setTitle(R.string.app_name);
 
@@ -196,13 +215,13 @@ public class MainActivity extends AppCompatActivity implements
             sp = PreferenceManager.getDefaultSharedPreferences(this);
             initFCM();
             getSupportActionBar().setDisplayHomeAsUpEnabled(false); // remove the left caret
-            ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
+            viewPager = (ViewPager) findViewById(R.id.viewpager);
+            tabLayout = (TabLayout) findViewById(R.id.tabs);
+
             setupViewPager(viewPager);
 
-            TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
-            tabLayout.setupWithViewPager(viewPager);
 
-            if (viewPager.getAdapter().getCount() == 6) {
+          /*  if (viewPager.getAdapter().getCount() == 6) {
 
                 if (tabLayout.getTabAt(0) != null) {
                     tabLayout.getTabAt(0).setIcon(R.drawable.profile_512);
@@ -229,96 +248,7 @@ public class MainActivity extends AppCompatActivity implements
                 }
             }
             viewPager.setOffscreenPageLimit(6);
-            viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-                @Override
-                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-
-                    switch (position) {
-                        case 0:
-                            toolbar.setTitle("Profile");
-                            Answers.getInstance().logCustom(new CustomEvent("User Swiped to Profile")
-                                    .putCustomAttribute(Keys.KEY_LATITUDE, lat)
-                                    .putCustomAttribute(Keys.KEY_LONGITUDE, lng)
-                                    .putCustomAttribute(Keys.USER_EMAIL, sharedPrefs.getEmail())
-                            );
-
-                            break;
-                        case 1:
-                            toolbar.setTitle("Shouts");
-                            Answers.getInstance().logCustom(new CustomEvent("User Swiped to Shouts")
-                                    .putCustomAttribute(Keys.KEY_LATITUDE, lat)
-                                    .putCustomAttribute(Keys.KEY_LONGITUDE, lng)
-                                    .putCustomAttribute(Keys.USER_EMAIL, sharedPrefs.getEmail())
-
-                            );
-
-                            break;
-                        case 2:
-                            toolbar.setTitle("Restrooms");
-                            Answers.getInstance().logCustom(new CustomEvent("User Swiped to Restroom")
-                                    .putCustomAttribute(Keys.KEY_LATITUDE, lat)
-                                    .putCustomAttribute(Keys.KEY_LONGITUDE, lng)
-                                    .putCustomAttribute(Keys.USER_EMAIL, sharedPrefs.getEmail())
-
-                            );
-
-                            break;
-
-                        case 3:
-                            toolbar.setTitle("Gallery");
-                            Answers.getInstance().logCustom(new CustomEvent("User Swiped to Gallery")
-                                    .putCustomAttribute(Keys.KEY_LATITUDE, lat)
-                                    .putCustomAttribute(Keys.KEY_LONGITUDE, lng)
-                                    .putCustomAttribute(Keys.USER_EMAIL, sharedPrefs.getEmail())
-
-                            );
-
-                            break;
-
-                        case 4:
-                            toolbar.setTitle("Pollution Meter");
-                            Answers.getInstance().logCustom(new CustomEvent("User Swiped to Pollution")
-                                    .putCustomAttribute(Keys.KEY_LATITUDE, lat)
-                                    .putCustomAttribute(Keys.KEY_LONGITUDE, lng)
-                                    .putCustomAttribute(Keys.USER_EMAIL, sharedPrefs.getEmail())
-
-                            );
-
-                            break;
-                        case 5:
-                            toolbar.setTitle("News");
-                            Answers.getInstance().logCustom(new CustomEvent("User Swiped to News")
-                                    .putCustomAttribute(Keys.KEY_LATITUDE, lat)
-                                    .putCustomAttribute(Keys.KEY_LONGITUDE, lng)
-                                    .putCustomAttribute(Keys.USER_EMAIL, sharedPrefs.getEmail())
-
-                            );
-
-                            break;
-                        default:
-                            toolbar.setTitle("Profile");
-
-                            break;
-                    }
-
-
-                }
-
-                @Override
-                public void onPageSelected(int position) {
-
-
-                }
-
-                @Override
-                public void onPageScrollStateChanged(int state) {
-
-                }
-            });
-
-
-            viewPager.setCurrentItem(4);
+*/
         }
 
 
@@ -351,22 +281,178 @@ public class MainActivity extends AppCompatActivity implements
     public void setupViewPager(ViewPager upViewPager) {
         profile = new MyProfile();
         world = new World();
-        RestroomFragment restroomFragment = new RestroomFragment();
         PollutionFragment pollutionFragment = new PollutionFragment();
-        GalleryFragment galleryFragment=new GalleryFragment();
+        GalleryFragment galleryFragment = new GalleryFragment();
         NewsListFragment newsListFragment = new NewsListFragment();
 
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(profile, "My Profile");
-        adapter.addFragment(world, "World");
-        adapter.addFragment(RestroomFragment.newInstance("", ""), "RestRoomFragment");
-        adapter.addFragment(galleryFragment, "GalleryFragment");
-        adapter.addFragment(pollutionFragment, "PollutionFragment");
-        adapter.addFragment(newsListFragment, "NewsListFragment");
+        adapter = new ViewPagerAdapter(getSupportFragmentManager());
 
-        adapter.setPrimaryItem(null, 4, null);
+//        ViewPagerAdapter adapter=new ViewPagerAdapter(getFragmentManager());
+        adapter.addFragment(profile, "My Profile", FRAGMENT_TYPE_PROFILE);
+
+        if (sharedPrefs.isShouts()) {
+            adapter.addFragment(world, "World", FRAGMENT_TYPE_SHOUTS);
+        }
+
+        if (sharedPrefs.isToilet()) {
+            adapter.addFragment(RestroomFragment.newInstance("", ""), "RestRoomFragment", FRAGMENT_TYPE_TOILET);
+
+        }
+        if (sharedPrefs.isGallery()) {
+            adapter.addFragment(galleryFragment, "GalleryFragment", FRAGMENT_TYPE_GALLERY);
+
+        }
+        if (sharedPrefs.isPullution()) {
+            adapter.addFragment(pollutionFragment, "PollutionFragment", FRAGMENT_TYPE_POLLUTIOMN);
+        }
+        if (sharedPrefs.isNews()) {
+            adapter.addFragment(newsListFragment, "NewsListFragment", FRAGMENT_TYPE_NEWS);
+        }
+
+        adapter.setPrimaryItem(null, adapter.getCount() - 1, null);
 
         upViewPager.setAdapter(adapter);
+
+        tabLayout.setupWithViewPager(viewPager);
+
+        for (int i = 0; i < adapter.getCount() ; i++) {
+
+            switch (adapter.fragmentTypeList.get(i)) {
+
+                case FRAGMENT_TYPE_PROFILE:
+                    if (tabLayout.getTabAt(i) != null) {
+                        tabLayout.getTabAt(i).setIcon(R.drawable.profile_512);
+                    }
+                    break;
+                case FRAGMENT_TYPE_SHOUTS:
+                    if (tabLayout.getTabAt(i) != null) {
+                        tabLayout.getTabAt(i).setIcon(R.drawable.world);
+                    }
+                    break;
+                case FRAGMENT_TYPE_TOILET:
+                    if (tabLayout.getTabAt(i) != null) {
+                        tabLayout.getTabAt(i).setIcon(R.drawable.restroom1);
+                    }
+                    break;
+                case FRAGMENT_TYPE_GALLERY:
+                    if (tabLayout.getTabAt(i) != null) {
+                        tabLayout.getTabAt(i).setIcon(R.drawable.gallery);
+                    }
+                    break;
+                case FRAGMENT_TYPE_POLLUTIOMN:
+                    if (tabLayout.getTabAt(i) != null) {
+                        tabLayout.getTabAt(i).setIcon(R.drawable.pollution1);
+                    }
+                    break;
+                case FRAGMENT_TYPE_NEWS:
+                    if (tabLayout.getTabAt(i) != null) {
+                        tabLayout.getTabAt(i).setIcon(R.drawable.newspaper);
+                    }
+                    break;
+
+
+            }
+        }
+
+        viewPager.setOffscreenPageLimit(adapter.getCount());
+
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+
+                switch (adapter.fragmentTypeList.get(position)) {
+                    case FRAGMENT_TYPE_PROFILE:
+                        toolbar.setTitle("Profile");
+                        Answers.getInstance().logCustom(new CustomEvent("User Swiped to Profile")
+                                .putCustomAttribute(Keys.KEY_LATITUDE, lat)
+                                .putCustomAttribute(Keys.KEY_LONGITUDE, lng)
+                                .putCustomAttribute(Keys.USER_EMAIL, sharedPrefs.getEmail())
+                        );
+
+                        break;
+                    case FRAGMENT_TYPE_SHOUTS:
+                        toolbar.setTitle("Shouts");
+                        Answers.getInstance().logCustom(new CustomEvent("User Swiped to Shouts")
+                                .putCustomAttribute(Keys.KEY_LATITUDE, lat)
+                                .putCustomAttribute(Keys.KEY_LONGITUDE, lng)
+                                .putCustomAttribute(Keys.USER_EMAIL, sharedPrefs.getEmail())
+
+                        );
+
+                        break;
+                    case FRAGMENT_TYPE_TOILET:
+                        toolbar.setTitle("Restrooms");
+                        Answers.getInstance().logCustom(new CustomEvent("User Swiped to Restroom")
+                                .putCustomAttribute(Keys.KEY_LATITUDE, lat)
+                                .putCustomAttribute(Keys.KEY_LONGITUDE, lng)
+                                .putCustomAttribute(Keys.USER_EMAIL, sharedPrefs.getEmail())
+
+                        );
+
+                        break;
+
+                    case FRAGMENT_TYPE_GALLERY:
+                        toolbar.setTitle("Gallery");
+                        Answers.getInstance().logCustom(new CustomEvent("User Swiped to Gallery")
+                                .putCustomAttribute(Keys.KEY_LATITUDE, lat)
+                                .putCustomAttribute(Keys.KEY_LONGITUDE, lng)
+                                .putCustomAttribute(Keys.USER_EMAIL, sharedPrefs.getEmail())
+
+                        );
+
+                        break;
+
+                    case FRAGMENT_TYPE_POLLUTIOMN:
+                        toolbar.setTitle("Pollution Meter");
+                        Answers.getInstance().logCustom(new CustomEvent("User Swiped to Pollution")
+                                .putCustomAttribute(Keys.KEY_LATITUDE, lat)
+                                .putCustomAttribute(Keys.KEY_LONGITUDE, lng)
+                                .putCustomAttribute(Keys.USER_EMAIL, sharedPrefs.getEmail())
+
+                        );
+
+                        break;
+                    case FRAGMENT_TYPE_NEWS:
+                        toolbar.setTitle("News");
+                        Answers.getInstance().logCustom(new CustomEvent("User Swiped to News")
+                                .putCustomAttribute(Keys.KEY_LATITUDE, lat)
+                                .putCustomAttribute(Keys.KEY_LONGITUDE, lng)
+                                .putCustomAttribute(Keys.USER_EMAIL, sharedPrefs.getEmail())
+
+                        );
+
+                        break;
+                    default:
+                        toolbar.setTitle("1 Mile App");
+
+                        break;
+                }
+
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
+
+        viewPager.setCurrentItem(adapter.getCount() - 1);
+    }
+
+    public void reloadViewPager() {
+
+        setupViewPager(viewPager);
+
+
     }
 
 /*
@@ -513,6 +599,12 @@ public class MainActivity extends AppCompatActivity implements
             LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
 
         } else {
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+                if (isMockLocation(location)) {
+                    return;
+                }
+            }
             //If everything went fine lets get latitude and longitude
             lat = location.getLatitude();
             lng = location.getLongitude();
@@ -570,9 +662,10 @@ public class MainActivity extends AppCompatActivity implements
 
     }
 
-    class ViewPagerAdapter extends FragmentPagerAdapter {
+    private class ViewPagerAdapter extends FragmentStatePagerAdapter {
         private final List<Fragment> mFragmentList = new ArrayList<>();
         private final List<String> mFragmentTitleList = new ArrayList<>();
+        private final List<Integer> fragmentTypeList = new ArrayList<>();
 
         public ViewPagerAdapter(FragmentManager manager) {
             super(manager);
@@ -588,16 +681,21 @@ public class MainActivity extends AppCompatActivity implements
             return mFragmentList.size();
         }
 
-        public void addFragment(Fragment fragment, String title) {
+        public void addFragment(Fragment fragment, String title, int fragmentType) {
             mFragmentList.add(fragment);
             mFragmentTitleList.add(title);
+            fragmentTypeList.add(fragmentType);
+        }
+
+        public List<Integer> getFragmentTypeList() {
+            return fragmentTypeList;
         }
 
         /*@Override
-        public void setPrimaryItem(ViewGroup container, int position, Object object) {
-            super.setPrimaryItem(container, position, object);
-        }
-*/
+                public void setPrimaryItem(ViewGroup container, int position, Object object) {
+                    super.setPrimaryItem(container, position, object);
+                }
+        */
         @Override
         public void setPrimaryItem(ViewGroup container, int position, Object object) {
   /*          if (mobject != object) {
@@ -614,6 +712,8 @@ public class MainActivity extends AppCompatActivity implements
         public CharSequence getPageTitle(int position) {
             return null;
         }
+
+
     }
 
 
@@ -644,7 +744,7 @@ public class MainActivity extends AppCompatActivity implements
             @Override
             public void onClick(View v) {
 
-                Toast.makeText(MainActivity.this, Urls.BASE_URL + "Post?UserId=" + profile.uid + "&UserName=" + profile.name.replace(" ", "%20") + "&Post=Hello&Latitude=" + lat + "&Longitude=" + lng, Toast.LENGTH_SHORT).show();
+//                Toast.makeText(MainActivity.this, Urls.BASE_URL + "Post?UserId=" + profile.uid + "&UserName=" + profile.name.replace(" ", "%20") + "&Post=Hello&Latitude=" + lat + "&Longitude=" + lng, Toast.LENGTH_SHORT).show();
                 Log.d(TAG, Urls.BASE_URL + "Post?UserId=" + profile.uid + "&UserName=" + profile.name + "&Post=Hello&Latitude=" + lat + "&Longitude=" + lng);
                 String content_txt = content.getText().toString();
                 if (lat != 0 && lng != 0) {
@@ -777,7 +877,7 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     public void openNewsDetails(String newsTitle, String image, String newsSource,
-                                String newsDescription, String newsAuthor, String newsTimestamp,String newsUrl) {
+                                String newsDescription, String newsAuthor, String newsTimestamp, String newsUrl) {
         Intent newsDetailsActivityIntent = new Intent(this, NewsDetailsActivity.class);
 
 
@@ -788,7 +888,7 @@ public class MainActivity extends AppCompatActivity implements
         bundle.putString(Keys.NEWS_DESCRIPTION, newsDescription);
         bundle.putString(Keys.NEWS_AUTHOR, newsAuthor);
         bundle.putString(Keys.NEWS_TIMESTAMP, newsTimestamp);
-        bundle.putString(Keys.NEWS_URL,newsUrl);
+        bundle.putString(Keys.NEWS_URL, newsUrl);
         newsDetailsActivityIntent.putExtras(bundle);
 
         startActivity(newsDetailsActivityIntent);
@@ -807,14 +907,56 @@ public class MainActivity extends AppCompatActivity implements
 
     }*/
 
-    protected void onActivityResult(int requestCode, int resultCode,
-                                    Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == LOCATION_SETTINGS_REQUEST) {
             // user is back from location settings - check if location services are now enabled
 
             startActivity(new Intent(this, MainActivity.class));
             finish();
 
+        } else if (requestCode == MOCK_LOCATION_OFF_REQUEST) {
+
+            Intent intent = new Intent(MainActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        }
+    }
+
+
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
+    public boolean isMockLocation(Location location) {
+        if (location.isFromMockProvider()) {
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder(this,R.style.AlertDialogTheme);
+            alertDialog.setTitle(R.string.mock_location_title)
+                    .setMessage(R.string.mock_location_message)
+                    .setCancelable(false)
+                    .setPositiveButton("Okay", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                            try {
+                                Intent intent = new Intent(Settings.ACTION_APPLICATION_DEVELOPMENT_SETTINGS);
+                                ComponentName componentName = intent.resolveActivity(getPackageManager());
+                                if (componentName == null) {
+                                    Toast.makeText(getApplicationContext(), "No Activity to handle Intent action", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    startActivityForResult(intent, MOCK_LOCATION_OFF_REQUEST);
+                                }
+                            } catch (Exception e) {
+
+                                Toast.makeText(MainActivity.this, "Error " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }).setNegativeButton("Exit", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    finish();
+                }
+            }).show();
+
+            return true;
+        } else {
+            return false;
         }
     }
 

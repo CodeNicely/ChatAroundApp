@@ -2,14 +2,23 @@ package com.fame.plumbum.chataround.news.view;
 
 import android.content.Context;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.load.resource.transcode.TranscoderRegistry;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.fame.plumbum.chataround.R;
 import com.fame.plumbum.chataround.activity.MainActivity;
 import com.fame.plumbum.chataround.helper.image_loader.GlideImageLoader;
@@ -55,13 +64,42 @@ public class NewsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         final NewsViewHolder newsViewHolder = (NewsViewHolder) holder;
 
         newsViewHolder.newsTitle.setText(newsListDataDetails.getTitle());
-        if (newsListDataDetails.getImage() != null) {
+
+
+        if (newsListDataDetails.getImage() != null && !newsListDataDetails.getImage().equals("")) {
+
+
+            Glide.with(context)
+                    .load(newsListDataDetails.getImage())
+                    .listener(new RequestListener<String, GlideDrawable>() {
+                        @Override
+                        public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+
+                            newsViewHolder.progressBar.setVisibility(View.GONE);
+                            newsViewHolder.imageView.setVisibility(View.GONE);
+                            newsViewHolder.placeHolder.setVisibility(View.VISIBLE);
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                            Glide.with(context).load(R.drawable.world_black).into(newsViewHolder.placeHolder);
+                            newsViewHolder.placeHolder.setVisibility(View.GONE);
+                            newsViewHolder.progressBar.setVisibility(View.GONE);
+                            return false;
+                        }
+                    })
+                    .into(newsViewHolder.imageView);
 
             newsViewHolder.imageView.setVisibility(View.VISIBLE);
-            imageLoader.loadImage(newsListDataDetails.getImage(), newsViewHolder.imageView, newsViewHolder.progressBar);
-        } else {
-            newsViewHolder.imageView.setVisibility(View.GONE);
             newsViewHolder.progressBar.setVisibility(View.GONE);
+        } else {
+
+            newsViewHolder.progressBar.setVisibility(View.GONE);
+            newsViewHolder.imageView.setVisibility(View.GONE);
+            newsViewHolder.placeHolder.setVisibility(View.VISIBLE);
+//            newsViewHolder.imageView.setVisibility(View.GONE);
+//            newsViewHolder.progressBar.setVisibility(View.GONE);
         }
 
 //        if (newsListDataDetails.getSource() == null) {
@@ -115,19 +153,27 @@ public class NewsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public class NewsViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.newsTitle)
         TextView newsTitle;
+
         @BindView(R.id.newsAuthor)
         TextView newsAuthor;
+
         @BindView(R.id.newSource)
         TextView newsSource;
-        @BindView(R.id.NewsSmallDescription)
-        TextView newsDescription;
+
+//        @BindView(R.id.NewsSmallDescription)
+//        TextView newsDescription;
+
         @BindView(R.id.timestamp)
         TextView news_published_timestamp;
+
         @BindView(R.id.news_card)
         CardView news_card;
 
         @BindView(R.id.image)
         ImageView imageView;
+
+        @BindView(R.id.placeHolder)
+        ImageView placeHolder;
 
         @BindView(R.id.progressBar)
         ProgressBar progressBar;

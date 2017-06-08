@@ -120,11 +120,11 @@
                     >
 
                     <ImageView
+                        android:layout_centerInParent="true"
                         android:id="@+id/image"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:adjustViewBounds="true"
-                        android:src="@drawable/trump"
 
                         />
 
@@ -134,8 +134,13 @@
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
                         android:visibility="gone" />
-
-                    <TextView
+                    <ImageView
+                        android:id="@+id/placeHolder"
+                        android:layout_centerInParent="true"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        />
+                  <!--  <TextView
                         android:id="@+id/NewsSmallDescription"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -148,7 +153,7 @@
                         android:textAlignment="center"
                         android:textColor="#FFFFFF"
                         android:textSize="15dp"
-                        android:visibility="gone" />
+                        android:visibility="gone" />-->
 
                 </RelativeLayout>
 

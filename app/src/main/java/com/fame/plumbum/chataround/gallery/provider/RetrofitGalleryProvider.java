@@ -21,6 +21,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class RetrofitGalleryProvider implements GalleryProvider {
 
     private Retrofit retrofit;
+    Call<GalleryData> galleryDataCall;
     @Override
     public void getImages(String userId, String mobile, double latitude, double longitude, final OnGalleryApiResponse onGalleryApiResponse) {
 
@@ -35,7 +36,7 @@ public class RetrofitGalleryProvider implements GalleryProvider {
                 addConverterFactory(GsonConverterFactory.create()).build();
 
         GalleryApi galleryApi=retrofit.create(GalleryApi.class);
-        Call<GalleryData> galleryDataCall=galleryApi.getGalleryImages(userId,mobile,latitude,longitude);
+        galleryDataCall=galleryApi.getGalleryImages(userId,mobile,latitude,longitude);
 
         galleryDataCall.enqueue(new Callback<GalleryData>() {
             @Override
@@ -48,6 +49,14 @@ public class RetrofitGalleryProvider implements GalleryProvider {
                 onGalleryApiResponse.onFailed(t.getMessage());
             }
         });
+
+    }
+
+    @Override
+    public void onDestroy() {
+        if(galleryDataCall!=null){
+            galleryDataCall.cancel();
+        }
 
     }
 

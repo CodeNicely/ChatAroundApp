@@ -39,7 +39,6 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 
 import java.io.IOException;
 import java.util.List;
@@ -70,8 +69,8 @@ public class GalleryFragment extends Fragment implements GalleryView, GoogleApiC
     private String mParam2;
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
-    private double latitude=0.0;
-    private double longitude=0.0;
+    private double latitude = 0.0;
+    private double longitude = 0.0;
     private SharedPrefs sharedPrefs;
 
     private GalleryPresenter galleryPresenter;
@@ -79,7 +78,6 @@ public class GalleryFragment extends Fragment implements GalleryView, GoogleApiC
 
 
     private OnFragmentInteractionListener mListener;
-
 
 
     @BindView(R.id.recyclerView)
@@ -137,21 +135,21 @@ public class GalleryFragment extends Fragment implements GalleryView, GoogleApiC
         View view = inflater.inflate(R.layout.fragment_gallery, container, false);
 
         ButterKnife.bind(this, view);
-        context=getContext();
+        context = getContext();
 
-        sharedPrefs=new SharedPrefs(context);
-        galleryPresenter=new GalleryPresenterImpl(this,new RetrofitGalleryProvider());
-        galleryAdapter=new GalleryAdapter(context);
+        sharedPrefs = new SharedPrefs(context);
+        galleryPresenter = new GalleryPresenterImpl(this, new RetrofitGalleryProvider());
+        galleryAdapter = new GalleryAdapter(context);
 
         addPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(getActivity(), AddImageActivity.class);
+                Intent intent = new Intent(getActivity(), AddImageActivity.class);
                 startActivity(intent);
             }
         });
 
-        GridLayoutManager gridLayoutManager=new GridLayoutManager(context,3);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(context, 3);
         recyclerView.setLayoutManager(gridLayoutManager);
         recyclerView.setAdapter(galleryAdapter);
 
@@ -180,14 +178,13 @@ public class GalleryFragment extends Fragment implements GalleryView, GoogleApiC
                                         if (latitude != 0.0 && longitude != 0.0) {
 
                                             //API call again to retrieve images from server
-                                            galleryPresenter.getImages(sharedPrefs.getUserId(),"8109109457",latitude,longitude);
+                                            galleryPresenter.getImages(sharedPrefs.getUserId(), "8109109457", latitude, longitude);
 
 
                                         }
                                     }
                                 }
         );
-
 
 
         return view;
@@ -234,9 +231,9 @@ public class GalleryFragment extends Fragment implements GalleryView, GoogleApiC
 
     @Override
     public void onGalleryData(List<ImageData> imageDataList) {
-        if(imageDataList.size()==0){
+        if (imageDataList.size() == 0) {
             photos_not_available_layout.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             photos_not_available_layout.setVisibility(View.GONE);
 
         }
@@ -254,9 +251,17 @@ public class GalleryFragment extends Fragment implements GalleryView, GoogleApiC
         if (latitude != 0.0 && longitude != 0.0) {
 
             //API call again to retrieve images from server
-            galleryPresenter.getImages(sharedPrefs.getUserId(),"8109109457",latitude,longitude);
+            galleryPresenter.getImages(sharedPrefs.getUserId(), "8109109457", latitude, longitude);
 
 
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (galleryPresenter != null) {
+            galleryPresenter.onDestroy();
         }
     }
 
@@ -286,7 +291,7 @@ public class GalleryFragment extends Fragment implements GalleryView, GoogleApiC
             latitude = location.getLatitude();
             longitude = location.getLongitude();
 
-            galleryPresenter.getImages(sharedPrefs.getUserId(),"8109109457",latitude,longitude);
+            galleryPresenter.getImages(sharedPrefs.getUserId(), "8109109457", latitude, longitude);
 
         }
     }
@@ -305,10 +310,10 @@ public class GalleryFragment extends Fragment implements GalleryView, GoogleApiC
     public void onLocationChanged(Location location) {
 
 
-            latitude = location.getLatitude();
-            longitude = location.getLongitude();
+        latitude = location.getLatitude();
+        longitude = location.getLongitude();
 
-            galleryPresenter.getImages(sharedPrefs.getUserId(),"8109109457",latitude,longitude);
+        galleryPresenter.getImages(sharedPrefs.getUserId(), "8109109457", latitude, longitude);
 
 
     }

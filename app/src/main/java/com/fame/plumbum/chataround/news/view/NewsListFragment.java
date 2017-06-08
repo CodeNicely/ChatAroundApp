@@ -9,7 +9,9 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -26,6 +28,7 @@ import android.widget.Toast;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
 import com.fame.plumbum.chataround.R;
+import com.fame.plumbum.chataround.helper.MockLocationUtils;
 import com.fame.plumbum.chataround.helper.SharedPrefs;
 import com.fame.plumbum.chataround.news.model.NewsListDataDetails;
 import com.fame.plumbum.chataround.news.presenter.NewsListPresenter;
@@ -298,6 +301,7 @@ public class NewsListFragment extends Fragment implements
     /**
      * If connected get lat and long
      */
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
     @Override
     public void onConnected(Bundle bundle) {
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -311,14 +315,10 @@ public class NewsListFragment extends Fragment implements
             return;
         }
         Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+
         if (location == null) {
             LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
         } else {
-            //If everything went fine lets get latitude and longitude
-
-           /* latitude=28.5223220;
-            longitude=77.1742630;
-*/
 
 
             try {

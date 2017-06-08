@@ -2,9 +2,12 @@ package com.fame.plumbum.chataround.add_photos.model;
 
 import android.util.Log;
 
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.CustomEvent;
 import com.fame.plumbum.chataround.add_photos.UploadCallback;
 import com.fame.plumbum.chataround.add_photos.api.ImageUploadApi;
 import com.fame.plumbum.chataround.add_photos.model.data.ImageUploadData;
+import com.fame.plumbum.chataround.helper.Keys;
 import com.fame.plumbum.chataround.helper.Urls;
 
 import java.io.File;
@@ -110,7 +113,10 @@ public class RetrofitImageUploader implements ImageUploader {
             public void onResponse(Call<ImageUploadData> call, Response<ImageUploadData> response) {
 
                 Log.i(TAG, "On Response" + response.message() + response.body());
+                Answers.getInstance().logCustom(new CustomEvent("Add Photo to Gallery Module Successful")
 
+
+                );
                 uploadCallback.onUploadSuccess(response.body());
 
             }
@@ -119,7 +125,10 @@ public class RetrofitImageUploader implements ImageUploader {
             public void onFailure(Call<ImageUploadData> call, Throwable t) {
 
                 Log.i(TAG, "On Failure");
+                Answers.getInstance().logCustom(new CustomEvent("Add Photo to Gallery Module Failed")
 
+
+                );
                 uploadCallback.onUploadFailed();
                 t.printStackTrace();
 
