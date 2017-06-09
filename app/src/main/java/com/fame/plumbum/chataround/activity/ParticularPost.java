@@ -277,11 +277,11 @@ public class ParticularPost extends AppCompatActivity implements View.OnClickLis
         report.setOnClickListener(this);
         chat_button.setOnClickListener(this);
         if (receiver==null) {
-            IntentFilter filter = new IntentFilter("Hello World");
+            IntentFilter filter = new IntentFilter("Hello ShoutsFragment");
             receiver = new BroadcastReceiver() {
                 @Override
                 public void onReceive(Context context, Intent intent) {
-                    if (intent.getAction().contentEquals("Hello World")) {
+                    if (intent.getAction().contentEquals("Hello ShoutsFragment")) {
                         lat = intent.getDoubleExtra("lat", 0.0);
                         lng = intent.getDoubleExtra("lng", 0.0);
                     }
@@ -309,11 +309,11 @@ public class ParticularPost extends AppCompatActivity implements View.OnClickLis
     protected void onResume() {
         super.onResume();
         if (receiver==null) {
-            IntentFilter filter = new IntentFilter("Hello World");
+            IntentFilter filter = new IntentFilter("Hello ShoutsFragment");
             receiver = new BroadcastReceiver() {
                 @Override
                 public void onReceive(Context context, Intent intent) {
-                    if (intent.getAction().contentEquals("Hello World")) {
+                    if (intent.getAction().contentEquals("Hello ShoutsFragment")) {
                         lat = intent.getDoubleExtra("lat", 0.0);
                         lng = intent.getDoubleExtra("lng", 0.0);
                     }

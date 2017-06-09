@@ -25,11 +25,20 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
+import com.fame.plumbum.chataround.MySingleton;
 import com.fame.plumbum.chataround.R;
+import com.fame.plumbum.chataround.activity.MainActivity;
 import com.fame.plumbum.chataround.helper.MockLocationUtils;
 import com.fame.plumbum.chataround.helper.SharedPrefs;
+import com.fame.plumbum.chataround.helper.Urls;
 import com.fame.plumbum.chataround.news.model.NewsListDataDetails;
 import com.fame.plumbum.chataround.news.presenter.NewsListPresenter;
 import com.fame.plumbum.chataround.news.presenter.NewsListPresenterImpl;
@@ -40,12 +49,17 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.fame.plumbum.chataround.R.drawable.world;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -409,6 +423,8 @@ public class NewsListFragment extends Fragment implements
             e.printStackTrace();
         }
     }
+
+
 
 
 }

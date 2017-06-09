@@ -1,13 +1,11 @@
 package com.fame.plumbum.chataround.activity;
 
 import android.Manifest;
-import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -29,19 +27,10 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
-import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
-import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -52,10 +41,8 @@ import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
 import com.fame.plumbum.chataround.MySingleton;
 import com.fame.plumbum.chataround.R;
-import com.fame.plumbum.chataround.add_restroom.view.AddRestroomActivity;
-import com.fame.plumbum.chataround.base.BaseActivity;
-import com.fame.plumbum.chataround.fragments.MyProfile;
-import com.fame.plumbum.chataround.fragments.World;
+import com.fame.plumbum.chataround.profile.MyProfileFragment;
+import com.fame.plumbum.chataround.shouts.ShoutsFragment;
 import com.fame.plumbum.chataround.gallery.view.GalleryFragment;
 import com.fame.plumbum.chataround.helper.Keys;
 import com.fame.plumbum.chataround.helper.SharedPrefs;
@@ -71,9 +58,6 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.firebase.iid.FirebaseInstanceId;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -91,7 +75,6 @@ public class MainActivity extends AppCompatActivity implements
         LocationListener {
     private static final int MOCK_LOCATION_OFF_REQUEST = 201;
 
-    private static final int MAX_RETRIES = 5;
     private static final int FRAGMENT_TYPE_PROFILE = 0;
     private static final int FRAGMENT_TYPE_SHOUTS = 1;
     private static final int FRAGMENT_TYPE_TOILET = 2;
@@ -102,14 +85,9 @@ public class MainActivity extends AppCompatActivity implements
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
     private SharedPrefs sharedPrefs;
-    private static final String TAG = "MainActivity";
     public double lat, lng;
-    public boolean needSomethingTweet = false, needSomethingWorld = false;
-    MyProfile profile;
-    World world;
     BroadcastReceiver receiver;
     SharedPreferences sp;
-    public int count = 0;
     String token;
     private boolean gps_enabled;
     private boolean network_enabled;
@@ -147,12 +125,13 @@ public class MainActivity extends AppCompatActivity implements
 
         toolbar = getSupportActionBar();
 
+        assert toolbar != null;
         toolbar.setTitle(R.string.app_name);
 
         LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         try {
             gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
-        } catch (Exception ex) {
+        } catch (Exception ignored) {
         }
         try {
             network_enabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
@@ -183,11 +162,11 @@ public class MainActivity extends AppCompatActivity implements
         } else {
 
             /*if (receiver == null) {
-                IntentFilter filter = new IntentFilter("Hello World");
+                IntentFilter filter = new IntentFilter("Hello ShoutsFragment");
                 receiver = new BroadcastReceiver() {
                     @Override
                     public void onReceive(Context context, Intent intent) {
-                        if (intent.getAction().contentEquals("Hello World")) {
+                        if (intent.getAction().contentEquals("Hello ShoutsFragment")) {
                             lat = intent.getDoubleExtra("lat", 0.0);
                             lng = intent.getDoubleExtra("lng", 0.0);
                             world.lat = lat;
@@ -282,8 +261,8 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     public void setupViewPager(ViewPager upViewPager) {
-        profile = new MyProfile();
-        world = new World();
+        MyProfileFragment profile = new MyProfileFragment();
+        ShoutsFragment shoutsFragment = new ShoutsFragment();
         PollutionFragment pollutionFragment = new PollutionFragment();
         GalleryFragment galleryFragment = new GalleryFragment();
         NewsListFragment newsListFragment = new NewsListFragment();
@@ -291,11 +270,10 @@ public class MainActivity extends AppCompatActivity implements
 
         adapter = new ViewPagerAdapter(getSupportFragmentManager());
 
-//        ViewPagerAdapter adapter=new ViewPagerAdapter(getFragmentManager());
         adapter.addFragment(profile, "My Profile", FRAGMENT_TYPE_PROFILE);
 
         if (sharedPrefs.isShouts()) {
-            adapter.addFragment(world, "World", FRAGMENT_TYPE_SHOUTS);
+            adapter.addFragment(shoutsFragment, "ShoutsFragment", FRAGMENT_TYPE_SHOUTS);
         }
 
         if (sharedPrefs.isToilet()) {
@@ -525,6 +503,7 @@ public class MainActivity extends AppCompatActivity implements
     }
 */
 
+/*
     public void getAllPosts(int counter) {
         RequestQueue queue = MySingleton.getInstance(getApplicationContext()).
                 getRequestQueue();
@@ -584,6 +563,7 @@ public class MainActivity extends AppCompatActivity implements
         stringRequest.setRetryPolicy(new DefaultRetryPolicy(10000, MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         MySingleton.getInstance(MainActivity.this).addToRequestQueue(stringRequest);
     }
+*/
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
@@ -613,20 +593,6 @@ public class MainActivity extends AppCompatActivity implements
             lat = location.getLatitude();
             lng = location.getLongitude();
 
-            if (world != null) {
-                world.lat = lat;
-                world.lng = lng;
-            }
-
-            if (profile != null) {
-                profile.lat = lat;
-                profile.lng = lng;
-            }
-            if (needSomethingTweet || needSomethingWorld) {
-                needSomethingWorld = false;
-                needSomethingTweet = false;
-                getAllPosts(count);
-            }
 
         }
 
@@ -648,20 +614,6 @@ public class MainActivity extends AppCompatActivity implements
 
         lat = location.getLatitude();
         lng = location.getLongitude();
-
-        if (world != null) {
-            world.lat = lat;
-            world.lng = lng;
-        }
-        if (profile != null) {
-            profile.lat = lat;
-            profile.lng = lng;
-        }
-        if (needSomethingTweet || needSomethingWorld) {
-            needSomethingWorld = false;
-            needSomethingTweet = false;
-            getAllPosts(count);
-        }
 
 
     }
@@ -691,24 +643,10 @@ public class MainActivity extends AppCompatActivity implements
             fragmentTypeList.add(fragmentType);
         }
 
-        public List<Integer> getFragmentTypeList() {
-            return fragmentTypeList;
-        }
 
-        /*@Override
-                public void setPrimaryItem(ViewGroup container, int position, Object object) {
-                    super.setPrimaryItem(container, position, object);
-                }
-        */
         @Override
         public void setPrimaryItem(ViewGroup container, int position, Object object) {
-  /*          if (mobject != object) {
-                mObject=objet; //mObject is global variable in adapter
-                //You can update your based on your logic like below
-                View view == (LinearLayout) object;
-                form4(view);
-            }
-  */
+
             super.setPrimaryItem(container, position, object);
         }
 
@@ -720,104 +658,6 @@ public class MainActivity extends AppCompatActivity implements
 
     }
 
-
-    public void actionShout() {
-
-        final Dialog dialog = new Dialog(MainActivity.this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.dialog_create_post);
-        final EditText content = (EditText) dialog.findViewById(R.id.post_content);
-        final TextView mTextView = (TextView) dialog.findViewById(R.id.num_chars);
-        final TextWatcher mTextEditorWatcher = new TextWatcher() {
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                //This sets a textview to the current length
-                mTextView.setText(String.valueOf(140 - s.length()) + "/140");
-            }
-
-            public void afterTextChanged(Editable s) {
-            }
-        };
-        content.addTextChangedListener(mTextEditorWatcher);
-
-
-        Button create_post = (Button) dialog.findViewById(R.id.post_button);
-        create_post.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-//                Toast.makeText(MainActivity.this, Urls.BASE_URL + "Post?UserId=" + profile.uid + "&UserName=" + profile.name.replace(" ", "%20") + "&Post=Hello&Latitude=" + lat + "&Longitude=" + lng, Toast.LENGTH_SHORT).show();
-                Log.d(TAG, Urls.BASE_URL + "Post?UserId=" + profile.uid + "&UserName=" + profile.name + "&Post=Hello&Latitude=" + lat + "&Longitude=" + lng);
-                String content_txt = content.getText().toString();
-                if (lat != 0 && lng != 0) {
-                    RequestQueue queue = MySingleton.getInstance(MainActivity.this.getApplicationContext()).
-                            getRequestQueue();
-                    content_txt = content_txt.replace("\n", "%0A");
-                    StringRequest stringRequest = new StringRequest(Request.Method.GET, Urls.BASE_URL + "Post?UserId=" + profile.uid + "&UserName=" + profile.name.replace(" ", "%20") + "&Post=" + content_txt.replace(" ", "%20") + "&Latitude=" + lat + "&Longitude=" + lng,
-                            new Response.Listener<String>() {
-                                public static final String TAG = "MainActivity";
-
-                                @Override
-                                public void onResponse(String response) {
-                                    Log.d(TAG, "Response " + response);
-                                    needSomethingTweet = true;
-                                    Answers.getInstance().logCustom(new CustomEvent("Adding Shout Successful")
-                                            .putCustomAttribute(Keys.USER_EMAIL, sharedPrefs.getEmail())
-                                            .putCustomAttribute(Keys.KEY_LATITUDE, lat)
-                                            .putCustomAttribute(Keys.KEY_LONGITUDE, lng)
-                                    );
-                                }
-                            }, new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            error.printStackTrace();
-                            Answers.getInstance().logCustom(new CustomEvent("Adding Shout Failed")
-                                    .putCustomAttribute(Keys.USER_EMAIL, sharedPrefs.getEmail())
-                                    .putCustomAttribute(Keys.KEY_LATITUDE, lat)
-                                    .putCustomAttribute(Keys.KEY_LONGITUDE, lng)
-                            );
-                            Toast.makeText(MainActivity.this, "Error sending data!", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                    stringRequest.setRetryPolicy(new DefaultRetryPolicy(5000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-                    MySingleton.getInstance(MainActivity.this).addToRequestQueue(stringRequest);
-                } else {
-                    Toast.makeText(MainActivity.this, "Location Error", Toast.LENGTH_SHORT).show();
-                }
-                dialog.dismiss();
-            }
-        });
-        dialog.show();
-
-    }
-
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (receiver == null) {
-            IntentFilter filter = new IntentFilter("Hello World");
-            receiver = new BroadcastReceiver() {
-                @Override
-                public void onReceive(Context context, Intent intent) {
-                    if (intent.getAction().contentEquals("Hello World")) {
-                        lat = intent.getDoubleExtra("lat", 0.0);
-                        lng = intent.getDoubleExtra("lng", 0.0);
-                        world.lat = lat;
-                        world.lng = lng;
-                        if (needSomethingTweet || needSomethingWorld) {
-                            needSomethingWorld = false;
-                            needSomethingTweet = false;
-                            getAllPosts(count);
-                        }
-                    }
-                }
-            };
-            registerReceiver(receiver, filter);
-        }
-    }
 
     private void sendFCM(final String uid) {
         RequestQueue queue = MySingleton.getInstance(getApplicationContext()).

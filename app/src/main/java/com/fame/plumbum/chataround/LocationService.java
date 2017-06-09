@@ -27,7 +27,7 @@ import com.google.android.gms.location.LocationSettingsStatusCodes;
  * Created by pankaj on 30/7/16.
  */
 public class LocationService extends Service implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener {
-    public static final String BROADCAST_ACTION = "Hello World";
+    public static final String BROADCAST_ACTION = "Hello ShoutsFragment";
     GoogleApiClient mGoogleApiClient;
     Location mLastLocation;
     public double lat, lng;
