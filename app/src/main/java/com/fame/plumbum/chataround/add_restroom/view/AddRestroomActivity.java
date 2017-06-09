@@ -587,21 +587,26 @@ public class AddRestroomActivity extends Activity implements
     @Override
     public void onRestroomAdded(AddRestroomData addRestroomData) {
 
-        Intent uploadServiceIntent = new Intent(AddRestroomActivity.this, UploadRestroomImageService.class);
-        uploadServiceIntent.putExtra(Keys.KEY_RESTROOM_ID, addRestroomData.getRestroom_id());
-        getApplicationContext().startService(uploadServiceIntent);
+        if(addRestroomData.getRestroom_id().equals("NONE")){
+            showMessage("Restroom Added Successfully");
+
+            finish();
+        }else {
+            Intent uploadServiceIntent = new Intent(AddRestroomActivity.this, UploadRestroomImageService.class);
+            uploadServiceIntent.putExtra(Keys.KEY_RESTROOM_ID, addRestroomData.getRestroom_id());
+            getApplicationContext().startService(uploadServiceIntent);
 
 
-        imageAdapter.setData(new ArrayList<ImageData>());
-        imageAdapter.notifyDataSetChanged();
+            imageAdapter.setData(new ArrayList<ImageData>());
+            imageAdapter.notifyDataSetChanged();
 
-        if (uriList.size() > 0) {
-            imagePresenter.onImagesUpload(uriList);
+            if (uriList.size() > 0) {
+                imagePresenter.onImagesUpload(uriList);
+            }
+
+            finish();
+            showMessage("Restroom Added Successfully");
         }
-
-        finish();
-        showMessage("Restroom Added Successfully");
-
     }
 
     /**

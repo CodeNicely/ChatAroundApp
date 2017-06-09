@@ -15,7 +15,11 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
--ignorewarnings
--keep class * {
-    public private *;
-}
+#-ignorewarnings
+#-keep class * {
+#    public private *;
+#}
+
+-keep class com.google.gson.** { *; }
+-keep public class com.google.gson.** {public private protected *;}
+-keep class retrofit.** { *; }

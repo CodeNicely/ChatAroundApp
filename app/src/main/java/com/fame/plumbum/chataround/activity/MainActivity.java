@@ -219,6 +219,9 @@ public class MainActivity extends AppCompatActivity implements
             tabLayout = (TabLayout) findViewById(R.id.tabs);
 
             setupViewPager(viewPager);
+            viewPager.setCurrentItem(adapter.getCount() - 1);
+            adapter.setPrimaryItem(null, adapter.getCount() - 1, null);
+
 
 
           /*  if (viewPager.getAdapter().getCount() == 6) {
@@ -284,6 +287,7 @@ public class MainActivity extends AppCompatActivity implements
         PollutionFragment pollutionFragment = new PollutionFragment();
         GalleryFragment galleryFragment = new GalleryFragment();
         NewsListFragment newsListFragment = new NewsListFragment();
+        RestroomFragment restroomFragment = new RestroomFragment();
 
         adapter = new ViewPagerAdapter(getSupportFragmentManager());
 
@@ -295,7 +299,7 @@ public class MainActivity extends AppCompatActivity implements
         }
 
         if (sharedPrefs.isToilet()) {
-            adapter.addFragment(RestroomFragment.newInstance("", ""), "RestRoomFragment", FRAGMENT_TYPE_TOILET);
+            adapter.addFragment(restroomFragment, "RestRoomFragment", FRAGMENT_TYPE_TOILET);
 
         }
         if (sharedPrefs.isGallery()) {
@@ -309,13 +313,12 @@ public class MainActivity extends AppCompatActivity implements
             adapter.addFragment(newsListFragment, "NewsListFragment", FRAGMENT_TYPE_NEWS);
         }
 
-        adapter.setPrimaryItem(null, adapter.getCount() - 1, null);
 
         upViewPager.setAdapter(adapter);
 
         tabLayout.setupWithViewPager(viewPager);
 
-        for (int i = 0; i < adapter.getCount() ; i++) {
+        for (int i = 0; i < adapter.getCount(); i++) {
 
             switch (adapter.fragmentTypeList.get(i)) {
 
@@ -445,13 +448,14 @@ public class MainActivity extends AppCompatActivity implements
         });
 
 
-        viewPager.setCurrentItem(adapter.getCount() - 1);
     }
 
     public void reloadViewPager() {
 
         setupViewPager(viewPager);
-
+        viewPager.setCurrentItem(0);
+        adapter.setPrimaryItem(null, 0, null);
+//        adapter.notifyDataSetChanged();
 
     }
 
@@ -926,7 +930,7 @@ public class MainActivity extends AppCompatActivity implements
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
     public boolean isMockLocation(Location location) {
         if (location.isFromMockProvider()) {
-            AlertDialog.Builder alertDialog = new AlertDialog.Builder(this,R.style.AlertDialogTheme);
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder(this, R.style.AlertDialogTheme);
             alertDialog.setTitle(R.string.mock_location_title)
                     .setMessage(R.string.mock_location_message)
                     .setCancelable(false)

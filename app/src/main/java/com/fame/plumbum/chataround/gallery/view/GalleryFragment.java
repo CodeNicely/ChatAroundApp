@@ -233,8 +233,10 @@ public class GalleryFragment extends Fragment implements GalleryView, GoogleApiC
     public void onGalleryData(List<ImageData> imageDataList) {
         if (imageDataList.size() == 0) {
             photos_not_available_layout.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.GONE);
         } else {
             photos_not_available_layout.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
 
         }
         galleryAdapter.setData(imageDataList);

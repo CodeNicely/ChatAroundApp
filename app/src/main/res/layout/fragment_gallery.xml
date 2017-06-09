@@ -44,9 +44,9 @@
         android:text="@string/photos_not_available"
         android:id="@+id/photos_not_available"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
+        android:layout_height="match_parent"
         android:gravity="center"
+
         android:layout_centerInParent="true"
         android:textColor="@color/black"
         android:textSize="@dimen/text_size_medium"

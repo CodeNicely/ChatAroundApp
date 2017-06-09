@@ -113,7 +113,7 @@ public class RestroomFragment extends Fragment implements
      * @return A new instance of fragment RestroomFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static RestroomFragment newInstance(String param1, String param2) {
+  /*  public static RestroomFragment newInstance(String param1, String param2) {
         RestroomFragment fragment = new RestroomFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
@@ -121,7 +121,7 @@ public class RestroomFragment extends Fragment implements
         fragment.setArguments(args);
         return fragment;
     }
-
+*/
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
