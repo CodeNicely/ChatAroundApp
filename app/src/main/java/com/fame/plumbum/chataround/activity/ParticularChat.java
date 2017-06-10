@@ -168,11 +168,11 @@ public class ParticularChat extends AppCompatActivity implements SwipeRefreshLay
     }
 
     private void picassoGlobal(String s, CircleImageView user_img) {
-        Picasso.with(this).load(Urls.BASE_URL+"ImageReturn?ImageName="+s).resize(256,256).error(R.drawable.user).into(user_img);
+        Picasso.with(this).load(Urls.BASE_URL+"ImageReturn?ImageName="+s).resize(256,256).error(R.drawable.user_big).into(user_img);
     }
 
     private void picassoLocal(String s, CircleImageView user_img) {
-        Picasso.with(this).load(Urls.BASE_URL+"ImageReturn?ImageName="+s).resize(256,256).error(R.drawable.user).into(user_img);
+        Picasso.with(this).load(Urls.BASE_URL+"ImageReturn?ImageName="+s).resize(256,256).error(R.drawable.user_big).into(user_img);
     }
 
     private void refreshUpdate(){

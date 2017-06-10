@@ -34,11 +34,11 @@
                 android:src="#ffffff" />
 
             <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/image_user"
+                android:id="@+id/circleImageView"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_centerInParent="true"
-                android:src="@drawable/user" />
+                android:src="@drawable/user_big" />
         </RelativeLayout>
 
         <TextView
@@ -109,7 +109,7 @@
         android:paddingBottom="4dp" />
 
     <TextView
-        android:id="@+id/midText"
+        android:id="@+id/shoutsNotAvailable"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/rl_bottom"

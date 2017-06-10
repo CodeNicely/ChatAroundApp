@@ -10,6 +10,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.CustomEvent;
 import com.fame.plumbum.chataround.R;
 import com.fame.plumbum.chataround.activity.MainActivity;
 import com.fame.plumbum.chataround.helper.Urls;
@@ -107,7 +109,11 @@ public class RestroomAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     ((MainActivity) context).openGoogleMaps(
                             restRoomDetails.getLatitude(),
                             restRoomDetails.getLongitude()
+
                     );
+
+                    Answers.getInstance().logCustom(new CustomEvent("Restroom get route clicked"));
+
                 }
             }
         });

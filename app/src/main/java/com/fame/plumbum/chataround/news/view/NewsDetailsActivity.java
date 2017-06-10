@@ -159,6 +159,8 @@ public class NewsDetailsActivity extends AppCompatActivity {
                     // launch the url
                     customTabsIntent.intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     customTabsIntent.launchUrl(getBaseContext(), uri);
+                    Answers.getInstance().logCustom(new CustomEvent("News URL Clicked"));
+
                 }
             });
         }

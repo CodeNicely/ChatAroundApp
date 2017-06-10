@@ -76,7 +76,7 @@ public class Comments_adapter extends BaseAdapter {
         LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View rowView = inflater.inflate(R.layout.list_post_comments, parent, false);
         RelativeLayout rl_comment = (RelativeLayout)rowView.findViewById(R.id.rL_comment);
-        CircleImageView user_img = (CircleImageView) rowView.findViewById(R.id.image_user);
+        CircleImageView user_img = (CircleImageView) rowView.findViewById(R.id.circleImageView);
         TextView commentor_name = (TextView) rowView.findViewById(R.id.commentor_name);
         final TextView comment = (TextView) rowView.findViewById(R.id.comment);
         comment.setTypeface(typeFace);
@@ -111,17 +111,14 @@ public class Comments_adapter extends BaseAdapter {
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 dialog.setContentView(R.layout.dialog_proifle);
                 Button okay = (Button) dialog.findViewById(R.id.okay);
-                CircleImageView image_user = (CircleImageView)dialog.findViewById(R.id.image_user);
+                CircleImageView image_user = (CircleImageView)dialog.findViewById(R.id.circleImageView);
                 TextView name = (TextView)dialog.findViewById(R.id.name);
-                TextView phone = (TextView)dialog.findViewById(R.id.phone);
-                LinearLayout ll_phone = (LinearLayout) dialog.findViewById(R.id.ll_phone);
                 SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
                 try {
                     if (!sp.getString("uid", "").contentEquals(comments.getJSONObject(position).getString("CommentorId"))){
-                        ll_phone.setVisibility(View.INVISIBLE);
                     }
                     getImage(comments.getJSONObject(position).getString("CommentorId"), true, image_user);
-                    receiveData(comments.getJSONObject(position).getString("CommentorId"), name, phone);
+                    receiveData(comments.getJSONObject(position).getString("CommentorId"), name, null);
                 } catch (JSONException ignored) {
                 }
                 okay.setOnClickListener(new View.OnClickListener() {
@@ -171,7 +168,7 @@ public class Comments_adapter extends BaseAdapter {
     }
 
     private void picassoSmall(String s, CircleImageView user_img) {
-        Picasso.with(context).load(Urls.BASE_URL+"ImageReturn?ImageName="+s).error(R.drawable.user).into(user_img);
+        Picasso.with(context).load(Urls.BASE_URL+"ImageReturn?ImageName="+s).error(R.drawable.user_big).into(user_img);
     }
 
     private String toProperCase(String name) {

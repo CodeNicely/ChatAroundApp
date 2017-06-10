@@ -36,16 +36,11 @@ public class PollutionPresenterImpl implements PollutionPresenter {
                         pollutionView.showLoader(false);
                         pollutionView.setData(airPollutionDetails);
 
-                        Answers.getInstance().logCustom(new CustomEvent("Pollution Module Loading Successful")
-                                .putCustomAttribute(Keys.KEY_LATITUDE, latitude)
-                                .putCustomAttribute(Keys.KEY_LONGITUDE, longitude)
-
-                        );
 
                     } else {
                         pollutionView.showLoader(false);
 
-                        Answers.getInstance().logCustom(new CustomEvent("Pollution Module Loading Failed")
+                        Answers.getInstance().logCustom(new CustomEvent("Pollution Module Loading Failed - Server end")
                                 .putCustomAttribute(Keys.KEY_LATITUDE, latitude)
                                 .putCustomAttribute(Keys.KEY_LONGITUDE, longitude)
 
@@ -57,6 +52,12 @@ public class PollutionPresenterImpl implements PollutionPresenter {
 
             @Override
             public void onFailed(String message) {
+
+                Answers.getInstance().logCustom(new CustomEvent("Restroom Module Loading Failed - Local")
+                        .putCustomAttribute(Keys.KEY_LATITUDE,latitude)
+                        .putCustomAttribute(Keys.KEY_LONGITUDE,longitude)
+
+                );
 
                 if (pollutionView != null) {
                     pollutionView.showLoader(false);

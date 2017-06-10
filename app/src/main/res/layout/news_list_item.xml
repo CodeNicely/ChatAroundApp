@@ -5,11 +5,11 @@
     android:id="@+id/news_card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:clickable="true"
-    app:cardCornerRadius="@dimen/padding_small"
-    app:cardBackgroundColor="@color/white_100_percent"
     android:layout_margin="@dimen/padding_medium"
     android:layout_marginLeft="@dimen/padding_medium"
+    android:clickable="true"
+    app:cardBackgroundColor="@color/white_100_percent"
+    app:cardCornerRadius="@dimen/padding_small"
 
 
     >
@@ -17,11 +17,10 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:background="@drawable/border_news_item"
-        android:paddingTop="@dimen/padding_large"
+        android:orientation="vertical"
         android:paddingLeft="@dimen/padding_large"
-        >
+        android:paddingTop="@dimen/padding_large">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -33,32 +32,28 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_alignBottom="@+id/image"
-                android:layout_weight="1"
-                >
+                android:layout_weight="1">
 
                 <TextView
                     android:id="@+id/newsTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:layout_above="@+id/newsAuthor"
                     android:layout_centerHorizontal="true"
                     android:layout_weight="1"
+                    android:ellipsize="end"
                     android:fontFamily="sans-serif-condensed"
                     android:lineSpacingExtra="0.2dp"
-                    android:text="The relationship between India and Palestine asdasdasdasasdasdadasdasdasdasdasdasdasdasdasdasdasdasdasd."
-                    android:textColor="@color/colorPrimary"
-                    android:textSize="@dimen/text_size_medium"
                     android:maxLines="4"
-                    android:ellipsize="end"
                     android:paddingRight="@dimen/padding_medium"
-                    android:layout_above="@+id/newsAuthor"
-                    />
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/text_size_medium" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_above="@+id/newsAuthor"
-                    android:visibility="invisible"
-                    >
+                    android:visibility="invisible">
 
                     <TextView
                         android:id="@+id/newsLabel"
@@ -90,16 +85,15 @@
 
                 <TextView
                     android:id="@+id/newsAuthor"
-                    android:layout_marginTop="@dimen/padding_small"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginTop="@dimen/padding_small"
+                    android:fontFamily="sans-serif-condensed"
                     android:text="News Author"
                     android:textColor="@color/colorAccentGrey"
-                    android:fontFamily="sans-serif-condensed"
-                    android:textSize="@dimen/textSizeExtraSmall"
-                    android:layout_alignParentBottom="true"
                     android:textScaleX="0.8"
-                    />
+                    android:textSize="@dimen/textSizeExtraSmall" />
 
 
             </RelativeLayout>
@@ -109,21 +103,19 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:minHeight="108dp"
-                >
+                android:minHeight="108dp">
 
                 <RelativeLayout
                     android:id="@+id/imageLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/white"
-                    >
+                    android:background="@color/white">
 
                     <ImageView
-                        android:layout_centerInParent="true"
                         android:id="@+id/image"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
                         android:adjustViewBounds="true"
 
                         />
@@ -132,28 +124,27 @@
                         android:id="@+id/progressBar"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:visibility="gone" />
+                        android:layout_centerInParent="true" />
+
                     <ImageView
                         android:id="@+id/placeHolder"
-                        android:layout_centerInParent="true"
                         android:layout_width="100dp"
                         android:layout_height="100dp"
-                        />
-                  <!--  <TextView
-                        android:id="@+id/NewsSmallDescription"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_alignBottom="@+id/image"
-                        android:layout_centerHorizontal="true"
-                        android:layout_margin="3dp"
-                        android:gravity="center"
-                        android:padding="@dimen/padding_small"
-                        android:text="The relationship between India and Palestine is taking a new step."
-                        android:textAlignment="center"
-                        android:textColor="#FFFFFF"
-                        android:textSize="15dp"
-                        android:visibility="gone" />-->
+                        android:layout_centerInParent="true" />
+                    <!--  <TextView
+                          android:id="@+id/NewsSmallDescription"
+                          android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          android:layout_alignBottom="@+id/image"
+                          android:layout_centerHorizontal="true"
+                          android:layout_margin="3dp"
+                          android:gravity="center"
+                          android:padding="@dimen/padding_small"
+                          android:text="The relationship between India and Palestine is taking a new step."
+                          android:textAlignment="center"
+                          android:textColor="#FFFFFF"
+                          android:textSize="15dp"
+                          android:visibility="gone" />-->
 
                 </RelativeLayout>
 
@@ -161,7 +152,6 @@
             </LinearLayout>
 
         </LinearLayout>
-
 
 
         <LinearLayout

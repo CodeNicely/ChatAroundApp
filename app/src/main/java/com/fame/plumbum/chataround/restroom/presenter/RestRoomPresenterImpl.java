@@ -37,17 +37,11 @@ public class RestRoomPresenterImpl implements RestRoomPresenter {
                 if (restRoomData.isSuccess()) {
                     restRoomView.onReceived(restRoomData.getRestroom_list());
                     restRoomView.showLoader(false);
-                    Answers.getInstance().logCustom(new CustomEvent("Restroom Module Loading Successful")
-                            .putCustomAttribute(Keys.USER_EMAIL, user_id)
-                            .putCustomAttribute(Keys.KEY_LATITUDE,latitude)
-                            .putCustomAttribute(Keys.KEY_LONGITUDE,longitude)
-
-                    );
 
                 } else {
                     restRoomView.showMessage(restRoomData.getMessage());
                     restRoomView.showLoader(false);
-                    Answers.getInstance().logCustom(new CustomEvent("Restroom Module Loading Failed")
+                    Answers.getInstance().logCustom(new CustomEvent("Restroom Module Loading Failed - Server end")
                             .putCustomAttribute(Keys.USER_EMAIL, user_id)
                             .putCustomAttribute(Keys.KEY_LATITUDE,latitude)
                             .putCustomAttribute(Keys.KEY_LONGITUDE,longitude)
@@ -59,6 +53,12 @@ public class RestRoomPresenterImpl implements RestRoomPresenter {
 
             @Override
             public void onFailure(String message) {
+                Answers.getInstance().logCustom(new CustomEvent("Restroom Module Loading Failed - Local")
+                        .putCustomAttribute(Keys.USER_EMAIL, user_id)
+                        .putCustomAttribute(Keys.KEY_LATITUDE,latitude)
+                        .putCustomAttribute(Keys.KEY_LONGITUDE,longitude)
+
+                );
                 restRoomView.showLoader(false);
                 restRoomView.showMessage(message);
             }

@@ -32,13 +32,7 @@ public class NewsListPresenterImpl implements NewsListPresenter {
                 newsListView.showProgressBar(false);
                 if (newsListData.isSuccess()) {
                     newsListView.setNewsList(newsListData.getNewsListDataDetailsList());
-                    Answers.getInstance().logCustom(new CustomEvent("News Module Loading Successful")
-                            .putCustomAttribute(Keys.USER_EMAIL, userId)
-                            .putCustomAttribute(Keys.KEY_CITY,city)
-                            .putCustomAttribute(Keys.KEY_COUNTRY,country)
-                            .putCustomAttribute(Keys.KEY_STATE,state)
 
-                    );
 
                 } else {
                     if(newsListData.getMessage()!=null) {
@@ -48,7 +42,7 @@ public class NewsListPresenterImpl implements NewsListPresenter {
 
                     }
 
-                    Answers.getInstance().logCustom(new CustomEvent("News Module Loading Failed")
+                    Answers.getInstance().logCustom(new CustomEvent("News Module Loading Failed - Server end")
                             .putCustomAttribute(Keys.USER_EMAIL, userId)
                             .putCustomAttribute(Keys.KEY_CITY,city)
                             .putCustomAttribute(Keys.KEY_COUNTRY,country)
@@ -62,6 +56,13 @@ public class NewsListPresenterImpl implements NewsListPresenter {
             @Override
             public void OnFailure(String message) {
 
+                Answers.getInstance().logCustom(new CustomEvent("News Module Loading Failed - Local")
+                        .putCustomAttribute(Keys.USER_EMAIL, userId)
+                        .putCustomAttribute(Keys.KEY_CITY,city)
+                        .putCustomAttribute(Keys.KEY_COUNTRY,country)
+                        .putCustomAttribute(Keys.KEY_STATE,state)
+
+                );
                 newsListView.showProgressBar(false);
                 newsListView.showMessage(message);
             }

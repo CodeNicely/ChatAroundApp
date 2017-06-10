@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/rl_profile_main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:id="@+id/rl_profile_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/padding_small"
+            android:layout_margin="@dimen/padding_small"
+            >
+
+            <RelativeLayout
+                android:id="@+id/image_user_rl"
+                android:layout_width="105dp"
+                android:layout_height="105dp">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/image_user_bound"
+                    android:layout_width="95dp"
+                    android:layout_height="95dp"
+                    android:layout_centerInParent="true"
+                    android:layout_margin="8dp"
+                    android:src="#202020" />
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/image_user_boundary"
+                    android:layout_width="88dp"
+                    android:layout_height="88dp"
+                    android:layout_centerInParent="true"
+                    android:layout_margin="8dp"
+                    android:src="#ffffff" />
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/circleImageView"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_centerInParent="true"
+                    android:layout_margin="8dp"
+                    android:src="@drawable/user_big" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/activity_vertical_margin"
+                android:layout_toRightOf="@+id/image_user_rl">
+
+                <TextView
+                    android:id="@+id/name_user"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#000000"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/phone_user"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/name_user"
+                    android:layout_marginTop="@dimen/activity_vertical_margin"
+                    android:textColor="#424242"
+                    android:textSize="16sp" />
+            </RelativeLayout>
+
+
+        </RelativeLayout>
+
+
+
+            <LinearLayout
+                android:layout_below="@+id/rl_profile_info"
+                android:id="@+id/toggleLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_margin="@dimen/padding_small"
+                android:padding="@dimen/padding_small"
+                >
+
+                <Switch
+                    android:id="@+id/shoutSwitch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/shoutToggle"
+                    />
+
+                <Switch
+                    android:id="@+id/toiletSwitch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/toiletToggle"
+
+                    />
+
+                <Switch
+                    android:id="@+id/gallerySwitch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/galleryToggle"
+
+                    />
+
+                <Switch
+                    android:id="@+id/pollutionSwitch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/pollutionToggle"
+
+                    />
+
+                <Switch
+                    android:id="@+id/newsSwitch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/newsToggle"
+
+                    />
+            </LinearLayout>
+
+
+    <View
+        android:id="@+id/extra_view1"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_below="@+id/toggleLayout"
+        android:background="#12320F" />
+
+    <TextView
+        android:id="@+id/notif_heading"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/extra_view1"
+        android:layout_marginBottom="4dp"
+        android:layout_marginLeft="@dimen/activity_vertical_margin"
+        android:layout_marginTop="4dp"
+        android:text="Notifications" />
+
+    <View
+        android:id="@+id/extra_view2"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_below="@+id/notif_heading"
+        android:background="#12320F" />
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipe"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/extra_view2"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingTop="8dp">
+
+        <ListView
+            android:id="@+id/my_tweets_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+    <TextView
+        android:id="@+id/shoutsNotAvailable"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/extra_view2"
+        android:gravity="center"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingTop="8dp"
+        android:text="No content found!"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:visibility="gone" />
+</RelativeLayout>
+
+<LinearLayout
+android:id="@+id/ll_crop"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:background="#ffffff"
+android:orientation="vertical"
+android:visibility="gone">
+
+<com.theartofdev.edmodo.cropper.CropImageView
+    android:id="@+id/cropImageView"
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:layout_weight="1"
+    app:cropMaxCropResultHeightPX="1024"
+    app:cropMaxCropResultWidthPX="1024"
+    app:cropMinCropResultHeightPX="300"
+    app:cropMinCropResultWidthPX="300" />
+
+<Button
+    android:id="@+id/cropImageButton"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#202020"
+    android:padding="@dimen/activity_horizontal_margin"
+    android:text="Crop Image"
+    android:textAllCaps="false"
+    android:textColor="#ffffff"
+    android:textSize="24sp" />
+</LinearLayout></RelativeLayout>

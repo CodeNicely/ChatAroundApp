@@ -34,16 +34,10 @@ public class GalleryPresenterImpl implements GalleryPresenter {
 
                     galleryView.showLoader(false);
                     galleryView.onGalleryData(galleryData.getImage_list());
-                    Answers.getInstance().logCustom(new CustomEvent("Gallery Module Loading Successful")
-                            .putCustomAttribute(Keys.KEY_USER_ID, userId)
-                            .putCustomAttribute(Keys.KEY_LATITUDE,latitude)
-                            .putCustomAttribute(Keys.KEY_LONGITUDE,longitude)
-                            .putCustomAttribute(Keys.KEY_USER_MOBILE,mobile)
 
-                    );
                 }else{
 
-                    Answers.getInstance().logCustom(new CustomEvent("Gallery Module Loading False")
+                    Answers.getInstance().logCustom(new CustomEvent("Gallery Module Loading Failed - Server end")
                             .putCustomAttribute(Keys.KEY_USER_ID, userId)
                             .putCustomAttribute(Keys.KEY_LATITUDE,latitude)
                             .putCustomAttribute(Keys.KEY_LONGITUDE,longitude)
@@ -58,7 +52,7 @@ public class GalleryPresenterImpl implements GalleryPresenter {
             public void onFailed(String message)
             {
 
-                Answers.getInstance().logCustom(new CustomEvent("Gallery Module Loading False")
+                Answers.getInstance().logCustom(new CustomEvent("Gallery Module Loading Failed - Local")
                         .putCustomAttribute(Keys.KEY_USER_ID, userId)
                         .putCustomAttribute(Keys.KEY_LATITUDE,latitude)
                         .putCustomAttribute(Keys.KEY_LONGITUDE,longitude)

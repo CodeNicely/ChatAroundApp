@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.CustomEvent;
 import com.fame.plumbum.chataround.R;
 import com.fame.plumbum.chataround.activity.MainActivity;
 import com.fame.plumbum.chataround.gallery.model.ImageData;
@@ -58,7 +60,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         galleryViewHolder.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Answers.getInstance().logCustom(new CustomEvent("Gallery photos clicked"));
                 ((MainActivity) context).openImageViewer(imageData.getImage_url(), position);
 
             }

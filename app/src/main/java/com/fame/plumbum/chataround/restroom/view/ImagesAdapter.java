@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.CustomEvent;
 import com.fame.plumbum.chataround.R;
 import com.fame.plumbum.chataround.activity.MainActivity;
 import com.fame.plumbum.chataround.helper.Urls;
@@ -64,6 +66,8 @@ public class ImagesAdapter extends PagerAdapter {
             public void onClick(View v) {
                 if (context instanceof MainActivity) {
                     ((MainActivity) context).openImageViewer(imageUrl, position);
+                    Answers.getInstance().logCustom(new CustomEvent("Restroom photos clicked"));
+
                 }
             }
         });

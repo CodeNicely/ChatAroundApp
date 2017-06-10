@@ -165,7 +165,7 @@ public class ParticularPost extends AppCompatActivity implements View.OnClickLis
 
     private void update() {
         try {
-            TextView midText = (TextView)findViewById(R.id.midText);
+            TextView midText = (TextView)findViewById(R.id.shoutsNotAvailable);
             post_id = postDetails.getString("PostId");
             poster_id = postDetails.getString("PosterId");
             poster_name = postDetails.getString("PosterName");
@@ -250,7 +250,7 @@ public class ParticularPost extends AppCompatActivity implements View.OnClickLis
     }
 
     private void picassoLoad(String s, CircleImageView img_user) {
-        Picasso.with(this).load(Urls.BASE_URL+"ImageReturn?ImageName="+s).error(R.drawable.user).into(img_user);
+        Picasso.with(this).load(Urls.BASE_URL+"ImageReturn?ImageName="+s).error(R.drawable.user_big).into(img_user);
     }
 
     public static void getDetails(JSONObject post) {
@@ -261,7 +261,7 @@ public class ParticularPost extends AppCompatActivity implements View.OnClickLis
         post_id = getIntent().getExtras().getString("post_id");
         rl_progress = (RelativeLayout) findViewById(R.id.rl_progress);
         comments_list = (ListView) findViewById(R.id.list_comments_post);
-        image_user = (CircleImageView) findViewById(R.id.image_user);
+        image_user = (CircleImageView) findViewById(R.id.circleImageView);
         poster_name_txt = (TextView) findViewById(R.id.poster_name);
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         uid = sharedPreferences.getString("uid", "");
@@ -277,11 +277,11 @@ public class ParticularPost extends AppCompatActivity implements View.OnClickLis
         report.setOnClickListener(this);
         chat_button.setOnClickListener(this);
         if (receiver==null) {
-            IntentFilter filter = new IntentFilter("Hello ShoutsFragment");
+            IntentFilter filter = new IntentFilter("Hello ShoutsFragmentOld");
             receiver = new BroadcastReceiver() {
                 @Override
                 public void onReceive(Context context, Intent intent) {
-                    if (intent.getAction().contentEquals("Hello ShoutsFragment")) {
+                    if (intent.getAction().contentEquals("Hello ShoutsFragmentOld")) {
                         lat = intent.getDoubleExtra("lat", 0.0);
                         lng = intent.getDoubleExtra("lng", 0.0);
                     }
@@ -309,11 +309,11 @@ public class ParticularPost extends AppCompatActivity implements View.OnClickLis
     protected void onResume() {
         super.onResume();
         if (receiver==null) {
-            IntentFilter filter = new IntentFilter("Hello ShoutsFragment");
+            IntentFilter filter = new IntentFilter("Hello ShoutsFragmentOld");
             receiver = new BroadcastReceiver() {
                 @Override
                 public void onReceive(Context context, Intent intent) {
-                    if (intent.getAction().contentEquals("Hello ShoutsFragment")) {
+                    if (intent.getAction().contentEquals("Hello ShoutsFragmentOld")) {
                         lat = intent.getDoubleExtra("lat", 0.0);
                         lng = intent.getDoubleExtra("lng", 0.0);
                     }

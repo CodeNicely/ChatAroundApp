@@ -41,8 +41,8 @@ import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
 import com.fame.plumbum.chataround.MySingleton;
 import com.fame.plumbum.chataround.R;
-import com.fame.plumbum.chataround.profile.MyProfileFragment;
-import com.fame.plumbum.chataround.shouts.ShoutsFragment;
+import com.fame.plumbum.chataround.profile.ProfileFragment;
+import com.fame.plumbum.chataround.shouts.view.ShoutsFragment;
 import com.fame.plumbum.chataround.gallery.view.GalleryFragment;
 import com.fame.plumbum.chataround.helper.Keys;
 import com.fame.plumbum.chataround.helper.SharedPrefs;
@@ -162,11 +162,11 @@ public class MainActivity extends AppCompatActivity implements
         } else {
 
             /*if (receiver == null) {
-                IntentFilter filter = new IntentFilter("Hello ShoutsFragment");
+                IntentFilter filter = new IntentFilter("Hello ShoutsFragmentOld");
                 receiver = new BroadcastReceiver() {
                     @Override
                     public void onReceive(Context context, Intent intent) {
-                        if (intent.getAction().contentEquals("Hello ShoutsFragment")) {
+                        if (intent.getAction().contentEquals("Hello ShoutsFragmentOld")) {
                             lat = intent.getDoubleExtra("lat", 0.0);
                             lng = intent.getDoubleExtra("lng", 0.0);
                             world.lat = lat;
@@ -261,7 +261,7 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     public void setupViewPager(ViewPager upViewPager) {
-        MyProfileFragment profile = new MyProfileFragment();
+        ProfileFragment profile = new ProfileFragment();
         ShoutsFragment shoutsFragment = new ShoutsFragment();
         PollutionFragment pollutionFragment = new PollutionFragment();
         GalleryFragment galleryFragment = new GalleryFragment();
@@ -273,7 +273,7 @@ public class MainActivity extends AppCompatActivity implements
         adapter.addFragment(profile, "My Profile", FRAGMENT_TYPE_PROFILE);
 
         if (sharedPrefs.isShouts()) {
-            adapter.addFragment(shoutsFragment, "ShoutsFragment", FRAGMENT_TYPE_SHOUTS);
+            adapter.addFragment(shoutsFragment, "ShoutsFragmentOld", FRAGMENT_TYPE_SHOUTS);
         }
 
         if (sharedPrefs.isToilet()) {
@@ -345,64 +345,64 @@ public class MainActivity extends AppCompatActivity implements
                 switch (adapter.fragmentTypeList.get(position)) {
                     case FRAGMENT_TYPE_PROFILE:
                         toolbar.setTitle("Profile");
-                        Answers.getInstance().logCustom(new CustomEvent("User Swiped to Profile")
+                       /* Answers.getInstance().logCustom(new CustomEvent("User Swiped to Profile")
                                 .putCustomAttribute(Keys.KEY_LATITUDE, lat)
                                 .putCustomAttribute(Keys.KEY_LONGITUDE, lng)
                                 .putCustomAttribute(Keys.USER_EMAIL, sharedPrefs.getEmail())
                         );
-
+*/
                         break;
                     case FRAGMENT_TYPE_SHOUTS:
                         toolbar.setTitle("Shouts");
-                        Answers.getInstance().logCustom(new CustomEvent("User Swiped to Shouts")
+  /*                      Answers.getInstance().logCustom(new CustomEvent("User Swiped to Shouts")
                                 .putCustomAttribute(Keys.KEY_LATITUDE, lat)
                                 .putCustomAttribute(Keys.KEY_LONGITUDE, lng)
                                 .putCustomAttribute(Keys.USER_EMAIL, sharedPrefs.getEmail())
 
                         );
-
+*/
                         break;
                     case FRAGMENT_TYPE_TOILET:
                         toolbar.setTitle("Restrooms");
-                        Answers.getInstance().logCustom(new CustomEvent("User Swiped to Restroom")
+  /*                      Answers.getInstance().logCustom(new CustomEvent("User Swiped to Restroom")
                                 .putCustomAttribute(Keys.KEY_LATITUDE, lat)
                                 .putCustomAttribute(Keys.KEY_LONGITUDE, lng)
                                 .putCustomAttribute(Keys.USER_EMAIL, sharedPrefs.getEmail())
 
                         );
-
+*/
                         break;
 
                     case FRAGMENT_TYPE_GALLERY:
                         toolbar.setTitle("Gallery");
-                        Answers.getInstance().logCustom(new CustomEvent("User Swiped to Gallery")
+  /*                      Answers.getInstance().logCustom(new CustomEvent("User Swiped to Gallery")
                                 .putCustomAttribute(Keys.KEY_LATITUDE, lat)
                                 .putCustomAttribute(Keys.KEY_LONGITUDE, lng)
                                 .putCustomAttribute(Keys.USER_EMAIL, sharedPrefs.getEmail())
 
                         );
-
+*/
                         break;
 
                     case FRAGMENT_TYPE_POLLUTIOMN:
                         toolbar.setTitle("Pollution Meter");
-                        Answers.getInstance().logCustom(new CustomEvent("User Swiped to Pollution")
+  /*                      Answers.getInstance().logCustom(new CustomEvent("User Swiped to Pollution")
                                 .putCustomAttribute(Keys.KEY_LATITUDE, lat)
                                 .putCustomAttribute(Keys.KEY_LONGITUDE, lng)
                                 .putCustomAttribute(Keys.USER_EMAIL, sharedPrefs.getEmail())
 
                         );
-
+*/
                         break;
                     case FRAGMENT_TYPE_NEWS:
                         toolbar.setTitle("News");
-                        Answers.getInstance().logCustom(new CustomEvent("User Swiped to News")
+  /*                      Answers.getInstance().logCustom(new CustomEvent("User Swiped to News")
                                 .putCustomAttribute(Keys.KEY_LATITUDE, lat)
                                 .putCustomAttribute(Keys.KEY_LONGITUDE, lng)
                                 .putCustomAttribute(Keys.USER_EMAIL, sharedPrefs.getEmail())
 
                         );
-
+*/
                         break;
                     default:
                         toolbar.setTitle("1 Mile App");

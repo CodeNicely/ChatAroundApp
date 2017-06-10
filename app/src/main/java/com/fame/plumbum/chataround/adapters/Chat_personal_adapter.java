@@ -70,7 +70,7 @@ public class Chat_personal_adapter extends BaseAdapter {
         LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View rowView = inflater.inflate(R.layout.list_person, parent, false);
         RelativeLayout rl_comment = (RelativeLayout)rowView.findViewById(R.id.rL_comment);
-        CircleImageView user_img = (CircleImageView) rowView.findViewById(R.id.image_user);
+        CircleImageView user_img = (CircleImageView) rowView.findViewById(R.id.circleImageView);
         TextView commentor_name = (TextView) rowView.findViewById(R.id.commentor_name);
         commentor_name.setTypeface(typeface_light);
         TextView timestamp = (TextView) rowView.findViewById(R.id.timestamp);
@@ -148,11 +148,11 @@ public class Chat_personal_adapter extends BaseAdapter {
     }
 
     private void picassoGlobal(String s, CircleImageView user_img) {
-        Picasso.with(context).load(Urls.BASE_URL+"ImageReturn?ImageName=" + s).error(R.drawable.user).into(user_img);
+        Picasso.with(context).load(Urls.BASE_URL+"ImageReturn?ImageName=" + s).error(R.drawable.user_big).into(user_img);
     }
 
     private void picassoLocal(String s, CircleImageView user_img) {
-        Picasso.with(context).load(Urls.BASE_URL+"ImageReturn?ImageName=" + s).error(R.drawable.user).into(user_img);
+        Picasso.with(context).load(Urls.BASE_URL+"ImageReturn?ImageName=" + s).error(R.drawable.user_big).into(user_img);
     }
 
     private String toProperCase(String name) {

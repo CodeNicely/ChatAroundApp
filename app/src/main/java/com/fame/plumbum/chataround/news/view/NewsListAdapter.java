@@ -71,10 +71,28 @@ public class NewsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
             Glide.with(context)
                     .load(newsListDataDetails.getImage())
+                    .crossFade()
+                    .thumbnail(0.05f)
+                    .load(newsListDataDetails.getImage())
+                    .crossFade()
+                    .thumbnail(0.1f)
+                    .load(newsListDataDetails.getImage())
+                    .crossFade()
+                    .thumbnail(1f)
                     .listener(new RequestListener<String, GlideDrawable>() {
                         @Override
                         public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
 
+                            Glide.with(context)
+                                    .load(R.drawable.world_black)
+                                    .crossFade()
+                                    .thumbnail(0.05f)
+                                    .load(R.drawable.world_black)
+                                    .crossFade()
+                                    .thumbnail(0.1f)
+                                    .load(R.drawable.world_black)
+                                    .crossFade()
+                                    .thumbnail(1f).into(newsViewHolder.placeHolder);
                             newsViewHolder.progressBar.setVisibility(View.GONE);
                             newsViewHolder.imageView.setVisibility(View.GONE);
                             newsViewHolder.placeHolder.setVisibility(View.VISIBLE);
@@ -83,9 +101,11 @@ public class NewsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
                         @Override
                         public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-                            Glide.with(context).load(R.drawable.world_black).into(newsViewHolder.placeHolder);
+
                             newsViewHolder.placeHolder.setVisibility(View.GONE);
                             newsViewHolder.progressBar.setVisibility(View.GONE);
+                            newsViewHolder.imageView.setVisibility(View.VISIBLE);
+
                             return false;
                         }
                     })
@@ -94,21 +114,20 @@ public class NewsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             newsViewHolder.imageView.setVisibility(View.VISIBLE);
             newsViewHolder.progressBar.setVisibility(View.GONE);
         } else {
-
+            Glide.with(context)
+                    .load(R.drawable.world_black)
+                    .crossFade()
+                    .thumbnail(0.05f)
+                    .load(R.drawable.world_black)
+                    .crossFade()
+                    .thumbnail(0.1f)
+                    .load(R.drawable.world_black)
+                    .crossFade()
+                    .thumbnail(1f).into(newsViewHolder.placeHolder);
             newsViewHolder.progressBar.setVisibility(View.GONE);
             newsViewHolder.imageView.setVisibility(View.GONE);
             newsViewHolder.placeHolder.setVisibility(View.VISIBLE);
-//            newsViewHolder.imageView.setVisibility(View.GONE);
-//            newsViewHolder.progressBar.setVisibility(View.GONE);
         }
-
-//        if (newsListDataDetails.getSource() == null) {
-//            newsViewHolder.newsSource.setVisibility(View.GONE);
-//        } else {
-//            newsViewHolder.newsSource.setText(newsListDataDetails.getSource());
-//
-//            newsViewHolder.newsSource.setVisibility(View.VISIBLE);
-//        }
 
 
         if (newsListDataDetails.getAuthor() == null) {
@@ -117,28 +136,24 @@ public class NewsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             newsViewHolder.newsAuthor.setText(newsListDataDetails.getAuthor());
 
             newsViewHolder.newsAuthor.setVisibility(View.VISIBLE);
-        }
-//        newsViewHolder.newsDescription.setText(newsListDataDetails.getBody_small());
-//        newsViewHolder.news_published_timestamp.setText(newsListDataDetails.getPublished_at());
-//        newsViewHolder.newsAuthor.setText(newsListDataDetails.getAuthor());
-        newsViewHolder.news_card.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (context instanceof MainActivity) {
-                    NewsListDataDetails newsListDataDetails=newsListDataDetailsList.get(position);
-                    ((MainActivity) context).openNewsDetails(
-                            newsListDataDetails.getTitle(),
-                            newsListDataDetails.getImage(),
-                            newsListDataDetails.getSource(),
-                            newsListDataDetails.getBody(),
-                            newsListDataDetails.getAuthor(),
-                            newsListDataDetails.getPublished_at(),
-                            newsListDataDetails.getUrl()
-                    );
+            newsViewHolder.news_card.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (context instanceof MainActivity) {
+                        NewsListDataDetails newsListDataDetails = newsListDataDetailsList.get(position);
+                        ((MainActivity) context).openNewsDetails(
+                                newsListDataDetails.getTitle(),
+                                newsListDataDetails.getImage(),
+                                newsListDataDetails.getSource(),
+                                newsListDataDetails.getBody(),
+                                newsListDataDetails.getAuthor(),
+                                newsListDataDetails.getPublished_at(),
+                                newsListDataDetails.getUrl()
+                        );
+                    }
                 }
-            }
-        });
-
+            });
+        }
     }
 
     @Override

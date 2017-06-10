@@ -33,7 +33,7 @@
                 android:src="#ffffff" />
 
             <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/image_user"
+                android:id="@+id/circleImageView"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_centerInParent="true"
