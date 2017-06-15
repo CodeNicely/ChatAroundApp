@@ -1,6 +1,7 @@
 package com.fame.plumbum.chataround.activity;
 
 import android.Manifest;
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -8,9 +9,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
+import android.net.wifi.WifiInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -27,7 +31,15 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.telephony.TelephonyManager;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
+import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -41,7 +53,13 @@ import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
 import com.fame.plumbum.chataround.MySingleton;
 import com.fame.plumbum.chataround.R;
+import com.fame.plumbum.chataround.helper.Constants;
 import com.fame.plumbum.chataround.profile.ProfileFragment;
+import com.fame.plumbum.chataround.referral.model.VerifyDeviceData;
+import com.fame.plumbum.chataround.referral.presenter.ReferralPresenter;
+import com.fame.plumbum.chataround.referral.presenter.ReferralPresenterImpl;
+import com.fame.plumbum.chataround.referral.provider.RetrofitReferralProvider;
+import com.fame.plumbum.chataround.referral.view.ReferralView;
 import com.fame.plumbum.chataround.shouts.view.ShoutsFragment;
 import com.fame.plumbum.chataround.gallery.view.GalleryFragment;
 import com.fame.plumbum.chataround.helper.Keys;
@@ -59,12 +77,19 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.firebase.iid.FirebaseInstanceId;
 
+import java.io.IOException;
+import java.net.NetworkInterface;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import io.fabric.sdk.android.Fabric;
+
+import static android.R.attr.country;
+import static com.fame.plumbum.chataround.helper.MyApplication.getContext;
 
 /**
  * Created by pankaj on 4/8/16.
@@ -72,7 +97,8 @@ import io.fabric.sdk.android.Fabric;
 public class MainActivity extends AppCompatActivity implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
-        LocationListener {
+        LocationListener,
+        ReferralView {
     private static final int MOCK_LOCATION_OFF_REQUEST = 201;
 
     private static final int FRAGMENT_TYPE_PROFILE = 0;
@@ -81,6 +107,7 @@ public class MainActivity extends AppCompatActivity implements
     private static final int FRAGMENT_TYPE_GALLERY = 3;
     private static final int FRAGMENT_TYPE_POLLUTIOMN = 4;
     private static final int FRAGMENT_TYPE_NEWS = 5;
+    private static final String TAG = "MainActivity" ;
 
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
@@ -98,6 +125,7 @@ public class MainActivity extends AppCompatActivity implements
     private ViewPager viewPager;
     private ActionBar toolbar;
     private TabLayout tabLayout;
+    private ReferralPresenter referralPresenter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -135,7 +163,7 @@ public class MainActivity extends AppCompatActivity implements
         }
         try {
             network_enabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-        } catch (Exception ex) {
+        } catch (Exception ignored) {
         }
         if (!gps_enabled && !network_enabled) {
             AlertDialog.Builder dialog = new AlertDialog.Builder(this, R.style.AlertDialogTheme);
@@ -231,6 +259,8 @@ public class MainActivity extends AppCompatActivity implements
             }
             viewPager.setOffscreenPageLimit(6);
 */
+
+
         }
 
 
@@ -593,9 +623,29 @@ public class MainActivity extends AppCompatActivity implements
             lat = location.getLatitude();
             lng = location.getLongitude();
 
+            Geocoder geocoder;
+            List<Address> addresses;
+            geocoder = new Geocoder(this, Locale.getDefault());
+            try {
+                addresses = geocoder.getFromLocation(lat, lng, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
 
+//                city = addresses.get(0).getLocality();
+//                state = addresses.get(0).getAdminArea();
+                String country = addresses.get(0).getCountryName();
+                Toast.makeText(this, country, Toast.LENGTH_SHORT).show();
+                if(country.contentEquals(Constants.KEY_COUNTRY_INDIA)) {
+
+
+                    referralPresenter = new ReferralPresenterImpl(this, new RetrofitReferralProvider());
+
+                    referralPresenter.requestDeviceIdVerify(sharedPrefs.getUserId(), Settings.Secure.getString(getContext().getContentResolver(),
+                            Settings.Secure.ANDROID_ID));
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
-
 
     }
 
@@ -616,6 +666,85 @@ public class MainActivity extends AppCompatActivity implements
         lng = location.getLongitude();
 
 
+    }
+
+    @Override
+    public void showDialogLoader(boolean show) {
+
+    }
+
+    @Override
+    public void onDeviceDataReceived(VerifyDeviceData verifyDeviceData) {
+
+        if(verifyDeviceData.isNew_device()) {
+
+            final Dialog dialog = new Dialog(this);
+            dialog.setContentView(R.layout.dialog_referal);
+            final EditText referal_code = (EditText) dialog.findViewById(R.id.referal);
+            Button proceed = (Button) dialog.findViewById(R.id.proceed);
+            Button skip = (Button) dialog.findViewById(R.id.skip);
+
+            referal_code.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    if(s.length()==10){
+                        hideKeyboard();
+                    }
+                }
+            });
+
+            dialog.setTitle("Referal Code");
+            dialog.setCancelable(false);
+            dialog.show();
+
+            proceed.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    String code = referal_code.getText().toString();
+                    if (code.equals("") || code.equals(null)) {
+                        referal_code.setError("Invalid mobile number");
+                        referal_code.requestFocus();
+                    } else if (code.length() < 10 || code.length()>10) {
+                        referal_code.setError("Invalid mobile number");
+                        referal_code.requestFocus();
+                    } else {
+
+                        sharedPrefs.setUserMobile(code);
+                        referralPresenter.requestReferal(sharedPrefs.getUserId(),Settings.Secure.getString(getContext().getContentResolver(),
+                                Settings.Secure.ANDROID_ID),code);
+                        dialog.dismiss();
+                    }
+
+                }
+
+            });
+
+            skip.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    dialog.dismiss();
+                }
+            });
+        }else{
+
+            Log.d(TAG,"Old device");
+        }
+
+    }
+
+    @Override
+    public void showMessage(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
     private class ViewPagerAdapter extends FragmentStatePagerAdapter {
@@ -803,5 +932,15 @@ public class MainActivity extends AppCompatActivity implements
             return false;
         }
     }
+
+    private void hideKeyboard() {
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
+
+
 
 }

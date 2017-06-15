@@ -15,14 +15,15 @@ public class Urls {
     public static final String SUB_URL_SHOUTS = "ShowPost";
     public static final String SUB_URL_GALLERY_API ="ShowGallery" ;
     public static final String SUB_URL_PHOTO_UPLOAD_API ="AddPhoto" ;
-    public static final String REFERAL_CODE="Referal";
+    public static final String SUB_URL_ADD_REFERRAL ="AddReferral";
+    public static final String SUB_URL_VERIFY_DEVICE = "VerifyDevice";
 
 
     //    public static String BASE_URL = "http://52.66.45.251:5000/"; // AWS
-    public static String BASE_URL = "http://139.59.30.208:5000/"; // Digital Ocean
+//    public static String BASE_URL = "http://139.59.30.208:5000/"; // Digital Ocean
 
 //    public static String BASE_URL = "http://163.53.72.247:8765/";
-//    public static String BASE_URL = "http://192.168.0.101:5000/"; // Local Server
+    public static String BASE_URL = "http://192.168.0.102:5000/"; // Local Server
 
 
 }

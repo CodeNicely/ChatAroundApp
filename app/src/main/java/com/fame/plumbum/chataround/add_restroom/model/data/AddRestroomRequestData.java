@@ -7,6 +7,7 @@ package com.fame.plumbum.chataround.add_restroom.model.data;
 public class AddRestroomRequestData {
 
     private String username;
+    private String userMobile;
     private double latitude;
     private double langitude;
     private String address;
@@ -21,12 +22,9 @@ public class AddRestroomRequestData {
     private String mobile;
 
 
-    public AddRestroomRequestData(String username, double latitude, double langitude, String address,
-                                  String city, String state, String country, String postalCode,
-                                  String knownName, boolean male, boolean female, boolean disabled,
-                                  String mobile
-                                  ) {
+    public AddRestroomRequestData(String username, String userMobile, double latitude, double langitude, String address, String city, String state, String country, String postalCode, String knownName, boolean male, boolean female, boolean disabled, String mobile) {
         this.username = username;
+        this.userMobile = userMobile;
         this.latitude = latitude;
         this.langitude = langitude;
         this.address = address;
@@ -38,15 +36,15 @@ public class AddRestroomRequestData {
         this.male = male;
         this.female = female;
         this.disabled = disabled;
-        this.mobile=mobile;
-    }
-
-    public String getMobile() {
-        return mobile;
+        this.mobile = mobile;
     }
 
     public String getUsername() {
         return username;
+    }
+
+    public String getUserMobile() {
+        return userMobile;
     }
 
     public double getLatitude() {
@@ -91,5 +89,9 @@ public class AddRestroomRequestData {
 
     public boolean isDisabled() {
         return disabled;
+    }
+
+    public String getMobile() {
+        return mobile;
     }
 }

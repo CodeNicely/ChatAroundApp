@@ -18,6 +18,7 @@ public interface AddRestroomApi {
     @POST(Urls.SUB_URL_ADD_RESTROOM)
     Call<AddRestroomData> addRestroom(
             @Field("username") String username,
+            @Field("userMobile") String userMobile,
             @Field("latitude") double latitude,
             @Field("longitude") double longitude,
             @Field("address") String address,

@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ClipData;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -26,10 +27,14 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -46,6 +51,7 @@ import com.fame.plumbum.chataround.add_photos.model.data.ImageUploadData;
 import com.fame.plumbum.chataround.add_photos.presenter.ImagePresenter;
 import com.fame.plumbum.chataround.add_photos.presenter.ImagePresenterImpl;
 import com.fame.plumbum.chataround.add_restroom.view.AddRestroomActivity;
+import com.fame.plumbum.chataround.helper.Constants;
 import com.fame.plumbum.chataround.helper.Keys;
 import com.fame.plumbum.chataround.helper.RxSchedulersHook;
 import com.fame.plumbum.chataround.helper.SharedPrefs;
@@ -133,6 +139,9 @@ public class AddImageActivity extends Activity implements
     @BindView(R.id.imageView)
     ImageView imageView;
 
+    @BindView(R.id.mobileEditText)
+    EditText mobileEditText;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -187,6 +196,27 @@ public class AddImageActivity extends Activity implements
             }
         });
 
+        mobileEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+                if(s.length()==10){
+                    hideKeyboard();
+                }
+            }
+        });
+
+
         uploadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -194,10 +224,38 @@ public class AddImageActivity extends Activity implements
 
                 if (latitude != 0.0 && longitude != 0.0) {
 
+                    String mobile = mobileEditText.getText().toString();
+
+                    Geocoder geocoder;
+                    List<Address> addresses;
+                    geocoder = new Geocoder(AddImageActivity.this, Locale.getDefault());
+
+                    try {
+                        addresses = geocoder.getFromLocation(latitude, longitude, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+                        String country = addresses.get(0).getCountryName();
+
+                        if(!country.contentEquals(Constants.KEY_COUNTRY_INDIA)){
+                            mobile=null;
+                        }
+                    }catch (Exception e){
+
+                        Log.e(TAG,e.getMessage());
+                        e.printStackTrace();
+
+                    }
+
+
+                    if(!mobile.equals(null) || !mobile.equals("") || mobile.length()!=10){
+                        mobileEditText.setError("Please Enter Valid Mobile No!");
+                        mobileEditText.requestFocus();
+                        return;
+                    }
+
                     Intent uploadServiceIntent = new Intent(AddImageActivity.this, UploadGalleryImageService.class);
                     uploadServiceIntent.putExtra(Keys.KEY_USER_MOBILE, "8109109457");
                     uploadServiceIntent.putExtra(Keys.KEY_LATITUDE, latitude);
                     uploadServiceIntent.putExtra(Keys.KEY_LONGITUDE, longitude);
+                    uploadServiceIntent.putExtra(Keys.KEY_USER_MOBILE, mobile);
                     getApplicationContext().startService(uploadServiceIntent);
 
 
@@ -586,6 +644,18 @@ public class AddImageActivity extends Activity implements
                 String knownName = addresses.get(0).getFeatureName();
 
 
+                if(country.contentEquals(Constants.KEY_COUNTRY_INDIA)){
+                    mobileEditText.setVisibility(View.VISIBLE);
+                    if(sharedPrefs.getUserMobile()!=null){
+                        mobileEditText.setText(sharedPrefs.getUserMobile());
+                    }
+                }else{
+                    mobileEditText.setVisibility(View.GONE);
+                    mobileEditText.setText("");
+                    mobileEditText.setEnabled(false);
+                }
+
+
                 if (knownName != null) {
 
                     addressTextView.setText(address);
@@ -669,6 +739,56 @@ public class AddImageActivity extends Activity implements
             return;
         }
 
+
+        latitude = location.getLatitude();
+        longitude = location.getLongitude();
+
+
+        latitudeLongitude.setText("Current Location - " + String.valueOf(latitude)
+                + " , " + longitude);
+        Geocoder geocoder;
+        List<Address> addresses;
+        geocoder = new Geocoder(AddImageActivity.this, Locale.getDefault());
+
+        try {
+            addresses = geocoder.getFromLocation(latitude, longitude, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+            String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
+            String city = addresses.get(0).getLocality();
+            String state = addresses.get(0).getAdminArea();
+            String country = addresses.get(0).getCountryName();
+            String postalCode = addresses.get(0).getPostalCode();
+            String knownName = addresses.get(0).getFeatureName();
+
+            if(country.contentEquals(Constants.KEY_COUNTRY_INDIA)){
+                mobileEditText.setVisibility(View.VISIBLE);
+                if(sharedPrefs.getUserMobile()!=null){
+                    mobileEditText.setText(sharedPrefs.getUserMobile());
+                }
+            }else{
+                mobileEditText.setVisibility(View.GONE);
+                mobileEditText.setText("");
+                mobileEditText.setEnabled(false);
+            }
+
+
+            if (knownName != null) {
+
+                addressTextView.setText(address);
+                addressTextView.append(", " + city);
+                addressTextView.append(", " + state);
+                addressTextView.append(", " + country);
+
+
+            } else {
+                addressTextView.setText(address);
+
+            }
+            showRestroomAddLayout(true);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
 
@@ -708,6 +828,14 @@ public class AddImageActivity extends Activity implements
             return true;
         } else {
             return false;
+        }
+    }
+
+    private void hideKeyboard() {
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }
 

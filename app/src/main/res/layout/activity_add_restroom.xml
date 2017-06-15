@@ -31,7 +31,6 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/submitLayout"
         android:layout_below="@+id/toolbar"
-        android:visibility="gone"
         >
 
         <LinearLayout
@@ -120,14 +119,14 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/textInputLayout"
-                        android:visibility="gone"
                         >
 
                         <EditText
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:id="@+id/mobile"
-                            android:hint="Mobile"
+                            android:id="@+id/mobileEditText"
+                            android:hint="@string/mobile"
+                            android:inputType="phone"
                             />
                     </android.support.design.widget.TextInputLayout>
 

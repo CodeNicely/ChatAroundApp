@@ -46,4 +46,9 @@
     <string name="pollutionToggle">Pollution</string>
     <string name="newsToggle">News</string>
     <string name="load_more">Load More</string>
+    <string name="get_paytm_cash">Get Paytm cash</string>
+    <string name="enter_your_paytm_mobile_number">Enter your mobile number with Paytm Account</string>
+    <string name="mobile">Paytm Mobile Number</string>
+    <string name="proceed">Proceed</string>
+    <string name="skip">Skip</string>
 </resources>

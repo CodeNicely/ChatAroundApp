@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ClipData;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -26,8 +27,11 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -38,8 +42,6 @@ import android.widget.Toast;
 
 import com.desmond.squarecamera.CameraActivity;
 import com.fame.plumbum.chataround.R;
-import com.fame.plumbum.chataround.activity.MainActivity;
-import com.fame.plumbum.chataround.add_photos.view.AddImageActivity;
 import com.fame.plumbum.chataround.add_restroom.model.ImageDataProviderImp;
 import com.fame.plumbum.chataround.add_restroom.model.RetrofitAddRestroomProvider;
 import com.fame.plumbum.chataround.add_restroom.model.data.AddRestroomData;
@@ -49,6 +51,7 @@ import com.fame.plumbum.chataround.add_restroom.presenter.AddRestroomPresenter;
 import com.fame.plumbum.chataround.add_restroom.presenter.AddRestroomPresenterImpl;
 import com.fame.plumbum.chataround.add_restroom.presenter.ImagePresenter;
 import com.fame.plumbum.chataround.add_restroom.presenter.ImagePresenterImpl;
+import com.fame.plumbum.chataround.helper.Constants;
 import com.fame.plumbum.chataround.helper.Keys;
 import com.fame.plumbum.chataround.helper.RxSchedulersHook;
 import com.fame.plumbum.chataround.helper.SharedPrefs;
@@ -147,13 +150,13 @@ public class AddRestroomActivity extends Activity implements
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
 
-    @BindView(R.id.mobile)
-    EditText txt_mobile;
+    @BindView(R.id.mobileEditText)
+    EditText mobileEditText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_camera);
+        setContentView(R.layout.activity_add_restroom);
         ButterKnife.bind(this);
         UploadRestroomImageService.ACTIVITY_DESTROYED = false;
 
@@ -206,7 +209,6 @@ public class AddRestroomActivity extends Activity implements
         imageDataList.add(new ImageData(null, true));
         imageAdapter.setData(imageDataList);
         imageAdapter.notifyDataSetChanged();
-
         galleryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -217,16 +219,36 @@ public class AddRestroomActivity extends Activity implements
         });
 
 
+        mobileEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+                if(s.length()==10){
+                    hideKeyboard();
+                }
+            }
+        });
+
         uploadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                if(imageAdapter.getItemCount()<2){
+                if (imageAdapter.getItemCount() < 2) {
                     Toast.makeText(AddRestroomActivity.this, "Please add atleast 1 Image to Add a new Toilet", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                mobile=txt_mobile.getText().toString();
+                mobile = mobileEditText.getText().toString();
 
 
 
@@ -243,30 +265,37 @@ public class AddRestroomActivity extends Activity implements
                     String postalCode = addresses.get(0).getPostalCode();
                     String knownName = addresses.get(0).getFeatureName();
 
+                    if(!country.contentEquals(Constants.KEY_COUNTRY_INDIA)){
+                        mobile=null;
+                    }
+                    if(!mobile.equals(null) || !mobile.equals("") || mobile.length()!=10){
+                        mobileEditText.setError("Please Enter Valid Mobile No!");
+                        mobileEditText.requestFocus();
+                        return;
+                    }
 /*
                     mobile="123456790";
                     if (mobile.equals(null) || mobile.equals("") || mobile.length()!=10)
                     {
-                        txt_mobile.setError("Please Enter Valid Mobile No!");
-                        txt_mobile.requestFocus();
+                        mobileEditText.setError("Please Enter Valid Mobile No!");
+                        mobileEditText.requestFocus();
                     }
 */
-                        AddRestroomRequestData addRestroomRequestData = new AddRestroomRequestData(
-                                sharedPrefs.getUsername(),
-                                latitude,
-                                longitude, address,
-                                city,
-                                state,
-                                country,
-                                postalCode,
-                                knownName,
-                                male.isChecked(),
-                                female.isChecked(),
-                                disabled.isChecked(),
-                                mobile);
-                        addRestroomPresenter.addRestroom(addRestroomRequestData);
-
-
+                    AddRestroomRequestData addRestroomRequestData = new AddRestroomRequestData(
+                            sharedPrefs.getUsername(),
+                            sharedPrefs.getUserMobile(),
+                            latitude,
+                            longitude, address,
+                            city,
+                            state,
+                            country,
+                            postalCode,
+                            knownName,
+                            male.isChecked(),
+                            female.isChecked(),
+                            disabled.isChecked(),
+                            mobile);
+                    addRestroomPresenter.addRestroom(addRestroomRequestData);
 
 
                 } catch (IOException e) {
@@ -367,7 +396,7 @@ public class AddRestroomActivity extends Activity implements
                 break;
             case MOCK_LOCATION_OFF_REQUEST:
 
-                Intent intent=new Intent(AddRestroomActivity.this,AddRestroomActivity.class);
+                Intent intent = new Intent(AddRestroomActivity.this, AddRestroomActivity.class);
                 startActivity(intent);
                 finish();
                 break;
@@ -390,7 +419,7 @@ public class AddRestroomActivity extends Activity implements
         Log.i(TAG, "Size :" + imageDataList.size());
         imageAdapter.setData(imageDataList);
         imageAdapter.notifyDataSetChanged();
-        recyclerView.smoothScrollToPosition(imageDataList.size()-1);
+        recyclerView.smoothScrollToPosition(imageDataList.size() - 1);
 
     }
 
@@ -587,11 +616,11 @@ public class AddRestroomActivity extends Activity implements
     @Override
     public void onRestroomAdded(AddRestroomData addRestroomData) {
 
-        if(addRestroomData.getRestroom_id().equals("NONE")){
+        if (addRestroomData.getRestroom_id().equals("NONE")) {
             showMessage("Restroom Added Successfully");
 
             finish();
-        }else {
+        } else {
             Intent uploadServiceIntent = new Intent(AddRestroomActivity.this, UploadRestroomImageService.class);
             uploadServiceIntent.putExtra(Keys.KEY_RESTROOM_ID, addRestroomData.getRestroom_id());
             getApplicationContext().startService(uploadServiceIntent);
@@ -632,7 +661,7 @@ public class AddRestroomActivity extends Activity implements
 
         } else {
 
-            if(isMockLocation(location)){
+            if (isMockLocation(location)) {
                 return;
             }
             //If everything went fine lets get latitude and longitude
@@ -655,6 +684,16 @@ public class AddRestroomActivity extends Activity implements
                 String postalCode = addresses.get(0).getPostalCode();
                 String knownName = addresses.get(0).getFeatureName();
 
+                if(country.contentEquals(Constants.KEY_COUNTRY_INDIA)){
+                    mobileEditText.setVisibility(View.VISIBLE);
+                    if(sharedPrefs.getUserMobile()!=null){
+                        mobileEditText.setText(sharedPrefs.getUserMobile());
+                    }
+                }else{
+                    mobileEditText.setVisibility(View.GONE);
+                    mobileEditText.setText("");
+                    mobileEditText.setEnabled(false);
+                }
 
                 if (knownName != null) {
 
@@ -735,7 +774,7 @@ public class AddRestroomActivity extends Activity implements
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
     @Override
     public void onLocationChanged(Location location) {
-        if(isMockLocation(location)){
+        if (isMockLocation(location)) {
             return;
         }
         latitude = location.getLatitude();
@@ -756,6 +795,18 @@ public class AddRestroomActivity extends Activity implements
             String country = addresses.get(0).getCountryName();
             String postalCode = addresses.get(0).getPostalCode();
             String knownName = addresses.get(0).getFeatureName();
+
+            if(country.contentEquals(Constants.KEY_COUNTRY_INDIA)){
+                mobileEditText.setVisibility(View.VISIBLE);
+                if(sharedPrefs.getUserMobile()!=null){
+                    mobileEditText.setText(sharedPrefs.getUserMobile());
+                }
+            }else{
+                mobileEditText.setVisibility(View.GONE);
+                mobileEditText.setText("");
+                mobileEditText.setEnabled(false);
+            }
+
 
             if (knownName != null) {
 
@@ -779,11 +830,10 @@ public class AddRestroomActivity extends Activity implements
     }
 
 
-
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
     public boolean isMockLocation(Location location) {
         if (location.isFromMockProvider()) {
-            AlertDialog.Builder alertDialog = new AlertDialog.Builder(this,R.style.AlertDialogTheme);
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder(this, R.style.AlertDialogTheme);
             alertDialog
                     .setTitle(R.string.mock_location_title)
                     .setMessage(R.string.mock_location_message)
@@ -798,7 +848,7 @@ public class AddRestroomActivity extends Activity implements
                                 if (componentName == null) {
                                     Toast.makeText(getApplicationContext(), "No Activity to handle Intent action", Toast.LENGTH_SHORT).show();
                                 } else {
-                                    startActivityForResult(intent,MOCK_LOCATION_OFF_REQUEST);
+                                    startActivityForResult(intent, MOCK_LOCATION_OFF_REQUEST);
                                 }
                             } catch (Exception e) {
 
@@ -819,5 +869,12 @@ public class AddRestroomActivity extends Activity implements
         }
     }
 
+    private void hideKeyboard() {
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
 
 }

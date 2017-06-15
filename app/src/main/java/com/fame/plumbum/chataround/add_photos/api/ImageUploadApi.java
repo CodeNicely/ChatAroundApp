@@ -20,15 +20,15 @@ public interface ImageUploadApi {
     /**
      * We are using Multipart annotation here for image uploading.
      *
-     * @param user_id    is unique admin token for admin verification.
-     * @param restroom_id restroom_id with which admin wants to attach image.
-     * @param file        is Image file to be uploaded
+     * @param user_id is unique admin token for admin verification.
+     * @param mobile  mobile of user in which he want paytm cash
+     * @param file    is Image file to be uploaded
      * @return
      */
     @Multipart
     @POST(Urls.SUB_URL_PHOTO_UPLOAD_API)
     Call<ImageUploadData> uploadImage(@Part("userId") RequestBody user_id,
-                                      @Part("mobile") RequestBody restroom_id,
+                                      @Part("mobile") RequestBody mobile,
                                       @Part("latitude") RequestBody latitude,
                                       @Part("longitude") RequestBody longitude,
                                       @Part MultipartBody.Part file);

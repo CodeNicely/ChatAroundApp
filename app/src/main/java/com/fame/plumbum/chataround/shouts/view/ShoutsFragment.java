@@ -263,7 +263,7 @@ public class ShoutsFragment extends Fragment implements SwipeRefreshLayout.OnRef
             //If everything went fine lets get latitude and longitude
             latitude = location.getLatitude();
             longitude = location.getLongitude();
-
+            count=0;
             shoutsPresenter.requestShouts(sharedPreferences.getString("uid", null), count, latitude, longitude);
 
         }

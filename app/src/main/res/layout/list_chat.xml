@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="horizontal">
 
     <RelativeLayout
         android:id="@+id/rL_chat"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="@dimen/activity_vertical_margin"
-        android:layout_marginRight="50dp"
-        android:background="@drawable/border_chat_receive">
+        android:layout_height="wrap_content"
+        android:background="@drawable/border_chat_receive"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/rL_chat_sent"
+        android:layout_toEndOf="@+id/rL_chat_sent">
 
         <LinearLayout
             android:id="@+id/ll_text_chat"
@@ -30,6 +31,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Name"
+                    android:textStyle="bold"
                     android:textColor="#202020"
                     android:textSize="12sp" />
 
@@ -39,7 +41,8 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:text="time"
-                    android:textColor="#202020" />
+                    android:textSize="8dp"
+                    android:textColor="#424242" />
             </RelativeLayout>
 
             <TextView

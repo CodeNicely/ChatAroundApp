@@ -1,4 +1,4 @@
-package com.fame.plumbum.chataround.referal_code.model.data;
+package com.fame.plumbum.chataround.referral.model;
 
 /**
  * Created by aman on 18/5/17.

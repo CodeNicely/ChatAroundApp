@@ -2,7 +2,6 @@ package com.fame.plumbum.chataround.helper;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 
 /**
  * Created by meghal on 5/3/17.
@@ -23,6 +22,7 @@ public class SharedPrefs {
     private static final String KEY_GALLERY_MODULE = "galleryModule";
     private static final String KEY_POLLUTION_MODULE = "pollutionModule";
     private static final String KEY_NEWS_MODULE = "newsModule";
+    private static final String KEY_USER_MOBILE_NUMBER = "userMobile";
 
 
     // Shared Preferences
@@ -53,6 +53,17 @@ public class SharedPrefs {
     }
 
 
+    public void setUserMobile(String mobile){
+
+        editor.putString(KEY_USER_MOBILE_NUMBER, mobile);
+        // commit changes
+        editor.commit();
+
+    }
+
+    public String getUserMobile(){
+        return pref.getString(KEY_USER_MOBILE_NUMBER, null);
+    }
 
     public boolean isShouts() {
         return pref.getBoolean(KEY_SHOUTS_MODULE, true);

@@ -43,6 +43,7 @@ public class RetrofitAddRestroomProvider implements AddRestroomProvider {
         AddRestroomApi addRestroomApi = retrofit.create(AddRestroomApi.class);
         Call<AddRestroomData> call = addRestroomApi.addRestroom(
                 addRestroomRequestData.getUsername(),
+                addRestroomRequestData.getMobile(),
                 addRestroomRequestData.getLatitude(),
                 addRestroomRequestData.getLangitude(),
                 addRestroomRequestData.getAddress(),

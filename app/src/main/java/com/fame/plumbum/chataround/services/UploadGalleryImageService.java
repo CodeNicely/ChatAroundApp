@@ -5,6 +5,8 @@ import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v7.app.NotificationCompat;
@@ -42,11 +44,9 @@ public class UploadGalleryImageService extends Service {
     public static boolean QUEUE_EMPTY = true;
 
     private static final int DELAY = 6000;
-    private static final int PROGRESS_DELAY = DELAY / 120;
     private static final int NOTIFICATION_ID = 1;
     private ImageUploader imageUploader;
     private SharedPrefs sharedPrefs;
-    private String userId;
     private String userMobile="";
     private double latitude;
     private double longitude;
@@ -129,7 +129,7 @@ public class UploadGalleryImageService extends Service {
                             startForeground(NOTIFICATION_ID, showNotification());
                             UploadImages = false;
                             uploadImages();
-                            showMessage("Photo uploaded successfully, It will be verified within 48 hours.");
+
                         } else {
                             showMessage("Photo uploading Failed " + imageUploadData.getMessage() +
                                     ". Please try again");
@@ -212,12 +212,15 @@ public class UploadGalleryImageService extends Service {
      * @return
      */
     private Notification showNotification() {
-
+        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         mNotifyManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         mBuilder = new NotificationCompat.Builder(this);
         mBuilder.setContentTitle("Photo Added Successfully")
                 .setContentText("Photo has been added successfully by you and now we are waiting for Verification Process. It will be accepted within 48 hours")
-                .setSmallIcon(R.drawable.ic_file_upload_white).setOngoing(false);
+                .setSmallIcon(R.drawable.ic_file_upload_white)
+                .setAutoCancel(true)
+                .setSound(defaultSoundUri)
+        ;
 // Start a lengthy operation in a background thread
    /*     new Thread(
                 new Runnable() {
@@ -271,7 +274,6 @@ public class UploadGalleryImageService extends Service {
         ImageData imageData = new ImageData(photoEvent.getFile());
         myQueue.add(imageData);
         uploadImages();
-        Toast.makeText(this, "Event bus onImageUploadEvent called!", Toast.LENGTH_SHORT).show();
         Log.i(TAG, "Service Yeah Added to Queue");
     }
 
