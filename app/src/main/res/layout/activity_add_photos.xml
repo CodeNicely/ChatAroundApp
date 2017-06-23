@@ -75,6 +75,40 @@
 
                     </LinearLayout>
 
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center">
+
+                        <TextView
+                            android:id="@+id/heading"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:padding="6dp"
+                            android:text="Get"
+                            android:textColor="#000000"
+                            android:textSize="24sp" />
+
+                        <ImageView
+                            android:layout_width="80dp"
+                            android:layout_height="80dp"
+
+                            android:padding="6dp"
+                            android:src="@drawable/paytm_logo" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+
+                            android:padding="6dp"
+                            android:text="Cash"
+                            android:textColor="#000000"
+                            android:textSize="24sp" />
+                    </LinearLayout>
+
                     <android.support.design.widget.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -133,7 +167,9 @@
 
                     <ImageView
                         android:id="@+id/imageView"
-                        android:layout_width="match_parent"
+                        android:layout_width="160dp"
+                        android:layout_gravity="center"
+                        android:padding="32dp"
                         android:layout_height="wrap_content"
                         android:src="@drawable/upload_image" />
 

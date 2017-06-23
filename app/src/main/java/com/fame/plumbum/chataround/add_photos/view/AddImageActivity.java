@@ -245,7 +245,7 @@ public class AddImageActivity extends Activity implements
                     }
 
 
-                    if(!mobile.equals(null) || !mobile.equals("") || mobile.length()!=10){
+                    if(!mobile.equals(null) && !mobile.equals("") && mobile.length()!=10){
                         mobileEditText.setError("Please Enter Valid Mobile No!");
                         mobileEditText.requestFocus();
                         return;

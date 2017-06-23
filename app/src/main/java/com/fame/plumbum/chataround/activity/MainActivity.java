@@ -14,7 +14,6 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
-import android.net.wifi.WifiInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -28,13 +27,14 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.telephony.TelephonyManager;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -78,17 +78,15 @@ import com.google.android.gms.location.LocationServices;
 import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.io.IOException;
-import java.net.NetworkInterface;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
 import io.fabric.sdk.android.Fabric;
+import it.sephiroth.android.library.tooltip.Tooltip;
 
-import static android.R.attr.country;
 import static com.fame.plumbum.chataround.helper.MyApplication.getContext;
 
 /**
@@ -105,9 +103,9 @@ public class MainActivity extends AppCompatActivity implements
     private static final int FRAGMENT_TYPE_SHOUTS = 1;
     private static final int FRAGMENT_TYPE_TOILET = 2;
     private static final int FRAGMENT_TYPE_GALLERY = 3;
-    private static final int FRAGMENT_TYPE_POLLUTIOMN = 4;
+    private static final int FRAGMENT_TYPE_POLLUTION = 4;
     private static final int FRAGMENT_TYPE_NEWS = 5;
-    private static final String TAG = "MainActivity" ;
+    private static final String TAG = "MainActivity";
 
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
@@ -123,7 +121,7 @@ public class MainActivity extends AppCompatActivity implements
     private ViewPagerAdapter adapter;
 
     private ViewPager viewPager;
-    private ActionBar toolbar;
+    private Toolbar toolbar;
     private TabLayout tabLayout;
     private ReferralPresenter referralPresenter;
 
@@ -151,8 +149,10 @@ public class MainActivity extends AppCompatActivity implements
         mGoogleApiClient.connect();
 
 
-        toolbar = getSupportActionBar();
+//        toolbar = getSupportActionBar();
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
 
+        setSupportActionBar(toolbar);
         assert toolbar != null;
         toolbar.setTitle(R.string.app_name);
 
@@ -221,7 +221,7 @@ public class MainActivity extends AppCompatActivity implements
 
             sp = PreferenceManager.getDefaultSharedPreferences(this);
             initFCM();
-            getSupportActionBar().setDisplayHomeAsUpEnabled(false); // remove the left caret
+//            getSupportActionBar().setDisplayHomeAsUpEnabled(false); // remove the left caret
             viewPager = (ViewPager) findViewById(R.id.viewpager);
             tabLayout = (TabLayout) findViewById(R.id.tabs);
 
@@ -315,7 +315,7 @@ public class MainActivity extends AppCompatActivity implements
 
         }
         if (sharedPrefs.isPullution()) {
-            adapter.addFragment(pollutionFragment, "PollutionFragment", FRAGMENT_TYPE_POLLUTIOMN);
+            adapter.addFragment(pollutionFragment, "PollutionFragment", FRAGMENT_TYPE_POLLUTION);
         }
         if (sharedPrefs.isNews()) {
             adapter.addFragment(newsListFragment, "NewsListFragment", FRAGMENT_TYPE_NEWS);
@@ -350,7 +350,7 @@ public class MainActivity extends AppCompatActivity implements
                         tabLayout.getTabAt(i).setIcon(R.drawable.gallery);
                     }
                     break;
-                case FRAGMENT_TYPE_POLLUTIOMN:
+                case FRAGMENT_TYPE_POLLUTION:
                     if (tabLayout.getTabAt(i) != null) {
                         tabLayout.getTabAt(i).setIcon(R.drawable.pollution1);
                     }
@@ -414,7 +414,7 @@ public class MainActivity extends AppCompatActivity implements
 */
                         break;
 
-                    case FRAGMENT_TYPE_POLLUTIOMN:
+                    case FRAGMENT_TYPE_POLLUTION:
                         toolbar.setTitle("Pollution Meter");
   /*                      Answers.getInstance().logCustom(new CustomEvent("User Swiped to Pollution")
                                 .putCustomAttribute(Keys.KEY_LATITUDE, lat)
@@ -633,7 +633,7 @@ public class MainActivity extends AppCompatActivity implements
 //                state = addresses.get(0).getAdminArea();
                 String country = addresses.get(0).getCountryName();
                 Toast.makeText(this, country, Toast.LENGTH_SHORT).show();
-                if(country.contentEquals(Constants.KEY_COUNTRY_INDIA)) {
+                if (country.contentEquals(Constants.KEY_COUNTRY_INDIA)) {
 
 
                     referralPresenter = new ReferralPresenterImpl(this, new RetrofitReferralProvider());
@@ -676,10 +676,10 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onDeviceDataReceived(VerifyDeviceData verifyDeviceData) {
 
-        if(verifyDeviceData.isNew_device()) {
+        if (verifyDeviceData.isNew_device()) {
 
             final Dialog dialog = new Dialog(this);
-            dialog.setContentView(R.layout.dialog_referal);
+            dialog.setContentView(R.layout.dialog_referral);
             final EditText referal_code = (EditText) dialog.findViewById(R.id.referal);
             Button proceed = (Button) dialog.findViewById(R.id.proceed);
             Button skip = (Button) dialog.findViewById(R.id.skip);
@@ -697,7 +697,7 @@ public class MainActivity extends AppCompatActivity implements
 
                 @Override
                 public void afterTextChanged(Editable s) {
-                    if(s.length()==10){
+                    if (s.length() == 10) {
                         hideKeyboard();
                     }
                 }
@@ -714,14 +714,14 @@ public class MainActivity extends AppCompatActivity implements
                     if (code.equals("") || code.equals(null)) {
                         referal_code.setError("Invalid mobile number");
                         referal_code.requestFocus();
-                    } else if (code.length() < 10 || code.length()>10) {
+                    } else if (code.length() < 10 || code.length() > 10) {
                         referal_code.setError("Invalid mobile number");
                         referal_code.requestFocus();
                     } else {
 
                         sharedPrefs.setUserMobile(code);
-                        referralPresenter.requestReferal(sharedPrefs.getUserId(),Settings.Secure.getString(getContext().getContentResolver(),
-                                Settings.Secure.ANDROID_ID),code);
+                        referralPresenter.requestReferal(sharedPrefs.getUserId(), Settings.Secure.getString(getContext().getContentResolver(),
+                                Settings.Secure.ANDROID_ID), code);
                         dialog.dismiss();
                     }
 
@@ -735,9 +735,9 @@ public class MainActivity extends AppCompatActivity implements
                     dialog.dismiss();
                 }
             });
-        }else{
+        } else {
 
-            Log.d(TAG,"Old device");
+            Log.d(TAG, "Old device");
         }
 
     }
@@ -941,6 +941,124 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
+
+    /*  @Override
+      public boolean onPrepareOptionsMenu(final Menu menu) {
+          getMenuInflater().inflate(R.menu.menu, menu);
+
+          return super.onCreateOptionsMenu(menu);
+      }
+  */
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu, menu);
+        MenuItem item = menu.findItem(R.id.menu_help);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_help:
+                String message = null;
+                // write your code here
+                if (viewPager.getCurrentItem() == FRAGMENT_TYPE_SHOUTS) {
+                    message = "Bulletin Board for your 1-mile radius. Post messages for everyone in your area to see. " +
+                            "See other people’s messages. Chat with them publicly through comments or privately through chat. ";
+                } else if (viewPager.getCurrentItem() == FRAGMENT_TYPE_TOILET) {
+                    message = "Public toilets(with photos and location) in your 1-mile radius sorted " +
+                            "by nearest. Photos represent the toilets’ outside appearance and relative cleanliness. ";
+                } else if (viewPager.getCurrentItem() == FRAGMENT_TYPE_GALLERY) {
+                    message = "Images unique to your area clicked in your 1-mile radius (landmarks, offices, religious institutions etc) ";
+                } else if (viewPager.getCurrentItem() == FRAGMENT_TYPE_POLLUTION) {
+                    message = "Pollution statistics from your nearest air pollution sensor. Subject to " +
+                            "availability of an digitally open air pollution sensor within 50km. ";
+
+                } else if (viewPager.getCurrentItem() == FRAGMENT_TYPE_NEWS) {
+                    message = "Every news article on the Internet related to your city or state in " +
+                            "case there aren’t enough news articles relating to your city (in case " +
+                            "of tier-2 and tier-3 cities).";
+                }
+
+                if (message != null) {
+                    /*final Dialog dialog = new Dialog(context);
+                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                    dialog.setContentView(R.layout.dialog_help);
+                    Button okay = (Button) dialog.findViewById(R.id.okay);
+                    TextView messageTextView = (TextView) dialog.findViewById(R.id.description);
+
+
+                    messageTextView.setText(message);
+
+                    okay.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            dialog.dismiss();
+                        }
+                    });
+                    dialog.show();*/
+
+
+
+/*                    new SimpleTooltip.Builder(this)
+                            .anchorView(toolbar.getChildAt(0))
+                            .text(message)
+                            .gravity(Gravity.BOTTOM)
+                            .animated(true)
+                            .transparentOverlay(false)
+                            .build()
+                            .show();*/
+
+                    final Tooltip.Builder tooltip = new Tooltip.Builder(101)
+                            .anchor(toolbar.getChildAt(0), Tooltip.Gravity.BOTTOM)
+                            .closePolicy(new Tooltip.ClosePolicy()
+                                    .insidePolicy(true, false)
+                                    .outsidePolicy(true, true), 10000)
+                            .activateDelay(000)
+                            .showDelay(000)
+                            .text(message)
+                            .maxWidth(ViewPager.LayoutParams.MATCH_PARENT)
+                            .withArrow(true)
+                            .withOverlay(true)
+                            .withCallback(new Tooltip.Callback() {
+                                @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+                                @Override
+                                public void onTooltipClose(Tooltip.TooltipView tooltipView, boolean b, boolean b1) {
+//                                            viewPager.setAlpha(Float.parseFloat("1"));
+                                    viewPager.setAlpha(1);
+
+                                }
+
+                                @Override
+                                public void onTooltipFailed(Tooltip.TooltipView tooltipView) {
+
+                                }
+
+                                @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+                                @Override
+                                public void onTooltipShown(Tooltip.TooltipView tooltipView) {
+                                    viewPager.setAlpha(Float.parseFloat("0.5"));
+
+                                }
+
+                                @Override
+                                public void onTooltipHidden(Tooltip.TooltipView tooltipView) {
+
+                                }
+                            })
+                            .floatingAnimation(Tooltip.AnimationBuilder.DEFAULT)
+                            .build();
+
+
+                    Tooltip.make(this, tooltip).show();
+                }
+
+                return true;
+            default:
+                return false;
+        }
+    }
 
 
 }

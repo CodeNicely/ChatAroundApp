@@ -22,6 +22,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.fame.plumbum.chataround.R;
@@ -47,7 +48,7 @@ import butterknife.ButterKnife;
  * Activities that contain this fragment must implement the
  * {@link RestroomFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link RestroomFragment#newInstance} factory method to
+ * Use the {@link RestroomFragment#} factory method to
  * create an instance of this fragment.
  */
 public class RestroomFragment extends Fragment implements
@@ -82,7 +83,7 @@ public class RestroomFragment extends Fragment implements
     ProgressBar progressBar;
 
     @BindView(R.id.add_restroom)
-    Button addRestroom;
+    RelativeLayout addRestroom;
 
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;

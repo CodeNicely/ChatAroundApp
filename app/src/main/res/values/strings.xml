@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">1 Mile</string>
+    <!--<string name="app_name">1 Mile</string>-->
 
     <!-- Strings related to login -->
     <string name="google_maps_key">AIzaSyCKxL9YpnXpIPYmGa4ZifTGpbbLr59KLOI</string>
@@ -51,4 +51,7 @@
     <string name="mobile">Paytm Mobile Number</string>
     <string name="proceed">Proceed</string>
     <string name="skip">Skip</string>
+    <string name="help">Help</string>
+    <string name="okay">Okay</string>
+    <string name="help_message">Help Message</string>
 </resources>

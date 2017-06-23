@@ -22,7 +22,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -87,7 +89,7 @@ public class GalleryFragment extends Fragment implements GalleryView, GoogleApiC
     ProgressBar progressBar;
 
     @BindView(R.id.add_photo)
-    Button addPhoto;
+    RelativeLayout addPhoto;
 
     @BindView(R.id.swipe_refresh_layout)
     SwipeRefreshLayout swipeRefreshLayout;

@@ -1,5 +1,7 @@
 package com.fame.plumbum.chataround.helper;
 
+import com.fame.plumbum.chataround.BuildConfig;
+
 /**
  * Created by meghal on 19/2/17.
  */
@@ -22,8 +24,7 @@ public class Urls {
     //    public static String BASE_URL = "http://52.66.45.251:5000/"; // AWS
 //    public static String BASE_URL = "http://139.59.30.208:5000/"; // Digital Ocean
 
-//    public static String BASE_URL = "http://163.53.72.247:8765/";
-    public static String BASE_URL = "http://192.168.43.198:5000/"; // Local Server
+    public static final String BASE_URL = BuildConfig.BASE_URL;
 
 
 }

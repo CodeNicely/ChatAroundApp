@@ -268,7 +268,7 @@ public class AddRestroomActivity extends Activity implements
                     if(!country.contentEquals(Constants.KEY_COUNTRY_INDIA)){
                         mobile=null;
                     }
-                    if(!mobile.equals(null) || !mobile.equals("") || mobile.length()!=10){
+                    if(!mobile.equals(null) && !mobile.equals("") && mobile.length()!=10){
                         mobileEditText.setError("Please Enter Valid Mobile No!");
                         mobileEditText.requestFocus();
                         return;
