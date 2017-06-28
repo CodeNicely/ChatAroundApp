@@ -631,15 +631,17 @@ public class MainActivity extends AppCompatActivity implements
 
 //                city = addresses.get(0).getLocality();
 //                state = addresses.get(0).getAdminArea();
-                String country = addresses.get(0).getCountryName();
-                Toast.makeText(this, country, Toast.LENGTH_SHORT).show();
-                if (country.contentEquals(Constants.KEY_COUNTRY_INDIA)) {
+                if (addresses.size() > 0) {
+                    String country = addresses.get(0).getCountryName();
+                    Toast.makeText(this, country, Toast.LENGTH_SHORT).show();
+                    if (country.contentEquals(Constants.KEY_COUNTRY_INDIA)) {
 
 
-                    referralPresenter = new ReferralPresenterImpl(this, new RetrofitReferralProvider());
+                        referralPresenter = new ReferralPresenterImpl(this, new RetrofitReferralProvider());
 
-                    referralPresenter.requestDeviceIdVerify(sharedPrefs.getUserId(), Settings.Secure.getString(getContext().getContentResolver(),
-                            Settings.Secure.ANDROID_ID));
+                        referralPresenter.requestDeviceIdVerify(sharedPrefs.getUserId(), Settings.Secure.getString(getContext().getContentResolver(),
+                                Settings.Secure.ANDROID_ID));
+                    }
                 }
 
             } catch (IOException e) {

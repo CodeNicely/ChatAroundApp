@@ -295,6 +295,11 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     }
 
     private void getDetails() {
+        Answers.getInstance().
+                logLogin(new LoginEvent().putMethod("GooglePlus")
+                        .putSuccess(true)
+                );
+
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
         startActivity(intent);
         finish();
@@ -341,7 +346,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 return params;
             }
 
-            ;
+
         };
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(myReq);
@@ -638,11 +643,24 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                     Toast.makeText(LoginActivity.this, "Image Uploaded!", Toast.LENGTH_SHORT).show();
                     editor.putString("image", "1");
                     editor.apply();
+
+                    Answers.getInstance().
+                            logLogin(new LoginEvent().putMethod("GooglePlus - Image Uploaded")
+                                    .putSuccess(true)
+                            );
                 } else {
                     Toast.makeText(LoginActivity.this, "Error uploading image!", Toast.LENGTH_SHORT).show();
+
+                    Answers.getInstance().
+                            logLogin(new LoginEvent().putMethod("GooglePlus - Error Uploading Image")
+                                    .putSuccess(true)
+                            );
                 }
 
                 sharedPrefs.setLogin(true);
+
+
+
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                 startActivity(intent);
                 finish();
@@ -652,6 +670,10 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             @Override
             public void onFailure(Call<ImageSendData> call, Throwable t) {
                 Toast.makeText(LoginActivity.this, "Error uploading image!", Toast.LENGTH_SHORT).show();
+                Answers.getInstance().
+                        logLogin(new LoginEvent().putMethod("GooglePlus - Error Uploading Image")
+                                .putSuccess(true)
+                        );
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                 startActivity(intent);
                 finish();

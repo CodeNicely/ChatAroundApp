@@ -33,21 +33,31 @@ public class RestRoomPresenterImpl implements RestRoomPresenter {
 
             @Override
             public void onSuccess(RestRoomData restRoomData) {
-                restRoomView.showLoader(false);
-                if (restRoomData.isSuccess()) {
-                    restRoomView.onReceived(restRoomData.getRestroom_list());
-                    restRoomView.showLoader(false);
 
-                } else {
-                    restRoomView.showMessage(restRoomData.getMessage());
-                    restRoomView.showLoader(false);
-                    Answers.getInstance().logCustom(new CustomEvent("Restroom Module Loading Failed - Server end")
+                restRoomView.showLoader(false);
+                if (restRoomData != null) {
+                    if (restRoomData.isSuccess()) {
+                        restRoomView.onReceived(restRoomData.getRestroom_list());
+                        restRoomView.showLoader(false);
+
+                    } else {
+                        restRoomView.showMessage(restRoomData.getMessage());
+                        restRoomView.showLoader(false);
+                        Answers.getInstance().logCustom(new CustomEvent("Restroom Module Loading Failed - Server end")
+                                .putCustomAttribute(Keys.USER_EMAIL, user_id)
+                                .putCustomAttribute(Keys.KEY_LATITUDE, latitude)
+                                .putCustomAttribute(Keys.KEY_LONGITUDE, longitude)
+
+                        );
+
+                    }
+                }else{
+                    Answers.getInstance().logCustom(new CustomEvent("Restroom Module Loading Failed - Null Data")
                             .putCustomAttribute(Keys.USER_EMAIL, user_id)
-                            .putCustomAttribute(Keys.KEY_LATITUDE,latitude)
-                            .putCustomAttribute(Keys.KEY_LONGITUDE,longitude)
+                            .putCustomAttribute(Keys.KEY_LATITUDE, latitude)
+                            .putCustomAttribute(Keys.KEY_LONGITUDE, longitude)
 
                     );
-
                 }
             }
 
@@ -55,8 +65,8 @@ public class RestRoomPresenterImpl implements RestRoomPresenter {
             public void onFailure(String message) {
                 Answers.getInstance().logCustom(new CustomEvent("Restroom Module Loading Failed - Local")
                         .putCustomAttribute(Keys.USER_EMAIL, user_id)
-                        .putCustomAttribute(Keys.KEY_LATITUDE,latitude)
-                        .putCustomAttribute(Keys.KEY_LONGITUDE,longitude)
+                        .putCustomAttribute(Keys.KEY_LATITUDE, latitude)
+                        .putCustomAttribute(Keys.KEY_LONGITUDE, longitude)
 
                 );
                 restRoomView.showLoader(false);

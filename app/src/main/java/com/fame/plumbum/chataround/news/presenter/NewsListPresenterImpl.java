@@ -30,26 +30,28 @@ public class NewsListPresenterImpl implements NewsListPresenter {
             @Override
             public void onSuccess(NewsListData newsListData) {
                 newsListView.showProgressBar(false);
-                if (newsListData.isSuccess()) {
-                    newsListView.setNewsList(newsListData.getNewsListDataDetailsList());
+                if (newsListData != null) {
+                    if (newsListData.isSuccess()) {
+                        newsListView.setNewsList(newsListData.getNewsListDataDetailsList());
 
 
-                } else {
-                    if(newsListData.getMessage()!=null) {
-                        newsListView.showMessage(newsListData.getMessage());
-                    }else{
-                        newsListView.showMessage("Unable to fetch News for your Location!");
+                    } else {
+                        if (newsListData.getMessage() != null) {
+                            newsListView.showMessage(newsListData.getMessage());
+                        } else {
+                            newsListView.showMessage("Unable to fetch News for your Location!");
+
+                        }
+
+                        Answers.getInstance().logCustom(new CustomEvent("News Module Loading Failed - Server end")
+                                .putCustomAttribute(Keys.USER_EMAIL, userId)
+                                .putCustomAttribute(Keys.KEY_CITY, city)
+                                .putCustomAttribute(Keys.KEY_COUNTRY, country)
+                                .putCustomAttribute(Keys.KEY_STATE, state)
+
+                        );
 
                     }
-
-                    Answers.getInstance().logCustom(new CustomEvent("News Module Loading Failed - Server end")
-                            .putCustomAttribute(Keys.USER_EMAIL, userId)
-                            .putCustomAttribute(Keys.KEY_CITY,city)
-                            .putCustomAttribute(Keys.KEY_COUNTRY,country)
-                            .putCustomAttribute(Keys.KEY_STATE,state)
-
-                    );
-
                 }
             }
 
@@ -58,9 +60,9 @@ public class NewsListPresenterImpl implements NewsListPresenter {
 
                 Answers.getInstance().logCustom(new CustomEvent("News Module Loading Failed - Local")
                         .putCustomAttribute(Keys.USER_EMAIL, userId)
-                        .putCustomAttribute(Keys.KEY_CITY,city)
-                        .putCustomAttribute(Keys.KEY_COUNTRY,country)
-                        .putCustomAttribute(Keys.KEY_STATE,state)
+                        .putCustomAttribute(Keys.KEY_CITY, city)
+                        .putCustomAttribute(Keys.KEY_COUNTRY, country)
+                        .putCustomAttribute(Keys.KEY_STATE, state)
 
                 );
                 newsListView.showProgressBar(false);

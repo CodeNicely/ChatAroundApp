@@ -288,30 +288,35 @@ public class PollutionFragment extends Fragment implements
     @Override
     public void setData(AirPollutionDetails airPollutionDetails) {
 
-        if(!isAdded()){
+        if (!isAdded()) {
             return;
         }
         List<Double> geo = airPollutionDetails.getData().getCity().getGeo();
+        double distance;
 
-        double distance1 = DistanceUtils.calculateDistanceBetweenTwoPoints(
-                latitude,
-                longitude,
-                geo.get(0),
-                geo.get(1));
+        if (geo.size() < 2) {
 
-        double distance2 = DistanceUtils.calculateDistanceBetweenTwoPoints(
-                latitude,
-                longitude,
-                geo.get(1),
-                geo.get(0));
+            double distance1 = DistanceUtils.calculateDistanceBetweenTwoPoints(
+                    latitude,
+                    longitude,
+                    geo.get(0),
+                    geo.get(1));
 
-        double distance = 0.0;
-        if (distance1 < distance2) {
-            distance = distance1;
-        } else {
-            distance = distance2;
+            double distance2 = DistanceUtils.calculateDistanceBetweenTwoPoints(
+                    latitude,
+                    longitude,
+                    geo.get(1),
+                    geo.get(0));
+
+            if (distance1 < distance2) {
+                distance = distance1;
+            } else {
+                distance = distance2;
+            }
+        }else{
+            distance=0.0;
         }
-/*
+        /*
         Location myLocation=new Location("My Location");
         myLocation.setLatitude(latitude);
         myLocation.setLongitude(longitude);
@@ -326,8 +331,8 @@ public class PollutionFragment extends Fragment implements
         if (distance > 50) {
 
             Answers.getInstance().logCustom(new CustomEvent("Pollution Data not available within 50 Kms")
-                    .putCustomAttribute(Keys.KEY_LATITUDE,latitude)
-                    .putCustomAttribute(Keys.KEY_LONGITUDE,longitude)
+                    .putCustomAttribute(Keys.KEY_LATITUDE, latitude)
+                    .putCustomAttribute(Keys.KEY_LONGITUDE, longitude)
 
             );
 
@@ -344,8 +349,8 @@ public class PollutionFragment extends Fragment implements
 
 
             Answers.getInstance().logCustom(new CustomEvent("Pollution Data available")
-                    .putCustomAttribute(Keys.KEY_LATITUDE,latitude)
-                    .putCustomAttribute(Keys.KEY_LONGITUDE,longitude)
+                    .putCustomAttribute(Keys.KEY_LATITUDE, latitude)
+                    .putCustomAttribute(Keys.KEY_LONGITUDE, longitude)
 
             );
 
@@ -414,7 +419,9 @@ public class PollutionFragment extends Fragment implements
             }
 
         } catch (Exception e) {
-            Log.e(TAG, e.getMessage());
+            if (e.getMessage().length() != 0) {
+                Log.e(TAG, e.getMessage());
+            }
 
         }
 

@@ -27,36 +27,46 @@ public class GalleryPresenterImpl implements GalleryPresenter {
 
         galleryView.showLoader(true);
 
-        galleryProvider.getImages(userId,mobile,latitude, longitude, new OnGalleryApiResponse() {
+        galleryProvider.getImages(userId, mobile, latitude, longitude, new OnGalleryApiResponse() {
             @Override
             public void onSuccess(GalleryData galleryData) {
-                if(galleryData.isSuccess()){
+                galleryView.showLoader(false);
 
-                    galleryView.showLoader(false);
-                    galleryView.onGalleryData(galleryData.getImage_list());
+                if (galleryData != null) {
+                    if (galleryData.isSuccess()) {
 
+                        galleryView.onGalleryData(galleryData.getImage_list());
+
+                    } else {
+
+                        Answers.getInstance().logCustom(new CustomEvent("Gallery Module Loading Failed - Server end")
+                                .putCustomAttribute(Keys.KEY_USER_ID, userId)
+                                .putCustomAttribute(Keys.KEY_LATITUDE, latitude)
+                                .putCustomAttribute(Keys.KEY_LONGITUDE, longitude)
+                                .putCustomAttribute(Keys.KEY_USER_MOBILE, mobile)
+
+                        );
+
+                    }
                 }else{
-
-                    Answers.getInstance().logCustom(new CustomEvent("Gallery Module Loading Failed - Server end")
+                    Answers.getInstance().logCustom(new CustomEvent("Gallery Module Loading Failed - Null data")
                             .putCustomAttribute(Keys.KEY_USER_ID, userId)
-                            .putCustomAttribute(Keys.KEY_LATITUDE,latitude)
-                            .putCustomAttribute(Keys.KEY_LONGITUDE,longitude)
-                            .putCustomAttribute(Keys.KEY_USER_MOBILE,mobile)
+                            .putCustomAttribute(Keys.KEY_LATITUDE, latitude)
+                            .putCustomAttribute(Keys.KEY_LONGITUDE, longitude)
+                            .putCustomAttribute(Keys.KEY_USER_MOBILE, mobile)
 
                     );
-                    galleryView.showLoader(false);
-
                 }
             }
+
             @Override
-            public void onFailed(String message)
-            {
+            public void onFailed(String message) {
 
                 Answers.getInstance().logCustom(new CustomEvent("Gallery Module Loading Failed - Local")
                         .putCustomAttribute(Keys.KEY_USER_ID, userId)
-                        .putCustomAttribute(Keys.KEY_LATITUDE,latitude)
-                        .putCustomAttribute(Keys.KEY_LONGITUDE,longitude)
-                        .putCustomAttribute(Keys.KEY_USER_MOBILE,mobile)
+                        .putCustomAttribute(Keys.KEY_LATITUDE, latitude)
+                        .putCustomAttribute(Keys.KEY_LONGITUDE, longitude)
+                        .putCustomAttribute(Keys.KEY_USER_MOBILE, mobile)
 
                 );
 
@@ -72,7 +82,7 @@ public class GalleryPresenterImpl implements GalleryPresenter {
 
     @Override
     public void onDestroy() {
-        if(galleryProvider!=null){
+        if (galleryProvider != null) {
             galleryProvider.onDestroy();
         }
     }

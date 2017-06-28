@@ -210,7 +210,7 @@ public class AddImageActivity extends Activity implements
             @Override
             public void afterTextChanged(Editable s) {
 
-                if(s.length()==10){
+                if (s.length() == 10) {
                     hideKeyboard();
                 }
             }
@@ -234,18 +234,18 @@ public class AddImageActivity extends Activity implements
                         addresses = geocoder.getFromLocation(latitude, longitude, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
                         String country = addresses.get(0).getCountryName();
 
-                        if(!country.contentEquals(Constants.KEY_COUNTRY_INDIA)){
-                            mobile=null;
+                        if (!country.contentEquals(Constants.KEY_COUNTRY_INDIA)) {
+                            mobile = null;
                         }
-                    }catch (Exception e){
+                    } catch (Exception e) {
 
-                        Log.e(TAG,e.getMessage());
+                        Log.e(TAG, e.getMessage());
                         e.printStackTrace();
 
                     }
 
 
-                    if(!mobile.equals(null) && !mobile.equals("") && mobile.length()!=10){
+                    if (mobile != null  && !mobile.equals("") && mobile.length() != 10) {
                         mobileEditText.setError("Please Enter Valid Mobile No!");
                         mobileEditText.requestFocus();
                         return;
@@ -636,40 +636,41 @@ public class AddImageActivity extends Activity implements
 
             try {
                 addresses = geocoder.getFromLocation(latitude, longitude, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
-                String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
-                String city = addresses.get(0).getLocality();
-                String state = addresses.get(0).getAdminArea();
-                String country = addresses.get(0).getCountryName();
-                String postalCode = addresses.get(0).getPostalCode();
-                String knownName = addresses.get(0).getFeatureName();
+                if(addresses.size()>0) {
+                    String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
+                    String city = addresses.get(0).getLocality();
+                    String state = addresses.get(0).getAdminArea();
+                    String country = addresses.get(0).getCountryName();
+                    String postalCode = addresses.get(0).getPostalCode();
+                    String knownName = addresses.get(0).getFeatureName();
 
 
-                if(country.contentEquals(Constants.KEY_COUNTRY_INDIA)){
-                    mobileEditText.setVisibility(View.VISIBLE);
-                    if(sharedPrefs.getUserMobile()!=null){
-                        mobileEditText.setText(sharedPrefs.getUserMobile());
+                    if (country.contentEquals(Constants.KEY_COUNTRY_INDIA)) {
+                        mobileEditText.setVisibility(View.VISIBLE);
+                        if (sharedPrefs.getUserMobile() != null) {
+                            mobileEditText.setText(sharedPrefs.getUserMobile());
+                        }
+                    } else {
+                        mobileEditText.setVisibility(View.GONE);
+                        mobileEditText.setText("");
+                        mobileEditText.setEnabled(false);
                     }
-                }else{
-                    mobileEditText.setVisibility(View.GONE);
-                    mobileEditText.setText("");
-                    mobileEditText.setEnabled(false);
+
+
+                    if (knownName != null) {
+
+                        addressTextView.setText(address);
+                        addressTextView.append(", " + city);
+                        addressTextView.append(", " + state);
+                        addressTextView.append(", " + country);
+
+
+                    } else {
+                        addressTextView.setText(address);
+
+                    }
+                    showRestroomAddLayout(true);
                 }
-
-
-                if (knownName != null) {
-
-                    addressTextView.setText(address);
-                    addressTextView.append(", " + city);
-                    addressTextView.append(", " + state);
-                    addressTextView.append(", " + country);
-
-
-                } else {
-                    addressTextView.setText(address);
-
-                }
-                showRestroomAddLayout(true);
-
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -759,12 +760,12 @@ public class AddImageActivity extends Activity implements
             String postalCode = addresses.get(0).getPostalCode();
             String knownName = addresses.get(0).getFeatureName();
 
-            if(country.contentEquals(Constants.KEY_COUNTRY_INDIA)){
+            if (country.contentEquals(Constants.KEY_COUNTRY_INDIA)) {
                 mobileEditText.setVisibility(View.VISIBLE);
-                if(sharedPrefs.getUserMobile()!=null){
+                if (sharedPrefs.getUserMobile() != null) {
                     mobileEditText.setText(sharedPrefs.getUserMobile());
                 }
-            }else{
+            } else {
                 mobileEditText.setVisibility(View.GONE);
                 mobileEditText.setText("");
                 mobileEditText.setEnabled(false);
@@ -792,41 +793,45 @@ public class AddImageActivity extends Activity implements
     }
 
 
-    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
+    //    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
     public boolean isMockLocation(Location location) {
-        if (location.isFromMockProvider()) {
-            AlertDialog.Builder alertDialog = new AlertDialog.Builder(this,R.style.AlertDialogTheme);
-            alertDialog
-                    .setTitle(R.string.mock_location_title)
-                    .setMessage(R.string.mock_location_message)
-                    .setCancelable(false)
-                    .setPositiveButton("Okay", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            if (location.isFromMockProvider()) {
+                AlertDialog.Builder alertDialog = new AlertDialog.Builder(this, R.style.AlertDialogTheme);
+                alertDialog
+                        .setTitle(R.string.mock_location_title)
+                        .setMessage(R.string.mock_location_message)
+                        .setCancelable(false)
+                        .setPositiveButton("Okay", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
 
-                            try {
-                                Intent intent = new Intent(Settings.ACTION_APPLICATION_DEVELOPMENT_SETTINGS);
-                                ComponentName componentName = intent.resolveActivity(getPackageManager());
-                                if (componentName == null) {
-                                    Toast.makeText(getApplicationContext(), "No Activity to handle Intent action", Toast.LENGTH_SHORT).show();
-                                } else {
-                                    startActivityForResult(intent,MOCK_LOCATION_OFF_REQUEST);
+                                try {
+                                    Intent intent = new Intent(Settings.ACTION_APPLICATION_DEVELOPMENT_SETTINGS);
+                                    ComponentName componentName = intent.resolveActivity(getPackageManager());
+                                    if (componentName == null) {
+                                        Toast.makeText(getApplicationContext(), "No Activity to handle Intent action", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        startActivityForResult(intent, MOCK_LOCATION_OFF_REQUEST);
+                                    }
+                                } catch (Exception e) {
+
+                                    Toast.makeText(AddImageActivity.this, "Error " + e.getMessage(), Toast.LENGTH_SHORT).show();
                                 }
-                            } catch (Exception e) {
-
-                                Toast.makeText(AddImageActivity.this, "Error " + e.getMessage(), Toast.LENGTH_SHORT).show();
                             }
-                        }
-                    })
-                    .setNegativeButton("Exit", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            finish();
-                        }
-                    }).show();
+                        })
+                        .setNegativeButton("Exit", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                finish();
+                            }
+                        }).show();
 
-            return true;
-        } else {
+                return true;
+            } else {
+                return false;
+            }
+        }else{
             return false;
         }
     }

@@ -346,11 +346,12 @@ public class NewsListFragment extends Fragment implements
 
 
                 addresses = geocoder.getFromLocation(latitude, longitude, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
-                city = addresses.get(0).getLocality();
-                state = addresses.get(0).getAdminArea();
-                country = addresses.get(0).getCountryName();
-                newsListPresenter.getNews(true, sharedPrefs.getUserId(), city, state, country);
-
+                if (addresses.size() > 0) {
+                    city = addresses.get(0).getLocality();
+                    state = addresses.get(0).getAdminArea();
+                    country = addresses.get(0).getCountryName();
+                    newsListPresenter.getNews(true, sharedPrefs.getUserId(), city, state, country);
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -414,17 +415,16 @@ public class NewsListFragment extends Fragment implements
             List<Address> addresses;
             geocoder = new Geocoder(context, Locale.getDefault());
             addresses = geocoder.getFromLocation(latitude, longitude, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
-            city = addresses.get(0).getLocality();
-            state = addresses.get(0).getAdminArea();
-            country = addresses.get(0).getCountryName();
-            newsListPresenter.getNews(true, sharedPrefs.getUserId(), city, state, country);
-
+            if (addresses.size() > 0) {
+                city = addresses.get(0).getLocality();
+                state = addresses.get(0).getAdminArea();
+                country = addresses.get(0).getCountryName();
+                newsListPresenter.getNews(true, sharedPrefs.getUserId(), city, state, country);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-
-
 
 
 }

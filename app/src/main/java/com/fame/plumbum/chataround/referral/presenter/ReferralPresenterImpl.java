@@ -16,12 +16,12 @@ import com.fame.plumbum.chataround.referral.view.ReferralView;
 
 public class ReferralPresenterImpl implements ReferralPresenter {
 
-    private static final String TAG = "ReferralPresenterTag" ;
+    private static final String TAG = "ReferralPresenterTag";
     private ReferralView referralView;
     private ReferralProvider referralProvider;
 
     public ReferralPresenterImpl(ReferralView referralView, ReferralProvider referralProvider) {
-         this.referralView = referralView;
+        this.referralView = referralView;
         this.referralProvider = referralProvider;
     }
 
@@ -30,34 +30,33 @@ public class ReferralPresenterImpl implements ReferralPresenter {
         referralProvider.requestDeviceIdVerify(userId, deviceId, new OnDeviceVerifyResponse() {
             @Override
             public void onSuccess(VerifyDeviceData verifyDeviceData) {
+                if (verifyDeviceData != null) {
+                    if (verifyDeviceData.isSuccess()) {
+                        referralView.onDeviceDataReceived(verifyDeviceData);
+                    } else {
 
-                if(verifyDeviceData.isSuccess()){
-                    referralView.onDeviceDataReceived(verifyDeviceData);
-                }else{
+                        Log.d(TAG, "Device is an old device, So we will not show a referral dialog");
 
-                    Log.d(TAG,"Device is an old device, So we will not show a referral dialog");
-
+                    }
                 }
             }
-
             @Override
             public void onFailure(String message) {
                 referralView.showMessage(message);
-                Log.e(TAG,"Device data API call unsuccessful");
+                Log.e(TAG, "Device data API call unsuccessful");
 
             }
         });
     }
 
 
-
     @Override
-    public void requestReferal(String userId,String deviceId,String mobile) {
+    public void requestReferal(String userId, String deviceId, String mobile) {
         referralView.showDialogLoader(true);
-        referralProvider.requestReferal(userId,deviceId,mobile, new OnReferralResponse() {
+        referralProvider.requestReferal(userId, deviceId, mobile, new OnReferralResponse() {
             @Override
             public void onSuccess(ReferalData body) {
-            referralView.showDialogLoader(false);
+                referralView.showDialogLoader(false);
             }
 
             @Override
