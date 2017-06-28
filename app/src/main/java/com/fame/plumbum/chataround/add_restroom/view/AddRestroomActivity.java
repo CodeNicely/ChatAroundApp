@@ -273,6 +273,10 @@ public class AddRestroomActivity extends Activity implements
                         mobileEditText.requestFocus();
                         return;
                     }
+
+                    if (mobile != null && mobile.length() == 10) {
+                        sharedPrefs.setUserMobile(mobile);
+                    }
 /*
                     mobile="123456790";
                     if (mobile.equals(null) || mobile.equals("") || mobile.length()!=10)

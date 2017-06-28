@@ -57,7 +57,7 @@ public class RetrofitImageUploader implements ImageUploader {
     }
 
     @Override
-    public void uploadImage(String user_id,String mobile, double latitude,double longitude, File file, final UploadCallback uploadCallback) {
+    public void uploadImage(String user_id,String mobile,String description, double latitude,double longitude, File file, final UploadCallback uploadCallback) {
 
 /*
         Retrofit retrofit = new Retrofit.Builder().baseUrl("http://photoshoto.me")
@@ -94,6 +94,10 @@ public class RetrofitImageUploader implements ImageUploader {
                 RequestBody.create(
                         MediaType.parse("multipart/form-data"), String.valueOf(mobile));
 
+        RequestBody description1 =
+                RequestBody.create(
+                        MediaType.parse("multipart/form-data"), String.valueOf(description));
+
         RequestBody latitude1 =
                 RequestBody.create(
                         MediaType.parse("multipart/form-data"), String.valueOf(latitude));
@@ -106,7 +110,7 @@ public class RetrofitImageUploader implements ImageUploader {
                 MultipartBody.Part.createFormData("file", file.getName(), fbody);
 
 
-        Call<ImageUploadData> call = imageUploadApi.uploadImage(userId, mobile1,latitude1,longitude1, body);
+        Call<ImageUploadData> call = imageUploadApi.uploadImage(userId, mobile1,description1,latitude1,longitude1, body);
         call.enqueue(new Callback<ImageUploadData>() {
 
             @Override

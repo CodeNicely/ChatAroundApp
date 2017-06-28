@@ -54,4 +54,7 @@
     <string name="help">Help</string>
     <string name="okay">Okay</string>
     <string name="help_message">Help Message</string>
+    <string name="photoDescription">Photo Description</string>
+    <string name="note_gallery">Note: Please add images of landmarks and other places unique to your locality in order to get it approved by the admin. You will get Paytm cash as soon as the photo is approved.</string>
+    <string name="note_restroom">Note: Please add images of outward appearance of Public Toilets only, in order to get it approved by admin. You will get Paytm cash as soon as the public toilet is approved.</string>
 </resources>

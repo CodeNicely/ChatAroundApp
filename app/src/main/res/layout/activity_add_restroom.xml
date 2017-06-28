@@ -30,8 +30,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/submitLayout"
-        android:layout_below="@+id/toolbar"
-        >
+        android:layout_below="@+id/toolbar">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -56,8 +55,7 @@
                         android:layout_gravity="center"
                         android:gravity="center"
                         android:orientation="horizontal"
-                        android:visibility="gone"
-                        >
+                        android:visibility="gone">
 
                         <ImageView
                             android:layout_width="24dp"
@@ -87,8 +85,7 @@
                         android:text="@string/add_restroom"
                         android:textColor="@color/black"
                         android:textSize="@dimen/text_size_large"
-                        android:visibility="gone"
-                        />
+                        android:visibility="gone" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -153,20 +150,17 @@
 
 
                     <android.support.design.widget.TextInputLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
                         android:id="@+id/textInputLayout"
-                        >
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
 
                         <EditText
+                            android:id="@+id/mobileEditText"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:id="@+id/mobileEditText"
                             android:hint="@string/mobile"
-                            android:inputType="phone"
-                            />
+                            android:inputType="phone" />
                     </android.support.design.widget.TextInputLayout>
-
 
 
                     <CheckBox
@@ -193,6 +187,14 @@
                         android:padding="4dp"
                         android:text="@string/disabled_compatible" />
 
+                    <TextView
+                        android:padding="4dp"
+                        android:layout_margin="4dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/note_restroom"
+                        android:textColor="#424242"
+                        />
 
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/recyclerView"

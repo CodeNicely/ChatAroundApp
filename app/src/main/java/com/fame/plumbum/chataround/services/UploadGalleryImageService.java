@@ -47,9 +47,10 @@ public class UploadGalleryImageService extends Service {
     private static final int NOTIFICATION_ID = 1;
     private ImageUploader imageUploader;
     private SharedPrefs sharedPrefs;
-    private String userMobile="";
+    private String userMobile = "";
     private double latitude;
     private double longitude;
+    private String description;
 
     @Nullable
     @Override
@@ -74,6 +75,7 @@ public class UploadGalleryImageService extends Service {
         userMobile = intent.getExtras().getString(Keys.KEY_USER_MOBILE);
         latitude = intent.getExtras().getDouble(Keys.KEY_LATITUDE);
         longitude = intent.getExtras().getDouble(Keys.KEY_LONGITUDE);
+        description = intent.getExtras().getString(Keys.KEY_PHOTO_DESCRIPTION);
         Log.i(TAG, "Service OnStartCommand");
 
         return START_REDELIVER_INTENT;
@@ -116,9 +118,8 @@ public class UploadGalleryImageService extends Service {
         Log.i(TAG, "Service uploadImage");
 
         imageUploader.uploadImage(sharedPrefs.getUserId(),
-                userMobile,latitude,longitude, new File(imageData.getFile())
+                userMobile,description, latitude, longitude, new File(imageData.getFile())
                 , new UploadCallback() {
-
 
 
                     @Override

@@ -29,6 +29,7 @@ public interface ImageUploadApi {
     @POST(Urls.SUB_URL_PHOTO_UPLOAD_API)
     Call<ImageUploadData> uploadImage(@Part("userId") RequestBody user_id,
                                       @Part("userMobile") RequestBody userMobile,
+                                      @Part("description") RequestBody description,
                                       @Part("latitude") RequestBody latitude,
                                       @Part("longitude") RequestBody longitude,
                                       @Part MultipartBody.Part file);

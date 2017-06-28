@@ -19,6 +19,6 @@ public interface ImageUploader {
      * @param uploadCallback is an interface that is used as Callback to notify presenter when
      *                       response from api call is ready or when api call is failed.
      */
-    void uploadImage(String user_id, String mobile,double latitude,double longitude, File file, UploadCallback uploadCallback);
+    void uploadImage(String user_id, String mobile,String description,double latitude,double longitude, File file, UploadCallback uploadCallback);
 
 }

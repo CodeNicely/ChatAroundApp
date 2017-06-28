@@ -142,6 +142,9 @@ public class AddImageActivity extends Activity implements
     @BindView(R.id.mobileEditText)
     EditText mobileEditText;
 
+    @BindView(R.id.descriptionEditText)
+    EditText descriptionEditText;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -225,6 +228,7 @@ public class AddImageActivity extends Activity implements
                 if (latitude != 0.0 && longitude != 0.0) {
 
                     String mobile = mobileEditText.getText().toString();
+                    String description=descriptionEditText.getText().toString();
 
                     Geocoder geocoder;
                     List<Address> addresses;
@@ -251,11 +255,16 @@ public class AddImageActivity extends Activity implements
                         return;
                     }
 
+                    if (mobile != null && mobile.length() == 10) {
+                        sharedPrefs.setUserMobile(mobile);
+                    }
+
                     Intent uploadServiceIntent = new Intent(AddImageActivity.this, UploadGalleryImageService.class);
                     uploadServiceIntent.putExtra(Keys.KEY_USER_MOBILE, "8109109457");
                     uploadServiceIntent.putExtra(Keys.KEY_LATITUDE, latitude);
                     uploadServiceIntent.putExtra(Keys.KEY_LONGITUDE, longitude);
                     uploadServiceIntent.putExtra(Keys.KEY_USER_MOBILE, mobile);
+                    uploadServiceIntent.putExtra(Keys.KEY_PHOTO_DESCRIPTION,description);
                     getApplicationContext().startService(uploadServiceIntent);
 
 

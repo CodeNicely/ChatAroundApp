@@ -110,18 +110,28 @@
                     </LinearLayout>
 
                     <android.support.design.widget.TextInputLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
                         android:id="@+id/textInputLayout"
-                        >
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
 
                         <EditText
+                            android:id="@+id/mobileEditText"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:id="@+id/mobileEditText"
                             android:hint="@string/mobile"
-                            android:inputType="phone"
-                            />
+                            android:inputType="phone" />
+                    </android.support.design.widget.TextInputLayout>
+
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <EditText
+                            android:id="@+id/descriptionEditText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/photoDescription"
+                            android:inputType="phone" />
                     </android.support.design.widget.TextInputLayout>
 
                     <TextView
@@ -141,8 +151,7 @@
                         android:layout_gravity="center"
                         android:gravity="center"
                         android:orientation="horizontal"
-                        android:visibility="gone"
-                        >
+                        android:visibility="gone">
 
                         <ImageView
                             android:layout_width="24dp"
@@ -168,11 +177,19 @@
                     <ImageView
                         android:id="@+id/imageView"
                         android:layout_width="160dp"
+                        android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:padding="32dp"
-                        android:layout_height="wrap_content"
                         android:src="@drawable/upload_image" />
 
+
+                    <TextView
+                        android:padding="4dp"
+                        android:layout_margin="4dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/note_gallery"
+                        android:textColor="#424242" />
 
                 </LinearLayout>
             </android.support.v7.widget.CardView>

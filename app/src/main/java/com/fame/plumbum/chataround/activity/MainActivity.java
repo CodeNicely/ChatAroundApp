@@ -633,7 +633,6 @@ public class MainActivity extends AppCompatActivity implements
 //                state = addresses.get(0).getAdminArea();
                 if (addresses.size() > 0) {
                     String country = addresses.get(0).getCountryName();
-                    Toast.makeText(this, country, Toast.LENGTH_SHORT).show();
                     if (country.contentEquals(Constants.KEY_COUNTRY_INDIA)) {
 
 
