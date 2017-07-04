@@ -31,22 +31,32 @@ public class PollutionPresenterImpl implements PollutionPresenter {
             public void onSuccess(AirPollutionDetails airPollutionDetails) {
                 if (pollutionView != null) {
 
-                    if (airPollutionDetails.getStatus().equals("ok")) {
+                    if (airPollutionDetails != null) {
+                        if (airPollutionDetails.getStatus().equals("ok")) {
 
-                        pollutionView.showLoader(false);
-                        pollutionView.setData(airPollutionDetails);
+                            pollutionView.showLoader(false);
+                            pollutionView.setData(airPollutionDetails);
 
 
-                    } else {
-                        pollutionView.showLoader(false);
+                        } else {
+                            pollutionView.showLoader(false);
 
-                        Answers.getInstance().logCustom(new CustomEvent("Pollution Module Loading Failed - Server end")
-                                .putCustomAttribute(Keys.KEY_LATITUDE, latitude)
-                                .putCustomAttribute(Keys.KEY_LONGITUDE, longitude)
+                            Answers.getInstance().logCustom(new CustomEvent("Pollution Module Loading Failed - Server end")
+                                    .putCustomAttribute(Keys.KEY_LATITUDE, latitude)
+                                    .putCustomAttribute(Keys.KEY_LONGITUDE, longitude)
 
-                        );
+                            );
 
+                        }
                     }
+                } else {
+                    pollutionView.showLoader(false);
+
+                    Answers.getInstance().logCustom(new CustomEvent("Pollution Module Loading Failed - Server end")
+                            .putCustomAttribute(Keys.KEY_LATITUDE, latitude)
+                            .putCustomAttribute(Keys.KEY_LONGITUDE, longitude)
+
+                    );
                 }
             }
 
@@ -54,8 +64,8 @@ public class PollutionPresenterImpl implements PollutionPresenter {
             public void onFailed(String message) {
 
                 Answers.getInstance().logCustom(new CustomEvent("Restroom Module Loading Failed - Local")
-                        .putCustomAttribute(Keys.KEY_LATITUDE,latitude)
-                        .putCustomAttribute(Keys.KEY_LONGITUDE,longitude)
+                        .putCustomAttribute(Keys.KEY_LATITUDE, latitude)
+                        .putCustomAttribute(Keys.KEY_LONGITUDE, longitude)
 
                 );
 

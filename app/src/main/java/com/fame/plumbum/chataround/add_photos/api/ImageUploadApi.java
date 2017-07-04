@@ -27,7 +27,7 @@ public interface ImageUploadApi {
      */
     @Multipart
     @POST(Urls.SUB_URL_PHOTO_UPLOAD_API)
-    Call<ImageUploadData> uploadImage(@Part("userId") RequestBody user_id,
+    Call<ImageUploadData> uploadImage(@Part("userId") RequestBody userId,
                                       @Part("userMobile") RequestBody userMobile,
                                       @Part("description") RequestBody description,
                                       @Part("latitude") RequestBody latitude,

@@ -131,7 +131,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:hint="@string/photoDescription"
-                            android:inputType="phone" />
+
+                            />
                     </android.support.design.widget.TextInputLayout>
 
                     <TextView
@@ -176,18 +177,18 @@
 
                     <ImageView
                         android:id="@+id/imageView"
-                        android:layout_width="160dp"
-                        android:layout_height="wrap_content"
+                        android:layout_width="280dp"
+                        android:layout_height="280dp"
                         android:layout_gravity="center"
-                        android:padding="32dp"
+                        android:padding="16dp"
                         android:src="@drawable/upload_image" />
 
 
                     <TextView
-                        android:padding="4dp"
-                        android:layout_margin="4dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_margin="4dp"
+                        android:padding="4dp"
                         android:text="@string/note_gallery"
                         android:textColor="#424242" />
 
