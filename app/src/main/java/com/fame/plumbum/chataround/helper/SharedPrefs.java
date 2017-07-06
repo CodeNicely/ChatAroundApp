@@ -14,6 +14,7 @@ public class SharedPrefs {
     private static final String KEY_USERNAME = "username";
     private static final String KEY_EMAIL = "email";
     private static final String KEY_USER_ID = "userId";
+    private static final String KEY_EMERGENCY_MODULE ="emergencyModule";
     private static String TAG = "Shared Preference";
     private static final String KEY_FIRST_TIME_USER = "firstTimeUser";
 
@@ -170,4 +171,13 @@ public class SharedPrefs {
     }
 
 
+    public boolean isEmergency() {
+        return pref.getBoolean(KEY_EMERGENCY_MODULE,true);
+    }
+    public void setEmergency(boolean set) {
+
+        editor.putBoolean(KEY_EMERGENCY_MODULE, set);
+        editor.commit();
+
+    }
 }

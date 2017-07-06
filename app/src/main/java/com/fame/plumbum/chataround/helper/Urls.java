@@ -19,6 +19,9 @@ public class Urls {
     public static final String SUB_URL_PHOTO_UPLOAD_API ="AddPhoto" ;
     public static final String SUB_URL_ADD_REFERRAL ="AddReferral";
     public static final String SUB_URL_VERIFY_DEVICE = "VerifyDevice";
+    public static final String SUB_URL_EMERGENCY_CONTACTS="EmergencyContacts";
+    public static final String SUB_URL_ADD_CONTACTS ="AddContacts" ;
+
 
 
     //    public static String BASE_URL = "http://52.66.45.251:5000/"; // AWS

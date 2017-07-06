@@ -19,6 +19,7 @@ import android.os.Environment;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
+import android.support.annotation.BinderThread;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -140,6 +141,9 @@ public class ProfileFragment extends Fragment implements
     @BindView(R.id.newsSwitch)
     Switch newsSwitch;
 
+    @BindView(R.id.emergencySwitch)
+    Switch emergencySwitch;
+
     @Override
     public void onRefresh() {
        getAllPosts(count);
@@ -259,6 +263,18 @@ public class ProfileFragment extends Fragment implements
                     Answers.getInstance().logCustom(new CustomEvent("Switch - News Switch Disabled"));
                 }
                 sharedPrefs.setNews(isChecked);
+                reloadTabs();
+            }
+        });
+        emergencySwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+                    Answers.getInstance().logCustom(new CustomEvent("Switch - News Switch Enabled"));
+                }else{
+                    Answers.getInstance().logCustom(new CustomEvent("Switch - News Switch Disabled"));
+                }
+                sharedPrefs.setEmergency(isChecked);
                 reloadTabs();
             }
         });

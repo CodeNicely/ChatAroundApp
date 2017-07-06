@@ -53,6 +53,7 @@ import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
 import com.fame.plumbum.chataround.MySingleton;
 import com.fame.plumbum.chataround.R;
+import com.fame.plumbum.chataround.emergency.view.EmergencyFragment;
 import com.fame.plumbum.chataround.helper.Constants;
 import com.fame.plumbum.chataround.profile.ProfileFragment;
 import com.fame.plumbum.chataround.referral.model.VerifyDeviceData;
@@ -105,6 +106,7 @@ public class MainActivity extends AppCompatActivity implements
     private static final int FRAGMENT_TYPE_GALLERY = 3;
     private static final int FRAGMENT_TYPE_POLLUTION = 4;
     private static final int FRAGMENT_TYPE_NEWS = 5;
+    private static final int FRAGMENT_TYPE_EMERGENCY=6;
     private static final String TAG = "MainActivity";
 
     private GoogleApiClient mGoogleApiClient;
@@ -297,6 +299,7 @@ public class MainActivity extends AppCompatActivity implements
         GalleryFragment galleryFragment = new GalleryFragment();
         NewsListFragment newsListFragment = new NewsListFragment();
         RestroomFragment restroomFragment = new RestroomFragment();
+        EmergencyFragment emergencyFragment= new EmergencyFragment();
 
         adapter = new ViewPagerAdapter(getSupportFragmentManager());
 
@@ -319,6 +322,9 @@ public class MainActivity extends AppCompatActivity implements
         }
         if (sharedPrefs.isNews()) {
             adapter.addFragment(newsListFragment, "NewsListFragment", FRAGMENT_TYPE_NEWS);
+        }
+        if(sharedPrefs.isEmergency()){
+            adapter.addFragment(emergencyFragment, "EmergencyFragment", FRAGMENT_TYPE_EMERGENCY);
         }
 
 
