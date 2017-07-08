@@ -365,6 +365,10 @@ public class MainActivity extends AppCompatActivity implements
                     if (tabLayout.getTabAt(i) != null) {
                         tabLayout.getTabAt(i).setIcon(R.drawable.newspaper);
                     }
+                case FRAGMENT_TYPE_EMERGENCY:
+                    if(tabLayout.getTabAt(i)!=null){
+                        tabLayout.getTabAt(i).setIcon(R.drawable.newspaper);
+                    }
                     break;
 
 
@@ -439,6 +443,9 @@ public class MainActivity extends AppCompatActivity implements
 
                         );
 */
+                        break;
+                    case FRAGMENT_TYPE_EMERGENCY:
+                        toolbar.setTitle("Emergency");
                         break;
                     default:
                         toolbar.setTitle("1 Mile App");

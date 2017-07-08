@@ -45,7 +45,8 @@ public class EmergencyFragment extends Fragment implements EmergencyContactsView
     private LinearLayout addContactsLayout;
     @BindView(R.id.emergency_contacts_recycler_view)
     RecyclerView recyclerView;
-
+    @BindView(R.id.selected_contacts_text)
+    TextView selectedContactsTextView;
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
     private Context context;
@@ -111,13 +112,13 @@ public class EmergencyFragment extends Fragment implements EmergencyContactsView
         context = getContext();
         LinearLayoutManager linearLayoutManager= new LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false);
         recyclerView.setLayoutManager(linearLayoutManager);
-        emergencyContactsAdapter=new EmergencyContactsAdapter(context);
+        emergencyContactsAdapter=new EmergencyContactsAdapter(context,null);
         recyclerView.setAdapter(emergencyContactsAdapter);
         addContactsLayout.setVisibility(View.VISIBLE);
         recyclerView.setVisibility(View.GONE);
         sharedPrefs = new SharedPrefs(context);
         emergencyContactsPresenter= new EmergencyContactsPresenterImpl(this);
-        emergencyContactsPresenter.getContacts(sharedPrefs.getUserId());
+       // emergencyContactsPresenter.getContacts(sharedPrefs.getUserId());
         sosButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -198,6 +199,7 @@ public class EmergencyFragment extends Fragment implements EmergencyContactsView
     public void onEmergencyContactsRecieved(List<EmergencyContactsFeed> contactsDataList) {
         if(contactsDataList.size()==0||contactsDataList.isEmpty()){
             addContactsLayout.setVisibility(View.VISIBLE);
+            selectedContactsTextView.setVisibility(View.GONE);
             recyclerView.setVisibility(View.GONE);
         }
         else

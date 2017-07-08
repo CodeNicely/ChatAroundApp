@@ -202,6 +202,7 @@ public class ProfileFragment extends Fragment implements
         gallerySwitch.setChecked(sharedPrefs.isGallery());
         pollutionSwitch.setChecked(sharedPrefs.isPullution());
         newsSwitch.setChecked(sharedPrefs.isNews());
+        emergencySwitch.setChecked(sharedPrefs.isEmergency());
 
 
         shoutSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {

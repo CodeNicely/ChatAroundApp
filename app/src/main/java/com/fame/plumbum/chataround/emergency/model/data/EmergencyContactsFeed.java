@@ -40,4 +40,7 @@ public class EmergencyContactsFeed {
     public boolean isChecked() {
         return checked;
     }
+    public void setChecked(boolean checked){
+        this.checked=checked;
+    }
 }

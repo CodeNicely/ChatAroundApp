@@ -8,7 +8,7 @@ import java.util.List;
 
 public class EmergencyContactsFeedData {
     private String message;
-    private boolean success;
+    private boolean success=false;
     private List<EmergencyContactsFeed> emergencyContactsFeedList;
 
     public EmergencyContactsFeedData(String message, boolean success, List<EmergencyContactsFeed> emergencyContactsFeedList) {
