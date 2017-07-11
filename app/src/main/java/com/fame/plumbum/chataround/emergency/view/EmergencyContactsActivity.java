@@ -1,11 +1,14 @@
 package com.fame.plumbum.chataround.emergency.view;
 
 import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.SearchManager;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.ContactsContract;
@@ -22,6 +25,8 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -124,9 +129,6 @@ public class EmergencyContactsActivity extends AppCompatActivity {
                 String contact_id = cursor.getString(cursor.getColumnIndex( _ID ));
 
                 String name = cursor.getString(cursor.getColumnIndex( DISPLAY_NAME ));
-                String image_uri = cursor
-                        .getString(cursor
-                                .getColumnIndex(ContactsContract.CommonDataKinds.Phone.PHOTO_URI));
 
                 int hasPhoneNumber = Integer.parseInt(cursor.getString(cursor.getColumnIndex( HAS_PHONE_NUMBER )));
 
@@ -146,7 +148,7 @@ public class EmergencyContactsActivity extends AppCompatActivity {
                     phoneCursor.close();
 
                     EmergencyContactsFeed emergencyContactsFeed = new EmergencyContactsFeed();// adding contacts into the list
-                    contactsFeedList.add(emergencyContactsFeed.setData(name, phoneNumber, image_uri,false));
+                    contactsFeedList.add(emergencyContactsFeed.setData(name, phoneNumber,false));
 
                 }
 
@@ -161,6 +163,7 @@ public class EmergencyContactsActivity extends AppCompatActivity {
         return true;
 
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.search,menu);
@@ -169,6 +172,10 @@ public class EmergencyContactsActivity extends AppCompatActivity {
         final SearchView searchView = (SearchView)menu.findItem(R.id.action_search).getActionView();
         searchView.setSearchableInfo(searchManager.
                 getSearchableInfo(getComponentName()));
+        int searchSrcTextId = getResources().getIdentifier("android:id/search_src_text", null, null);
+        EditText searchEditText = (EditText) searchView.findViewById(searchSrcTextId);
+        searchEditText.setTextColor(Color.YELLOW);
+        searchEditText.setHintTextColor(Color.WHITE);
         searchView.setSubmitButtonEnabled(true);
         SearchView.OnQueryTextListener queryTextListener =new SearchView.OnQueryTextListener() {
             @Override
@@ -178,8 +185,6 @@ public class EmergencyContactsActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                //  emergencyContactsAdapter.filter(newText,contactsFeedList);
-                //emergencyContactsAdapter.getFilter().filter(newText);
                 filter(newText);
 
                 return false;
@@ -200,12 +205,13 @@ public class EmergencyContactsActivity extends AppCompatActivity {
 
             if (s.getContactName().toLowerCase().contains(text.toLowerCase())) {
                 //adding the element to filtered list
-                filterdNames.add(emergencyContactsFeed.setData(s.getContactName(),s.getContactNumber(),s.getContactImage(),false));
+                filterdNames.add(emergencyContactsFeed.setData(s.getContactName(),s.getContactNumber(),false));
             }
         }
 
         //calling a method of the adapter class and passing the filtered list
-        emergencyContactsAdapter.filterList(filterdNames);
+        emergencyContactsAdapter.setEmergencyContactsFeedList(filterdNames);
+        emergencyContactsAdapter.notifyDataSetChanged();
     }
 
 }

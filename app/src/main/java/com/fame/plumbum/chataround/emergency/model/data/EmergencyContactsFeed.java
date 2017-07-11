@@ -9,17 +9,17 @@ import android.graphics.Bitmap;
 public class EmergencyContactsFeed {
     private String contactName;
     private String contactNumber;
-    private String contactImage;
+   // private String contactImage;
     private boolean checked;
 
     public EmergencyContactsFeed(){
 
     }
-     public EmergencyContactsFeed setData(String contactName,String contactNumber,String contactImage,boolean checked){
+     public EmergencyContactsFeed setData(String contactName,String contactNumber,boolean checked){
         EmergencyContactsFeed emergencyContactsFeed= new EmergencyContactsFeed();
         emergencyContactsFeed.contactName=contactName;
         emergencyContactsFeed.contactNumber=contactNumber;
-        emergencyContactsFeed.contactImage=contactImage;
+       // emergencyContactsFeed.contactImage=contactImage;
          emergencyContactsFeed.checked=checked;
         return emergencyContactsFeed;
     }
@@ -33,9 +33,9 @@ public class EmergencyContactsFeed {
     }
 
 
-    public String  getContactImage() {
+   /* public String  getContactImage() {
         return contactImage;
-    }
+    }*/
 
     public boolean isChecked() {
         return checked;

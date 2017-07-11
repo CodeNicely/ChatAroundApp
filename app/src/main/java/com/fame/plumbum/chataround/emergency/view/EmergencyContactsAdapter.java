@@ -34,7 +34,6 @@ import rx.Completable;
 
 public class EmergencyContactsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     List<EmergencyContactsFeed> emergencyContactsFeedList = new ArrayList<>();
-    List<EmergencyContactsFeed>filterList;
     private LayoutInflater layoutInflater;
     private SharedPrefs sharedPrefs;
     private EmergencyFragment emergencyFragment;
@@ -43,11 +42,6 @@ public class EmergencyContactsAdapter extends RecyclerView.Adapter<RecyclerView.
 
     public EmergencyContactsAdapter(Context context,List<EmergencyContactsFeed> feedList) {
         this.mContext=context;
-        this.filterList=new ArrayList<>();
-        if(feedList==null){
-            return;
-        }
-        this.filterList=feedList;
         this.sharedPrefs = new SharedPrefs(context);
         layoutInflater = LayoutInflater.from(context);
     }
@@ -64,17 +58,17 @@ public class EmergencyContactsAdapter extends RecyclerView.Adapter<RecyclerView.
         EmergencyContactsViewHolder emergencyContactsViewHolder = (EmergencyContactsViewHolder) holder;
         String contactName = emergencyContactsFeed.getContactName();
         final String contactNumber = emergencyContactsFeed.getContactNumber();
-        String contactImage = emergencyContactsFeed.getContactImage();
+       // String contactImage = emergencyContactsFeed.getContactImage();
         if (contactName != null && !contactName.isEmpty()) {
             emergencyContactsViewHolder.contactName.setText(emergencyContactsFeed.getContactName());
         }
         if (contactNumber != null && !contactNumber.isEmpty()) {
             emergencyContactsViewHolder.contactNumber.setText(emergencyContactsFeed.getContactNumber());
         }
-        if (contactImage != null) {
+        /*if (contactImage != null) {
             emergencyContactsViewHolder.contactsImage.setImageURI(Uri.parse(emergencyContactsFeedList.get(position).getContactImage()));
         }
-
+*/
         emergencyContactsViewHolder.contactCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -100,8 +94,8 @@ public class EmergencyContactsAdapter extends RecyclerView.Adapter<RecyclerView.
     }
 
     public class EmergencyContactsViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.contacts_image)
-        ImageView contactsImage;
+        /*@BindView(R.id.contacts_image)
+        ImageView contactsImage;*/
         @BindView(R.id.contacts_name)
         TextView contactName;
         @BindView(R.id.contacts_number)
@@ -120,49 +114,4 @@ public class EmergencyContactsAdapter extends RecyclerView.Adapter<RecyclerView.
         return position;
     }
 
-  /*  public void filter(final String text, final List<EmergencyContactsFeed> feedList) {
-
-        // Searching could be complex..so we will dispatch it to a different thread...
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-
-                // Clear the filter list
-                filterList.clear();
-                // If there is no search value, then add all original list items to filter list
-                if (TextUtils.isEmpty(text)) {
-
-                    filterList.addAll(feedList);
-
-                } else {
-                    // Iterate in the original List and add it to filter list...
-                    for (EmergencyContactsFeed item :feedList) {
-                        if (item.getContactName().toLowerCase().contains(text.toLowerCase()) ||
-                                item.getContactNumber().toLowerCase().contains(text.toLowerCase())) {
-                            // Adding Matched items
-                            filterList.add(item);
-                        }
-                    }
-                }
-
-                // Set on UI Thread
-                ((Activity)mContext ).runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        // Notify the List that the DataSet has changed...
-                        setEmergencyContactsFeedList(filterList);
-                        notifyDataSetChanged();
-                    }
-                });
-
-            }
-        }).start();
-    }*/
-
-    //RETURN FILTER OBJ
-
-    public void filterList(ArrayList<EmergencyContactsFeed> filterdNames) {
-        this.emergencyContactsFeedList = filterdNames;
-        notifyDataSetChanged();
-    }
 }
