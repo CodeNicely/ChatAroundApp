@@ -144,8 +144,8 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
     public void onLocationChanged(Location location) {
         lat = location.getLatitude();
         lng = location.getLongitude();
-        Log.e("lat",String.valueOf(lat));
-        Log.e("lng",String.valueOf(lng));
+        Log.d("lat",String.valueOf(lat));
+        Log.d("lng",String.valueOf(lng));
         intent.putExtra("lat", lat);
         intent.putExtra("lng", lng);
         sendBroadcast(intent);

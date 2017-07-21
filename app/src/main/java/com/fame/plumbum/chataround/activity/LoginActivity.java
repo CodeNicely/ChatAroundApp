@@ -108,9 +108,9 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 //        if(!sharedPrefs.isFirstTimeUser())
 //            showDialog();
 
-        sharedPrefs.setUserId("58cef9c581729e45159044da");
-        sharedPrefs.setUsername("v rama");
-        sharedPrefs.setEmailId("educate1996@gmail.com");
+//        sharedPrefs.setUserId("58cef9c581729e45159044da");
+//        sharedPrefs.setUsername("v rama");
+//        sharedPrefs.setEmailId("educate1996@gmail.com");
 
         if (sharedPrefs.isLoggedIn()) {
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
@@ -136,13 +136,9 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             finish();
         } else {
             callNec();
-            sharedPrefs.setLogin(true);
+//            sharedPrefs.setLogin(true);
         }
-        if (sharedPrefs.isLoggedIn()) {
-            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-            startActivity(intent);
-            finish();
-        }
+
 
         Fabric.with(this, new Crashlytics());
 

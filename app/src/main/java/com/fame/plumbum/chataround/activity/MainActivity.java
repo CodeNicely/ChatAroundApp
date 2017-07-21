@@ -106,7 +106,7 @@ public class MainActivity extends AppCompatActivity implements
     private static final int FRAGMENT_TYPE_GALLERY = 3;
     private static final int FRAGMENT_TYPE_POLLUTION = 4;
     private static final int FRAGMENT_TYPE_NEWS = 5;
-    private static final int FRAGMENT_TYPE_EMERGENCY=6;
+    private static final int FRAGMENT_TYPE_EMERGENCY = 6;
     private static final String TAG = "MainActivity";
 
     private GoogleApiClient mGoogleApiClient;
@@ -299,7 +299,7 @@ public class MainActivity extends AppCompatActivity implements
         GalleryFragment galleryFragment = new GalleryFragment();
         NewsListFragment newsListFragment = new NewsListFragment();
         RestroomFragment restroomFragment = new RestroomFragment();
-        EmergencyFragment emergencyFragment= new EmergencyFragment();
+        EmergencyFragment emergencyFragment = new EmergencyFragment();
 
         adapter = new ViewPagerAdapter(getSupportFragmentManager());
 
@@ -323,7 +323,7 @@ public class MainActivity extends AppCompatActivity implements
         if (sharedPrefs.isNews()) {
             adapter.addFragment(newsListFragment, "NewsListFragment", FRAGMENT_TYPE_NEWS);
         }
-        if(sharedPrefs.isEmergency()){
+        if (sharedPrefs.isEmergency()) {
             adapter.addFragment(emergencyFragment, "EmergencyFragment", FRAGMENT_TYPE_EMERGENCY);
         }
 
@@ -365,9 +365,10 @@ public class MainActivity extends AppCompatActivity implements
                     if (tabLayout.getTabAt(i) != null) {
                         tabLayout.getTabAt(i).setIcon(R.drawable.newspaper);
                     }
+                    break;
                 case FRAGMENT_TYPE_EMERGENCY:
-                    if(tabLayout.getTabAt(i)!=null){
-                        tabLayout.getTabAt(i).setIcon(R.drawable.newspaper);
+                    if (tabLayout.getTabAt(i) != null) {
+                        tabLayout.getTabAt(i).setIcon(R.drawable.caution_sign);
                     }
                     break;
 
@@ -977,6 +978,7 @@ public class MainActivity extends AppCompatActivity implements
             case R.id.menu_help:
                 String message = null;
                 // write your code here
+
                 if (viewPager.getCurrentItem() == FRAGMENT_TYPE_SHOUTS) {
                     message = "Bulletin Board for your 1-mile radius. Post messages for everyone in your area to see. " +
                             "See other people’s messages. Chat with them publicly through comments or privately through chat. ";
@@ -993,6 +995,8 @@ public class MainActivity extends AppCompatActivity implements
                     message = "Every news article on the Internet related to your city or state in " +
                             "case there aren’t enough news articles relating to your city (in case " +
                             "of tier-2 and tier-3 cities).";
+                }else if (viewPager.getCurrentItem() == FRAGMENT_TYPE_EMERGENCY) {
+                    message = "Send your live location to your friend and family in dangerous and emergency conditions";
                 }
 
                 if (message != null) {

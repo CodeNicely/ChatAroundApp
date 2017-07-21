@@ -29,4 +29,5 @@ public class Keys {
     public static final java.lang.String KEY_USER_ID ="userId" ;
     public static final java.lang.String KEY_USER_MOBILE ="mobile" ;
     public static final String KEY_PHOTO_DESCRIPTION ="photoDescription" ;
+    public static final String KEY_SOS_ID = "sosId";
 }

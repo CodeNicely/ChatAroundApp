@@ -1,29 +1,45 @@
 package com.fame.plumbum.chataround.emergency.view;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.fame.plumbum.chataround.LocationService;
 import com.fame.plumbum.chataround.R;
-import com.fame.plumbum.chataround.emergency.model.data.EmergencyContactsFeed;
-import com.fame.plumbum.chataround.emergency.presenter.EmergencyContactsPresenter;
-import com.fame.plumbum.chataround.emergency.presenter.EmergencyContactsPresenterImpl;
-import com.fame.plumbum.chataround.emergency.presenter.UpdateContactsPresenter;
+import com.fame.plumbum.chataround.emergency.model.StartSosData;
+import com.fame.plumbum.chataround.emergency.presenter.EmergencyPresenter;
+import com.fame.plumbum.chataround.emergency.presenter.EmergencyPresenterImpl;
+import com.fame.plumbum.chataround.emergency.provider.RetrofitEmergencyProvider;
+import com.fame.plumbum.chataround.emergency.service.EmergencyLocationServiceNew;
+import com.fame.plumbum.chataround.emergency_contacts.model.EmergencyContactData;
+import com.fame.plumbum.chataround.emergency_contacts.view.EmergencyContactsActivity;
+import com.fame.plumbum.chataround.helper.FButton;
+import com.fame.plumbum.chataround.helper.Keys;
 import com.fame.plumbum.chataround.helper.SharedPrefs;
+import com.fame.plumbum.chataround.emergency.service.EmergencyLocationService;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -37,25 +53,43 @@ import butterknife.ButterKnife;
  * Use the {@link EmergencyFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class EmergencyFragment extends Fragment implements EmergencyContactsView {
-    private Button sosButton;
+public class EmergencyFragment extends Fragment implements EmergencyView,SwipeRefreshLayout.OnRefreshListener {
+
+    private static final String TAG = "EmergencyFragment";
+    private FButton sosButton;
     private TextView sosText;
-    private static int count=0;
-    private static boolean isStarted=false;
+    private static int count = 0;
+    private static boolean isStarted = false;
     private LinearLayout addContactsLayout;
+
     @BindView(R.id.emergency_contacts_recycler_view)
     RecyclerView recyclerView;
+
     @BindView(R.id.selected_contacts_text)
     TextView selectedContactsTextView;
+
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
+
+    @BindView(R.id.swipe_refresh_layout)
+    SwipeRefreshLayout swipeRefreshLayout;
+
+    @BindView(R.id.allLayouts)
+    RelativeLayout allLayouts;
+
     private Context context;
+
     private SharedPrefs sharedPrefs;
+
     @BindView(R.id.add_contacts_button)
     Button addContactsButton;
-    private EmergencyContactsAdapter emergencyContactsAdapter;
-    private EmergencyContactsPresenter emergencyContactsPresenter;
-    private UpdateContactsPresenter updateContactsPresenter;
+
+    private EmergencyAdapter emergencyContactsAdapter;
+    private EmergencyPresenter emergencyPresenter;
+    private ProgressDialog progressDialog;
+
+
+    private List<EmergencyContactData> contactDataList = new ArrayList<>();
 
 
     // TODO: Rename parameter arguments, choose names that match
@@ -104,57 +138,246 @@ public class EmergencyFragment extends Fragment implements EmergencyContactsView
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view=inflater.inflate(R.layout.fragment_emergency, container, false);
+        View view = inflater.inflate(R.layout.fragment_emergency, container, false);
         ButterKnife.bind(this, view);
-        sosButton=(Button)view.findViewById(R.id.sosButton);
-        sosText=(TextView)view.findViewById(R.id.sos_service_text);
-        addContactsLayout=(LinearLayout)view.findViewById(R.id.add_contacts_layout);
         context = getContext();
-        LinearLayoutManager linearLayoutManager= new LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false);
+
+        progressDialog=new ProgressDialog(context);
+
+        sosButton = (FButton) view.findViewById(R.id.sosButton);
+        sosText = (TextView) view.findViewById(R.id.sos_service_text);
+        addContactsLayout = (LinearLayout) view.findViewById(R.id.add_contacts_layout);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(linearLayoutManager);
-        emergencyContactsAdapter=new EmergencyContactsAdapter(context,null);
+        emergencyContactsAdapter = new EmergencyAdapter(context,this);
         recyclerView.setAdapter(emergencyContactsAdapter);
         addContactsLayout.setVisibility(View.VISIBLE);
         recyclerView.setVisibility(View.GONE);
         sharedPrefs = new SharedPrefs(context);
-        emergencyContactsPresenter= new EmergencyContactsPresenterImpl(this);
-       // emergencyContactsPresenter.getContacts(sharedPrefs.getUserId());
+        emergencyPresenter = new EmergencyPresenterImpl(this, new RetrofitEmergencyProvider());
+        // emergencyPresenter.getContacts(sharedPrefs.getUserId());
+
+        final boolean[] red = {true};
+
+        final Handler handler = new Handler();
+        final Runnable runnable = new Runnable() {
+            public void run() {
+                //
+                // Do the stuff
+                //
+
+
+
+                
+                if (red[0]) {
+
+                    red[0] =false;
+
+                    sosButton.setButtonColor(ContextCompat.getColor(context,R.color.gray));
+
+
+
+                } else {
+
+                    red[0] =true;
+
+                    sosButton.setButtonColor(ContextCompat.getColor(context,R.color.colorAccentRed));
+
+
+                }
+                handler.postDelayed(this, 500);
+            }
+        };
+
+
         sosButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!isStarted){
+
+
+                if (!isStarted) {
                     count++;
-                    if(count==3) {
-                        sosText.setText(getActivity().getString(R.string.enable_sos_service_text));
-                        sosButton.setText("STOP SOS");
-                        getActivity().startService(new Intent(getActivity(), LocationService.class));
-                        isStarted = true;
-                    }
 
-                }
-                else
-                {
-                    count--;
-                    if(count==0){
-                        getActivity().stopService(new Intent(getActivity(),LocationService.class));
-                        sosButton.setText("START SOS");
+                    if (count == 3) {
+
+                        emergencyPresenter.startSos(sharedPrefs.getUserId(), 12.12, 13.13);
                         sosText.setText(getActivity().getString(R.string.disable_sos_service_text));
-                        isStarted=false;
+
+                    }
+
+                } else {
+                    count--;
+                    if (count == 0) {
+                        getActivity().stopService(new Intent(getActivity(), EmergencyLocationServiceNew.class));
+//                        sosButton.setText("START SOS");
+                        sosText.setText(getActivity().getString(R.string.enable_sos_service_text));
+                        isStarted = false;
                     }
 
 
                 }
+
+                if (count == 0) {
+
+                    sosButton.setButtonColor(ContextCompat.getColor(context,R.color.gray));
+                    handler.removeCallbacks(runnable);
+
+                }
+
+
+                if (count == 1) {
+
+                    sosButton.setButtonColor(ContextCompat.getColor(context,R.color.colorAccent));
+                    handler.removeCallbacks(runnable);
+
+
+                }
+
+                if (count == 2) {
+
+                    sosButton.setButtonColor(ContextCompat.getColor(context,R.color.colorAccentRed));
+                    handler.removeCallbacks(runnable);
+
+
+                }
+
+                if (count == 3) {
+
+                    runnable.run();
+
+                }
+
 
             }
         });
+
+
+
+ /*       sosButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                if (!isStarted) {
+                    count++;
+
+                    if (count == 3) {
+
+                        emergencyPresenter.startSos(sharedPrefs.getUserId(), 12.12, 13.13);
+                        sosText.setText(getActivity().getString(R.string.enable_sos_service_text));
+
+                    }
+
+                } else {
+                    count--;
+                    if (count == 0) {
+                        getActivity().stopService(new Intent(getActivity(), EmergencyLocationService.class));
+//                        sosButton.setText("START SOS");
+                        sosText.setText(getActivity().getString(R.string.disable_sos_service_text));
+                        isStarted = false;
+                    }
+
+
+                }
+
+                if (count == 0) {
+
+                    final int sdk = android.os.Build.VERSION.SDK_INT;
+                    if (sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+                        sosButton.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.translucent_button));
+                    } else {
+                        sosButton.setBackground(ContextCompat.getDrawable(context, R.drawable.translucent_button));
+                    }
+                }
+
+
+                if (count == 1) {
+
+                    final int sdk = android.os.Build.VERSION.SDK_INT;
+                    if (sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+                        sosButton.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.yellow_button));
+                    } else {
+                        sosButton.setBackground(ContextCompat.getDrawable(context, R.drawable.yellow_button));
+                    }
+                }
+
+                if (count == 2) {
+
+                    final int sdk = android.os.Build.VERSION.SDK_INT;
+                    if (sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+                        sosButton.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.red_button));
+                    } else {
+                        sosButton.setBackground(ContextCompat.getDrawable(context, R.drawable.red_button));
+                    }
+
+                    handler.removeCallbacks(runnable);
+
+                }
+
+                if (count == 3) {
+
+                    runnable.run();
+
+                }
+
+
+            }
+        });*/
         addContactsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent= new Intent(getActivity(),EmergencyContactsActivity.class);
+
+                EmergencyContactsActivity emergencyContactsActivity = new EmergencyContactsActivity();
+
+                Intent intent = new Intent(getActivity(), emergencyContactsActivity.getClass());
+
+               /* if (!EventBus.getDefault().isRegistered(emergencyContactsActivity)) {
+
+                    EventBus.getDefault().register(emergencyContactsActivity);
+
+                }*/
+
+                EventBus.getDefault().postSticky(new EmergencyContactsActivity.GetContactListEvent(contactDataList));
+
                 startActivity(intent);
+
+
             }
         });
+
+        swipeRefreshLayout.setOnRefreshListener(this);
+        swipeRefreshLayout.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        swipeRefreshLayout.setRefreshing(true);
+
+                                        emergencyPresenter.getContacts(sharedPrefs.getUserId());
+                                    }
+                                }
+        );
+
+        emergencyPresenter.getContacts(sharedPrefs.getUserId());
+
         return view;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if(!EventBus.getDefault().isRegistered(this)){
+
+            EventBus.getDefault().register(this);
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        if(EventBus.getDefault().isRegistered(this)){
+            EventBus.getDefault().unregister(this);
+        }
+
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -181,35 +404,58 @@ public class EmergencyFragment extends Fragment implements EmergencyContactsView
         mListener = null;
     }
 
+
     @Override
-    public void showLoader(boolean show) {
-        if (show) {
+    public void onEmergencyContactsRecieved(List<EmergencyContactData> contactsDataList) {
+
+        this.contactDataList = contactsDataList;
+
+        if (contactsDataList.size() == 0 || contactsDataList.isEmpty()) {
+//            addContactsLayout.setVisibility(View.VISIBLE);
+            selectedContactsTextView.setVisibility(View.GONE);
             recyclerView.setVisibility(View.GONE);
-            progressBar.setVisibility(View.GONE);
-
         } else {
-            progressBar.setVisibility(View.GONE);
+//            addContactsLayout.setVisibility(View.GONE);
             recyclerView.setVisibility(View.VISIBLE);
-
         }
+        emergencyContactsAdapter.setEmergencyContactDataList(contactsDataList);
+        emergencyContactsAdapter.notifyDataSetChanged();
 
     }
 
     @Override
-    public void onEmergencyContactsRecieved(List<EmergencyContactsFeed> contactsDataList) {
-        if(contactsDataList.size()==0||contactsDataList.isEmpty()){
-            addContactsLayout.setVisibility(View.VISIBLE);
-            selectedContactsTextView.setVisibility(View.GONE);
-            recyclerView.setVisibility(View.GONE);
-        }
-        else
-        {
-            addContactsLayout.setVisibility(View.GONE);
-            recyclerView.setVisibility(View.VISIBLE);
-        }
-        emergencyContactsAdapter.setEmergencyContactsFeedList(contactsDataList);
-        emergencyContactsAdapter.notifyDataSetChanged();
+    public void onSosStarted(StartSosData startSosData) {
 
+        Intent intent = new Intent(getActivity(), EmergencyLocationServiceNew.class);
+
+        intent.putExtra(Keys.KEY_SOS_ID, startSosData.getSosId());
+
+        getActivity().startService(intent);
+        sosText.setText(getActivity().getString(R.string.enable_sos_service_text));
+//        sosButton.setText("STOP SOS");
+
+        isStarted = true;
+
+
+    }
+
+    @Override
+    public void onContactDeleted() {
+        emergencyPresenter.getContacts(sharedPrefs.getUserId());
+    }
+
+    @Override
+    public void showLoader(boolean show) {
+        if(show){
+            allLayouts.setVisibility(View.GONE);
+            progressBar.setVisibility(View.VISIBLE);
+            swipeRefreshLayout.setRefreshing(true);
+        }else{
+            allLayouts.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.GONE);
+            swipeRefreshLayout.setRefreshing(false);
+
+        }
     }
 
     @Override
@@ -220,13 +466,40 @@ public class EmergencyFragment extends Fragment implements EmergencyContactsView
     }
 
     @Override
-    public void updateContacts(EmergencyContactsFeed emergencyContactsFeed) {
+    public void showProgressDialog(boolean show) {
+        if (show) {
+            progressDialog.show();
+        } else {
+            progressDialog.hide();
+        }
+    }
+
+    @Override
+    public void changeDialogMessage(String title,String message) {
+
+        progressDialog.setTitle(title);
+        progressDialog.setMessage(message);
+
 
     }
 
-    protected void requestContactsUpdate(String userId,EmergencyContactsFeed emergencyContactsFeed,boolean isChecked,int position)
-    {
+    @Override
+    public void onEmergencyContactsUpdated() {
 
+    }
+
+
+
+    public void deleteContact(String mobile) {
+
+        Log.d(TAG,"Mobile"+mobile);
+        emergencyPresenter.deleteContact(sharedPrefs.getUserId(),mobile);
+
+    }
+
+    @Override
+    public void onRefresh() {
+        emergencyPresenter.getContacts(sharedPrefs.getUserId());
     }
 
     /**
@@ -243,5 +516,17 @@ public class EmergencyFragment extends Fragment implements EmergencyContactsView
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+
+
+    @Subscribe(sticky = true,threadMode = ThreadMode.MAIN)
+    public void onContactsUpdatedEvent(Contact contact) {
+
+
+        /* Do something */
+
+        emergencyPresenter.getContacts(sharedPrefs.getUserId());
+
+    }
+
 
 }

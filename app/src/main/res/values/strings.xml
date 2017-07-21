@@ -3,6 +3,7 @@
 
     <!-- Strings related to login -->
     <string name="google_maps_key">AIzaSyCKxL9YpnXpIPYmGa4ZifTGpbbLr59KLOI</string>
+    <!--<string name="google_maps_key">AIzaSyCl36Q9zEz675KtkXxx-TSUxYuZG7cxTMY</string>-->
 
     <string name="action_settings">Settings</string>
 
@@ -62,4 +63,7 @@
     <string name="disable_sos_service_text">Click on the button three times to disable SOS service.</string>
     <string name="selected_contacts">Selected Contacts</string>
     <string name="emergencyToggle">Emergency</string>
+    <string name="update">Update</string>
+    <string name="add_responders">Add Responders</string>
+    <string name="sos">SOS</string>
 </resources>

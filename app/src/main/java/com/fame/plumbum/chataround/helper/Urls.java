@@ -19,16 +19,12 @@ public class Urls {
     public static final String SUB_URL_PHOTO_UPLOAD_API ="AddPhoto" ;
     public static final String SUB_URL_ADD_REFERRAL ="AddReferral";
     public static final String SUB_URL_VERIFY_DEVICE = "VerifyDevice";
-    public static final String SUB_URL_EMERGENCY_CONTACTS="EmergencyContacts";
-    public static final String SUB_URL_ADD_CONTACTS ="AddContacts" ;
-
-
-
-    //    public static String BASE_URL = "http://52.66.45.251:5000/"; // AWS
-//    public static String BASE_URL = "http://139.59.30.208:5000/"; // Digital Ocean
-
+    public static final String SUB_URL_GET_EMERGENCY_CONTACTS ="GetContactList";
     public static final String BASE_URL = BuildConfig.BASE_URL;
-
+    public static final String SUB_URL_UPDATE_CONTACTS = "UpdateEmergencyContacts";
+    public static final String SUB_URL_START_SOS = "StartSOS";
+    public static final String SUB_URL_UPDATE_SOS_LOCATION = "UpdateSosLocation";
+    public static final String SUB_URL_DELETE_EMERGENCY_CONTACTS = "DeleteContact";
 
 }
 

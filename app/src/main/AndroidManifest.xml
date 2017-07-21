@@ -65,6 +65,13 @@
             android:name=".LocationService"
             android:enabled="true" />
 
+        <service android:name=".emergency.service.EmergencyLocationServiceNew"
+            android:enabled="true"
+            />
+
+        <service android:name=".emergency.service.EmergencyLocationService"
+            android:enabled="true"/>
+
         <activity
             android:name=".activity.LoginActivity"
             android:label="@string/app_name"
@@ -145,7 +152,7 @@
             android:name=".news.view.NewsDetailsActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity android:name=".emergency.view.EmergencyContactsActivity"></activity>
+        <activity android:name=".emergency_contacts.view.EmergencyContactsActivity"></activity>
     </application>
 
 </manifest>
