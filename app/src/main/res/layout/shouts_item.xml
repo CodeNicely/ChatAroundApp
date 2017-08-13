@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_margin="2dp"
     >
 
     <RelativeLayout
@@ -74,6 +75,7 @@
                     android:layout_marginRight="8dp"
                     android:layout_toLeftOf="@+id/timestamp"
                     android:src="#ec3b3b"
+                    android:visibility="gone"
 
                     />
 
@@ -96,6 +98,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:gravity="center"
             android:id="@+id/ll_buts"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -114,8 +117,7 @@
                 <ImageView
                     android:id="@+id/chat_image"
                     android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    />
+                    android:layout_height="20dp" />
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/chat_dot"
@@ -130,7 +132,8 @@
                 android:id="@+id/report"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1">
+                android:layout_weight="1"
+                android:visibility="gone">
 
                 <ImageView
                     android:id="@+id/report_image"
@@ -157,6 +160,64 @@
                     />
 
             </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/voteLayout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="0.5"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/upvote"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:padding="4dp" />
+
+                <TextView
+                    android:id="@+id/upvotes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:text="@string/zero" />
+
+
+
+                <TextView
+                    android:id="@+id/downvotes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:text="@string/zero" />
+
+                <ImageView
+                    android:id="@+id/downvote"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:padding="4dp"
+
+                    />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:visibility="gone"
+                android:id="@+id/voteTextLayout"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:text="You already voted this post!"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+
+
+            </LinearLayout>
         </LinearLayout>
 
         <TextView
@@ -169,7 +230,7 @@
             android:layout_toRightOf="@+id/image_user_rl"
             android:paddingLeft="4dp"
             android:paddingRight="8dp"
-            android:text="0 Comments and 0 Reports"
+            android:text="No Comments"
             android:textSize="12sp" />
     </RelativeLayout>
 </RelativeLayout>

@@ -21,9 +21,11 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.fame.plumbum.chataround.R;
@@ -42,6 +44,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,6 +52,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class EmergencyContactsActivity extends AppCompatActivity implements EmergencyContactsView {
+    private static final String TAG = "EContactActivity";
     @BindView(R.id.contacts_recycler_view)
     RecyclerView recyclerView;
 
@@ -58,7 +62,9 @@ public class EmergencyContactsActivity extends AppCompatActivity implements Emer
     @BindView(R.id.update)
     Button update;
 
-    private Toolbar toolbar;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+
     private EmergencyContactsAdapter emergencyContactsAdapter;
     private static final int PERMISSIONS_REQUEST_READ_CONTACTS = 100;
     private SharedPrefs sharedPrefs;
@@ -74,7 +80,6 @@ public class EmergencyContactsActivity extends AppCompatActivity implements Emer
         setContentView(R.layout.activity_emergency_contacts);
         ButterKnife.bind(this);
         sharedPrefs = new SharedPrefs(this);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
 
         updateContactsPresenter = new UpdateContactsPresenterImpl(this, new RetrofitEmergencyContactsUpdateProvider());
 
@@ -84,11 +89,14 @@ public class EmergencyContactsActivity extends AppCompatActivity implements Emer
         progressDialog = new ProgressDialog(this);
         progressDialog.setCancelable(false);
 
-        toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.white));
-        if (toolbar != null) {
-            setSupportActionBar(toolbar);
-            toolbar.setTitle("Contacts");
-        }
+        setSupportActionBar(toolbar);
+
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
         emergencyContactsAdapter = new EmergencyContactsAdapter(this);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -227,7 +235,7 @@ public class EmergencyContactsActivity extends AppCompatActivity implements Emer
 //                public void run() {
 
 
-            String phoneNumber = null;
+            String phoneNumber;
 
             Uri CONTENT_URI = ContactsContract.Contacts.CONTENT_URI;
 
@@ -273,44 +281,45 @@ public class EmergencyContactsActivity extends AppCompatActivity implements Emer
 
                             phoneNumber = phoneCursor.getString(phoneCursor.getColumnIndex(NUMBER));
 
+                            assert phoneNumber != null;
+                            phoneNumber = phoneNumber.replace(" ", "");
+
+                            if (phoneNumber.startsWith("+91")) {
+                                phoneNumber = phoneNumber.substring(3, phoneNumber.length());
+                            }
+
+                            if (phoneNumber.length() == 10) {
+                                boolean checked = false;
+                                for (int i = 0; i < addedContacts.size(); i++) {
+
+                                    if (phoneNumber.equals(addedContacts.get(i).getMobile())) {
+                                        checked = true;
+                                        Log.d("EmergencyContacts", "Checked is True");
+                                    }
+                                }
+
+                                boolean exist=false;
+
+                                for(int i=0;i<contactsFeedList.size();i++){
+                                    if(contactsFeedList.get(i).getMobile().equals(phoneNumber)){
+                                        exist=true;
+                                    }
+                                }
+
+                                if(!exist){
+                                    contactsFeedList.add(new EmergencyContactData(name, phoneNumber, checked));
+                                    EventBus.getDefault().post(new ContactFetchEvent(count, cursor.getCount()));
+
+                                }
+
+                            }
+
                         }
 
 
                         phoneCursor.close();
 
-                        assert phoneNumber != null;
-                        phoneNumber = phoneNumber.replace(" ", "");
 
-                        if (phoneNumber.startsWith("+91")) {
-                            phoneNumber = phoneNumber.substring(3, phoneNumber.length());
-                        }
-
-                        if (phoneNumber.length() == 10) {
-                            boolean checked = false;
-                            for (int i = 0; i < addedContacts.size(); i++) {
-
-                                if (phoneNumber.equals(addedContacts.get(i).getMobile())) {
-                                    checked = true;
-                                    Log.d("EmergencyContacts", "Checked is True");
-                                }
-                            }
-
-
-                            contactsFeedList.add(new EmergencyContactData(name, phoneNumber, checked));
-                            EventBus.getDefault().post(new ContactFetchEvent(count, cursor.getCount()));
-
-//                            final String finalPhoneNumber = phoneNumber;
-                       /*     runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    emergencyContactsAdapter.addEmergencyContact(new EmergencyContactData(name, finalPhoneNumber, false));
-                                    emergencyContactsAdapter.notifyItemChanged(contactsFeedList.size());
-
-                                    showProgressDialog(false);
-                                }
-                            });*/
-
-                        }
 
                     }
 
@@ -439,8 +448,18 @@ public class EmergencyContactsActivity extends AppCompatActivity implements Emer
         final SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
         searchView.setSearchableInfo(searchManager.
                 getSearchableInfo(getComponentName()));
-        int searchSrcTextId = getResources().getIdentifier("android:id/search_src_text", null, null);
-        EditText searchEditText = (EditText) searchView.findViewById(searchSrcTextId);
+//        int searchSrcTextId = getResources().getIdentifier("android:id/search_src_text", null, null);
+//        EditText searchEditText = (EditText) searchView.findViewById(searchSrcTextId);
+
+        AutoCompleteTextView searchTextView = (AutoCompleteTextView) searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
+        try {
+            Field mCursorDrawableRes = TextView.class.getDeclaredField("mCursorDrawableRes");
+            mCursorDrawableRes.setAccessible(true);
+            mCursorDrawableRes.set(searchTextView, R.drawable.cursor); //This sets the cursor resource ID to 0 or @null which will make it visible on white background
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         searchView.setSubmitButtonEnabled(true);
         SearchView.OnQueryTextListener queryTextListener = new SearchView.OnQueryTextListener() {
             @Override

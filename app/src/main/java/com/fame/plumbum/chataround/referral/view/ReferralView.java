@@ -14,4 +14,7 @@ public interface ReferralView {
 
     void showMessage(String message);
 
+    void onReferralRequestSent();
+
+    void onReferralSuccess();
 }

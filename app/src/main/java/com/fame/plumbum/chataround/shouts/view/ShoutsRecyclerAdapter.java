@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,6 +56,10 @@ import de.hdodenhof.circleimageview.CircleImageView;
  */
 
 public class ShoutsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private static final int VOTE_TYPE_UPVOTE = 1;
+    private static final int VOTE_TYPE_DOWNVOTE = -1;
+    private static final String TAG = "ShoutsRecyclerAdapter";
+
     private LayoutInflater layoutInflater;
     private List<Posts> postsList = new ArrayList<>();
     private ShoutsFragment shoutsFragment;
@@ -78,7 +83,7 @@ public class ShoutsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = layoutInflater.inflate(R.layout.shouts_item, parent, false);
+        View view = layoutInflater.inflate(R.layout.shouts_item_new_new, parent, false);
         return new ShoutsViewHolder(view);
     }
 
@@ -104,8 +109,8 @@ public class ShoutsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             }
         });
 
-        Glide.with(context).load(R.drawable.reply).into(shoutsViewHolder.comment_image);
-        Glide.with(context).load(R.drawable.chat).into(shoutsViewHolder.chat_image);
+        Glide.with(context).load(R.drawable.chat).into(shoutsViewHolder.comment_image);
+        Glide.with(context).load(R.drawable.reply).into(shoutsViewHolder.chat_image);
 
         if (db.getPeronalChats(post.getPosterId()).size() > 0)
             shoutsViewHolder.chat_dot.setVisibility(View.VISIBLE);
@@ -113,33 +118,120 @@ public class ShoutsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             shoutsViewHolder.chat_dot.setVisibility(View.GONE);
         int reports = post.getLike().size();
         int comments = post.getComments().size();
-        if (reports == 0 && comments == 0) {
+
+        shoutsViewHolder.number_of_comments.setText(String.valueOf(comments+" Comments"));
+
+      /*  if (reports == 0 && comments == 0) {
             shoutsViewHolder.num_post.setText("No entries found.");
+
+
+
         } else if (reports == 0) {
             shoutsViewHolder.num_post.setText(comments + " comments");
         } else if (comments == 0) {
             shoutsViewHolder.num_post.setText(reports + " reports");
         } else {
+
+
+
             shoutsViewHolder.num_post.setText(comments + " comments and " + reports + " reports");
-        }
+        }*/
+/*
         if (post.getNoOfLikes() != 0) {
             shoutsViewHolder.report_dot.setVisibility(View.VISIBLE);
         } else {
             shoutsViewHolder.report_dot.setVisibility(View.GONE);
         }
+*/
 
-        shoutsViewHolder.num_post.setVisibility(View.VISIBLE);
+//        shoutsViewHolder.num_post.setVisibility(View.VISIBLE);
 
+/*
         if (post.getLikeFlag().contentEquals("0"))
             Glide.with(context).load(R.drawable.thumbs_down_accent).into(shoutsViewHolder.report_image);
         else
             Glide.with(context).load(R.drawable.thumbs_down_red).into(shoutsViewHolder.report_image);
+*/
+
+        Glide.with(context).load(R.drawable.downvote).into(shoutsViewHolder.downvote_image);
+
+//        Glide.with(context).load(R.drawable.timestamp).into(shoutsViewHolder.timestamp_icon);
+
+        try {
+            shoutsViewHolder.upvotes.setText(String.valueOf(post.getNUpvote()));
+
+        }catch (Exception e){
+            e.printStackTrace();
+            Log.d(TAG,e.getMessage());
+        }
+
+        try {
+            shoutsViewHolder.downvotes.setText(String.valueOf(post.getNDownvote()));
+        }catch (Exception e){
+            e.printStackTrace();
+            Log.d(TAG,e.getMessage());
+
+        }
+
+ /*       try{
+            if(post.isUpVoteFlag() || post.isDownVoteFlag()){
+
+                shoutsViewHolder.voteLayout.setVisibility(View.GONE);
+                shoutsViewHolder.voteTextLayout.setVisibility(View.VISIBLE);
+
+               // User has already voted for this post so the user can not vote any more.
+
+            }else{
+                shoutsViewHolder.voteLayout.setVisibility(View.VISIBLE);
+                shoutsViewHolder.voteTextLayout.setVisibility(View.GONE);
+
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }*/
+
+        try{
+            if(post.isUpVoteFlag()){
+
+                shoutsViewHolder.upvote_image.setAlpha(Float.parseFloat("1"));
+
+                Glide.with(context).load(R.drawable.up_vote).into(shoutsViewHolder.upvote_image);
+
+            }else{
+                shoutsViewHolder.upvote_image.setAlpha(Float.parseFloat("0.3"));
+
+                Glide.with(context).load(R.drawable.up_vote).into(shoutsViewHolder.upvote_image);
+
+            }
+
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        try{
+
+            if(post.isDownVoteFlag()){
+                shoutsViewHolder.downvote_image.setAlpha(Float.parseFloat("1"));
+                Glide.with(context).load(R.drawable.down_vote).into(shoutsViewHolder.downvote_image);
+
+            }else{
+                shoutsViewHolder.downvote_image.setAlpha(Float.parseFloat("0.3"));
+
+                Glide.with(context).load(R.drawable.down_vote).into(shoutsViewHolder.downvote_image);
+
+            }
+
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
         Glide.with(context).load(Urls.BASE_URL + "ImageReturn?ImageName=" + postsList.get(position).getPosterImage()).listener(new RequestListener<String, GlideDrawable>() {
             @Override
             public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
                 Glide.with(context).load(R.drawable.user_big).into(shoutsViewHolder.user_img);
-                return false;
+                return true;
             }
 
             @Override
@@ -171,16 +263,16 @@ public class ShoutsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             } else {
                 shoutsViewHolder.timestamp.setText(days + " days ago");
             }
-            if (post.getNoOfLikes() != 0) {
+            /*if (post.getNoOfLikes() != 0) {
                 shoutsViewHolder.report_dot.setVisibility(View.VISIBLE);
             } else {
                 shoutsViewHolder.report_dot.setVisibility(View.GONE);
-            }
+            }*/
         } catch (ParseException e) {
             e.printStackTrace();
         }
 
-        shoutsViewHolder.report.setOnClickListener(new View.OnClickListener() {
+/*        shoutsViewHolder.report.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -188,7 +280,7 @@ public class ShoutsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
 
             }
-        });
+        });*/
         shoutsViewHolder.chat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -213,6 +305,9 @@ public class ShoutsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
             }
         });
+
+
+
         shoutsViewHolder.rl_tweet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -221,6 +316,23 @@ public class ShoutsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 Intent intent = new Intent(context, ParticularPost.class);
                 intent.putExtra("post_id", post.getPostId());
                 context.startActivity(intent);
+            }
+        });
+
+
+        shoutsViewHolder.upvote_image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                shoutsFragment.requestVote(post.getPostId(),VOTE_TYPE_UPVOTE,position);
+
+            }
+        });
+
+        shoutsViewHolder.downvote_image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                shoutsFragment.requestVote(post.getPostId(),VOTE_TYPE_DOWNVOTE,position);
             }
         });
 
@@ -253,17 +365,21 @@ public class ShoutsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         return name;
     }
 
+    public void setItem(int position, Posts post) {
+        postsList.set(position,post);
+    }
+
 
     public class ShoutsViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.chat)
         LinearLayout chat;
 
-        @BindView(R.id.report)
-        LinearLayout report;
+//        @BindView(R.id.report)
+//        LinearLayout report;
 
-        @BindView(R.id.num_post)
-        TextView num_post;
+//        @BindView(R.id.num_post)
+//        TextView num_post;
 
         @BindView(R.id.rL_tweet)
         RelativeLayout rl_tweet;
@@ -277,8 +393,8 @@ public class ShoutsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         @BindView(R.id.timestamp)
         TextView timestamp;
 
-        @BindView(R.id.report_dot)
-        CircleImageView report_dot;
+//        @BindView(R.id.report_dot)
+//        CircleImageView report_dot;
 
         @BindView(R.id.image_user_post)
         CircleImageView user_img;
@@ -286,8 +402,8 @@ public class ShoutsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         @BindView(R.id.chat_dot)
         ImageView chat_dot;
 
-        @BindView(R.id.report_image)
-        ImageView report_image;
+//        @BindView(R.id.report_image)
+//        ImageView report_image;
 
         @BindView(R.id.chat_image)
         ImageView chat_image;
@@ -295,6 +411,32 @@ public class ShoutsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         @BindView(R.id.comment_image)
         ImageView comment_image;
 
+        @BindView(R.id.upvote)
+        ImageView upvote_image;
+
+        @BindView(R.id.downvote)
+        ImageView downvote_image;
+
+        @BindView(R.id.upvotes)
+        TextView upvotes;
+
+        @BindView(R.id.downvotes)
+        TextView downvotes;
+
+        @BindView(R.id.voteLayout)
+        LinearLayout voteLayout;
+
+        @BindView(R.id.voteTextLayout)
+        LinearLayout voteTextLayout;
+
+//        @BindView(R.id.timestamp_icon)
+//        ImageView timestamp_icon;
+
+        @BindView(R.id.number_of_replies)
+        TextView number_of_replies;
+
+        @BindView(R.id.number_of_comment)
+        TextView number_of_comments;
 
         public ShoutsViewHolder(View view) {
             super(view);
@@ -302,4 +444,6 @@ public class ShoutsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
         }
     }
+
+
 }

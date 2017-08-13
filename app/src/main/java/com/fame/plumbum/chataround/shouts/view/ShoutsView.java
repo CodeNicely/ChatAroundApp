@@ -14,4 +14,6 @@ public interface ShoutsView {
     void showLoader(boolean show);
 
     void setData(List<Posts> posts);
+
+    void onVoteSuccessful(int position, int vote_type);
 }

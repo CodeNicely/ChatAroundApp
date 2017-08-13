@@ -53,7 +53,7 @@ import butterknife.ButterKnife;
  * Use the {@link EmergencyFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class EmergencyFragment extends Fragment implements EmergencyView,SwipeRefreshLayout.OnRefreshListener {
+public class EmergencyFragment extends Fragment implements EmergencyView{
 
     private static final String TAG = "EmergencyFragment";
     private FButton sosButton;
@@ -70,9 +70,6 @@ public class EmergencyFragment extends Fragment implements EmergencyView,SwipeRe
 
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
-
-    @BindView(R.id.swipe_refresh_layout)
-    SwipeRefreshLayout swipeRefreshLayout;
 
     @BindView(R.id.allLayouts)
     RelativeLayout allLayouts;
@@ -159,6 +156,8 @@ public class EmergencyFragment extends Fragment implements EmergencyView,SwipeRe
 
         final boolean[] red = {true};
 
+
+
         final Handler handler = new Handler();
         final Runnable runnable = new Runnable() {
             public void run() {
@@ -190,6 +189,12 @@ public class EmergencyFragment extends Fragment implements EmergencyView,SwipeRe
         };
 
 
+        if(sharedPrefs.isSosOngoing()){
+                runnable.run();
+            count=3;
+            isStarted=true;
+        }
+
         sosButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -202,7 +207,6 @@ public class EmergencyFragment extends Fragment implements EmergencyView,SwipeRe
 
                         emergencyPresenter.startSos(sharedPrefs.getUserId(), 12.12, 13.13);
                         sosText.setText(getActivity().getString(R.string.disable_sos_service_text));
-
                     }
 
                 } else {
@@ -212,42 +216,30 @@ public class EmergencyFragment extends Fragment implements EmergencyView,SwipeRe
 //                        sosButton.setText("START SOS");
                         sosText.setText(getActivity().getString(R.string.enable_sos_service_text));
                         isStarted = false;
+                        sharedPrefs.setSosOngoing(false);
+
                     }
 
-
                 }
-
                 if (count == 0) {
 
                     sosButton.setButtonColor(ContextCompat.getColor(context,R.color.gray));
                     handler.removeCallbacks(runnable);
-
                 }
 
-
                 if (count == 1) {
-
                     sosButton.setButtonColor(ContextCompat.getColor(context,R.color.colorAccent));
                     handler.removeCallbacks(runnable);
-
-
                 }
 
                 if (count == 2) {
-
                     sosButton.setButtonColor(ContextCompat.getColor(context,R.color.colorAccentRed));
                     handler.removeCallbacks(runnable);
-
-
                 }
 
                 if (count == 3) {
-
                     runnable.run();
-
                 }
-
-
             }
         });
 
@@ -345,7 +337,7 @@ public class EmergencyFragment extends Fragment implements EmergencyView,SwipeRe
             }
         });
 
-        swipeRefreshLayout.setOnRefreshListener(this);
+        /*swipeRefreshLayout.setOnRefreshListener(this);
         swipeRefreshLayout.post(new Runnable() {
                                     @Override
                                     public void run() {
@@ -354,7 +346,7 @@ public class EmergencyFragment extends Fragment implements EmergencyView,SwipeRe
                                         emergencyPresenter.getContacts(sharedPrefs.getUserId());
                                     }
                                 }
-        );
+        );*/
 
         emergencyPresenter.getContacts(sharedPrefs.getUserId());
 
@@ -436,6 +428,8 @@ public class EmergencyFragment extends Fragment implements EmergencyView,SwipeRe
 
         isStarted = true;
 
+        sharedPrefs.setSosOngoing(true);
+
 
     }
 
@@ -449,11 +443,9 @@ public class EmergencyFragment extends Fragment implements EmergencyView,SwipeRe
         if(show){
             allLayouts.setVisibility(View.GONE);
             progressBar.setVisibility(View.VISIBLE);
-            swipeRefreshLayout.setRefreshing(true);
         }else{
             allLayouts.setVisibility(View.VISIBLE);
             progressBar.setVisibility(View.GONE);
-            swipeRefreshLayout.setRefreshing(false);
 
         }
     }
@@ -495,11 +487,6 @@ public class EmergencyFragment extends Fragment implements EmergencyView,SwipeRe
         Log.d(TAG,"Mobile"+mobile);
         emergencyPresenter.deleteContact(sharedPrefs.getUserId(),mobile);
 
-    }
-
-    @Override
-    public void onRefresh() {
-        emergencyPresenter.getContacts(sharedPrefs.getUserId());
     }
 
     /**

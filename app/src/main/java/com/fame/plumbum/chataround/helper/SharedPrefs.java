@@ -11,6 +11,8 @@ public class SharedPrefs {
 
     private static final String PREF_NAME = "SharedPreference";
     private static final String KEY_IS_LOGGEDIN = "isLoggedIn";
+    private static final String KEY_IS_REFFERAL_DIALOG_SHOWN = "isReferralDialogShown";
+
     private static final String KEY_USERNAME = "username";
     private static final String KEY_EMAIL = "email";
     private static final String KEY_USER_ID = "userId";
@@ -24,6 +26,7 @@ public class SharedPrefs {
     private static final String KEY_POLLUTION_MODULE = "pollutionModule";
     private static final String KEY_NEWS_MODULE = "newsModule";
     private static final String KEY_USER_MOBILE_NUMBER = "userMobile";
+    private static final String KEY_SOS_ONGOING = "sosOngoing";
 
 
     // Shared Preferences
@@ -54,6 +57,19 @@ public class SharedPrefs {
     }
 
 
+    public void setReferralDialogShown(boolean isReferralDialogShown) {
+
+        editor.putBoolean(KEY_IS_REFFERAL_DIALOG_SHOWN, isReferralDialogShown);
+        // commit changes
+        editor.commit();
+    }
+
+    public boolean isReferralDialogShown() {
+        return pref.getBoolean(KEY_IS_REFFERAL_DIALOG_SHOWN, false);
+    }
+
+
+
     public void setUserMobile(String mobile){
 
         editor.putString(KEY_USER_MOBILE_NUMBER, mobile);
@@ -73,6 +89,17 @@ public class SharedPrefs {
     public void setShouts(boolean set) {
 
         editor.putBoolean(KEY_SHOUTS_MODULE, set);
+        editor.commit();
+
+    }
+
+    public boolean isSosOngoing() {
+        return pref.getBoolean(KEY_SOS_ONGOING, false);
+    }
+
+    public void setSosOngoing(boolean set) {
+
+        editor.putBoolean(KEY_SOS_ONGOING, set);
         editor.commit();
 
     }

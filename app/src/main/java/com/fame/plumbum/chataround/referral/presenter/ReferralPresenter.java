@@ -10,5 +10,7 @@ public interface ReferralPresenter {
 
     void requestReferal(String userId,String deviceId,String mobile);
 
+    void requestReferralVerify(String userId,String deviceId,String mobile,String otp);
+
 
 }

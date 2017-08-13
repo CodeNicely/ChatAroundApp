@@ -57,6 +57,9 @@ import com.google.android.gms.location.LocationServices;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import butterknife.BindView;
@@ -402,6 +405,16 @@ public class ShoutsFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
     @Override
     public void setData(List<Posts> posts) {
+
+//        posts.sort(Comparator.comparingInt(Posts::getNDownvote()+Posts::getNUpvote));
+
+        Collections.sort(posts, new Comparator<Posts>() {
+            @Override
+            public int compare(Posts o1, Posts o2) {
+                return Integer.compare(o2.getNDownvote()+o2.getNUpvote(),o1.getNDownvote()+o1.getNUpvote());
+            }
+        });
+
         if (count > 0) {
             shoutsRecyclerAdapter.appendData(posts);
 
@@ -409,6 +422,34 @@ public class ShoutsFragment extends Fragment implements SwipeRefreshLayout.OnRef
             shoutsRecyclerAdapter.setData(posts);
         }
         shoutsRecyclerAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onVoteSuccessful(int position, int vote_type) {
+
+        Posts post=shoutsRecyclerAdapter.getPostsList().get(position);
+
+        if(vote_type==-1){
+            post.setDownVoteFlag(true);
+            post.setUpVoteFlag(false);
+            post.setNDownvote(post.getNDownvote()+1);
+        }else{
+            post.setUpVoteFlag(true);
+            post.setDownVoteFlag(false);
+            post.setNUpvote(post.getNUpvote()+1);
+
+        }
+
+        shoutsRecyclerAdapter.setItem(position,post);
+        shoutsRecyclerAdapter.notifyItemChanged(position);
+
+
+    }
+
+    public void requestVote(String postId,int post_type, int position) {
+
+        shoutsPresenter.requestVote(sharedPrefs.getUserId(),postId,post_type,position);
+
     }
 
     /**

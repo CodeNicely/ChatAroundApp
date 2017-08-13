@@ -368,11 +368,9 @@ public class MainActivity extends AppCompatActivity implements
                     break;
                 case FRAGMENT_TYPE_EMERGENCY:
                     if (tabLayout.getTabAt(i) != null) {
-                        tabLayout.getTabAt(i).setIcon(R.drawable.caution_sign);
+                        tabLayout.getTabAt(i).setIcon(R.drawable.emergency_icon);
                     }
                     break;
-
-
             }
         }
 
@@ -386,64 +384,28 @@ public class MainActivity extends AppCompatActivity implements
                 switch (adapter.fragmentTypeList.get(position)) {
                     case FRAGMENT_TYPE_PROFILE:
                         toolbar.setTitle("Profile");
-                       /* Answers.getInstance().logCustom(new CustomEvent("User Swiped to Profile")
-                                .putCustomAttribute(Keys.KEY_LATITUDE, lat)
-                                .putCustomAttribute(Keys.KEY_LONGITUDE, lng)
-                                .putCustomAttribute(Keys.USER_EMAIL, sharedPrefs.getEmail())
-                        );
-*/
+
                         break;
                     case FRAGMENT_TYPE_SHOUTS:
                         toolbar.setTitle("Shouts");
-  /*                      Answers.getInstance().logCustom(new CustomEvent("User Swiped to Shouts")
-                                .putCustomAttribute(Keys.KEY_LATITUDE, lat)
-                                .putCustomAttribute(Keys.KEY_LONGITUDE, lng)
-                                .putCustomAttribute(Keys.USER_EMAIL, sharedPrefs.getEmail())
 
-                        );
-*/
                         break;
                     case FRAGMENT_TYPE_TOILET:
                         toolbar.setTitle("Restrooms");
-  /*                      Answers.getInstance().logCustom(new CustomEvent("User Swiped to Restroom")
-                                .putCustomAttribute(Keys.KEY_LATITUDE, lat)
-                                .putCustomAttribute(Keys.KEY_LONGITUDE, lng)
-                                .putCustomAttribute(Keys.USER_EMAIL, sharedPrefs.getEmail())
 
-                        );
-*/
                         break;
 
                     case FRAGMENT_TYPE_GALLERY:
                         toolbar.setTitle("Gallery");
-  /*                      Answers.getInstance().logCustom(new CustomEvent("User Swiped to Gallery")
-                                .putCustomAttribute(Keys.KEY_LATITUDE, lat)
-                                .putCustomAttribute(Keys.KEY_LONGITUDE, lng)
-                                .putCustomAttribute(Keys.USER_EMAIL, sharedPrefs.getEmail())
 
-                        );
-*/
                         break;
 
                     case FRAGMENT_TYPE_POLLUTION:
                         toolbar.setTitle("Pollution Meter");
-  /*                      Answers.getInstance().logCustom(new CustomEvent("User Swiped to Pollution")
-                                .putCustomAttribute(Keys.KEY_LATITUDE, lat)
-                                .putCustomAttribute(Keys.KEY_LONGITUDE, lng)
-                                .putCustomAttribute(Keys.USER_EMAIL, sharedPrefs.getEmail())
 
-                        );
-*/
                         break;
                     case FRAGMENT_TYPE_NEWS:
-                        toolbar.setTitle("News");
-  /*                      Answers.getInstance().logCustom(new CustomEvent("User Swiped to News")
-                                .putCustomAttribute(Keys.KEY_LATITUDE, lat)
-                                .putCustomAttribute(Keys.KEY_LONGITUDE, lng)
-                                .putCustomAttribute(Keys.USER_EMAIL, sharedPrefs.getEmail())
 
-                        );
-*/
                         break;
                     case FRAGMENT_TYPE_EMERGENCY:
                         toolbar.setTitle("Emergency");
@@ -652,9 +614,11 @@ public class MainActivity extends AppCompatActivity implements
 
                         referralPresenter = new ReferralPresenterImpl(this, new RetrofitReferralProvider());
 
-                        referralPresenter.requestDeviceIdVerify(sharedPrefs.getUserId(), Settings.Secure.getString(getContext().getContentResolver(),
-                                Settings.Secure.ANDROID_ID));
-                    }
+                        if(!sharedPrefs.isReferralDialogShown()) {
+                            referralPresenter.requestDeviceIdVerify(sharedPrefs.getUserId(), Settings.Secure.getString(getContext().getContentResolver(),
+                                    Settings.Secure.ANDROID_ID));
+                        }
+                        }
                 }
 
             } catch (IOException e) {
@@ -690,6 +654,8 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onDeviceDataReceived(VerifyDeviceData verifyDeviceData) {
+
+        sharedPrefs.setReferralDialogShown(true);
 
         if (verifyDeviceData.isNew_device()) {
 
@@ -757,10 +723,94 @@ public class MainActivity extends AppCompatActivity implements
 
     }
 
+
     @Override
     public void showMessage(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
+
+    @Override
+    public void onReferralRequestSent() {
+
+
+        final Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.dialog_referral_otp_verify);
+        final EditText referal_code = (EditText) dialog.findViewById(R.id.referal);
+        final EditText referal_otp = (EditText) dialog.findViewById(R.id.referralOtp);
+
+        referal_code.setText(sharedPrefs.getUserMobile());
+
+        referal_code.setEnabled(false);
+
+        Button proceed = (Button) dialog.findViewById(R.id.proceed);
+        Button skip = (Button) dialog.findViewById(R.id.skip);
+
+        referal_code.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.length() == 10) {
+                    hideKeyboard();
+                }
+            }
+        });
+
+
+        dialog.setTitle("Referral Code");
+        dialog.setCancelable(false);
+        dialog.show();
+
+        proceed.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String code = referal_code.getText().toString();
+                String otp = referal_otp.getText().toString();
+
+
+                if (code.equals("") || code.equals(null)) {
+                    referal_code.setError("Invalid mobile number");
+                    referal_code.requestFocus();
+                } else if (code.length() < 10 || code.length() > 10) {
+                    referal_code.setError("Invalid mobile number");
+                    referal_code.requestFocus();
+                } else if (otp.length() == 0) {
+                    referal_otp.setError("Write Otp");
+                    referal_otp.requestFocus();
+                } else {
+
+                    sharedPrefs.setUserMobile(code);
+                    referralPresenter.requestReferralVerify(sharedPrefs.getUserId(), Settings.Secure.getString(getContext().getContentResolver(),
+                            Settings.Secure.ANDROID_ID), code, otp);
+                    dialog.dismiss();
+                }
+
+            }
+
+        });
+
+        skip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+    }
+
+    @Override
+    public void onReferralSuccess() {
+
+
+    }
+
 
     private class ViewPagerAdapter extends FragmentStatePagerAdapter {
         private final List<Fragment> mFragmentList = new ArrayList<>();
@@ -995,7 +1045,7 @@ public class MainActivity extends AppCompatActivity implements
                     message = "Every news article on the Internet related to your city or state in " +
                             "case there aren’t enough news articles relating to your city (in case " +
                             "of tier-2 and tier-3 cities).";
-                }else if (viewPager.getCurrentItem() == FRAGMENT_TYPE_EMERGENCY) {
+                } else if (viewPager.getCurrentItem() == FRAGMENT_TYPE_EMERGENCY) {
                     message = "Send your live location to your friend and family in dangerous and emergency conditions";
                 }
 

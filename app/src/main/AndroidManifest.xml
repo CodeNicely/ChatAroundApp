@@ -65,8 +65,11 @@
             android:name=".LocationService"
             android:enabled="true" />
 
-        <service android:name=".emergency.service.EmergencyLocationServiceNew"
+        <service
+            android:name=".emergency.service.EmergencyLocationServiceNew"
             android:enabled="true"
+            android:exported="true"
+            android:process=":ServiceProcess"
             />
 
         <service android:name=".emergency.service.EmergencyLocationService"

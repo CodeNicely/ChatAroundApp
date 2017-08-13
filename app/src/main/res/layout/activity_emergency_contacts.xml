@@ -12,6 +12,12 @@
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
+            app:title="@string/contact_list"
+            android:navigationIcon="@drawable/ic_arrow_back_black_24dp"
+            app:navigationIcon="@drawable/ic_arrow_back_black_24dp"
+            android:title="@string/contact_list"
+            app:titleTextColor="@color/black"
+            android:titleTextColor="@color/black"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="#F7D410"

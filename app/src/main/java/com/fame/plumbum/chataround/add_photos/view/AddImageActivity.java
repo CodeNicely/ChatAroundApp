@@ -99,8 +99,6 @@ public class AddImageActivity extends Activity implements
     private LocationRequest mLocationRequest;
     private static final String TAG = "AddImageActivity";
     private static final int CAMERA_REQUEST_ID = 1100;
-    private static final String FILE_KEY = "IMAGE_KEY";
-    private static final String LIST_KEY = "Image_List";
     private final int RESULT_LOAD_IMAGE = 1;
     private File image;
     private boolean CAMERA_REQUEST = false;
@@ -173,7 +171,7 @@ public class AddImageActivity extends Activity implements
         mLocationRequest = LocationRequest.create()
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
                 .setInterval(10 * 1000)        // 10 seconds, in milliseconds
-                .setFastestInterval(1 * 1000); // 1 second, in milliseconds
+                .setFastestInterval(1000); // 1 second, in milliseconds
 
 
         initializeObjects();

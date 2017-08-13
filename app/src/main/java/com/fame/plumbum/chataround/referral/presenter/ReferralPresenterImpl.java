@@ -56,6 +56,11 @@ public class ReferralPresenterImpl implements ReferralPresenter {
         referralProvider.requestReferal(userId, deviceId, mobile, new OnReferralResponse() {
             @Override
             public void onSuccess(ReferalData body) {
+                if(body.isSuccess()){
+                    referralView.onReferralRequestSent();
+                }else{
+                    referralView.showMessage(body.getMessage());
+                }
                 referralView.showDialogLoader(false);
             }
 
@@ -63,6 +68,35 @@ public class ReferralPresenterImpl implements ReferralPresenter {
             public void onFailure(String message) {
                 referralView.showMessage(message);
                 referralView.showDialogLoader(false);
+
+            }
+        });
+    }
+
+    @Override
+    public void requestReferralVerify(String userId, String deviceId, String mobile, String otp) {
+        referralView.showDialogLoader(true);
+        referralProvider.requestReferalOtp(userId, deviceId, mobile, otp, new OnReferralResponse() {
+            @Override
+            public void onSuccess(ReferalData referralData) {
+
+                if(referralData.isSuccess()) {
+
+                    referralView.onReferralSuccess();
+                }else{
+                    referralView.onReferralRequestSent();
+
+                }
+                referralView.showDialogLoader(false);
+                referralView.showMessage(referralData.getMessage());
+
+            }
+
+            @Override
+            public void onFailure(String message) {
+
+                referralView.showDialogLoader(false);
+                referralView.showMessage(message);
 
             }
         });

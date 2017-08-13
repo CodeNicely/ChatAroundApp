@@ -34,6 +34,20 @@ public class Posts {
     @SerializedName("PostId")
     private String PostId;
 
+    @SerializedName("NUpvote")
+    private int NUpvote;
+
+    @SerializedName("NDownvote")
+    private int NDownvote;
+
+    @SerializedName("UpVoteFlag")
+    private boolean UpVoteFlag;
+
+    @SerializedName("DownVoteFlag")
+    private boolean DownVoteFlag;
+
+
+
     public int getNoOfLikes() {
         return NoOfLikes;
     }
@@ -92,5 +106,37 @@ public class Posts {
 
     public String getPostId() {
         return PostId;
+    }
+
+    public int getNDownvote() {
+        return NDownvote;
+    }
+
+    public int getNUpvote() {
+        return NUpvote;
+    }
+
+    public boolean isDownVoteFlag() {
+        return DownVoteFlag;
+    }
+
+    public boolean isUpVoteFlag() {
+        return UpVoteFlag;
+    }
+
+    public void setUpVoteFlag(boolean upVoteFlag) {
+        UpVoteFlag = upVoteFlag;
+    }
+
+    public void setDownVoteFlag(boolean downVoteFlag) {
+        DownVoteFlag = downVoteFlag;
+    }
+
+    public void setNUpvote(int NUpvote) {
+        this.NUpvote = NUpvote;
+    }
+
+    public void setNDownvote(int NDownvote) {
+        this.NDownvote = NDownvote;
     }
 }

@@ -13,6 +13,10 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
 import com.fame.plumbum.chataround.R;
@@ -90,8 +94,49 @@ public class NewsDetailsActivity extends AppCompatActivity {
             final String news_url = bundle.getString(Keys.NEWS_URL);
 
             if (image_url != null) {
-                news_image.setVisibility(View.VISIBLE);
-                imageLoader.loadImage(image_url, news_image, imageProgressBar);
+
+
+                Glide.with(this)
+                        .load(image_url)
+                        .crossFade()
+                        .thumbnail(0.05f)
+                        .load(image_url)
+                        .crossFade()
+                        .thumbnail(0.1f)
+                        .load(image_url)
+                        .crossFade()
+                        .thumbnail(1f)
+                        .listener(new RequestListener<String, GlideDrawable>() {
+                            @Override
+                            public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+
+                                Glide.with(NewsDetailsActivity.this)
+                                        .load(R.drawable.world_black)
+                                        .crossFade()
+                                        .thumbnail(0.05f)
+                                        .load(R.drawable.world_black)
+                                        .crossFade()
+                                        .thumbnail(0.1f)
+                                        .load(R.drawable.world_black)
+                                        .crossFade()
+                                        .thumbnail(1f).into(news_image);
+                                imageProgressBar.setVisibility(View.GONE);
+                                news_image.setVisibility(View.GONE);
+                                return false;
+                            }
+
+                            @Override
+                            public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+
+                                imageProgressBar.setVisibility(View.GONE);
+                                news_image.setVisibility(View.VISIBLE);
+
+                                return false;
+                            }
+                        })
+                        .into(news_image);
+
+
             } else {
                 news_image.setVisibility(View.GONE);
                 imageProgressBar.setVisibility(View.GONE);

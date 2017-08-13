@@ -63,7 +63,15 @@
       },
       "oauth_client": [
         {
-          "client_id": "675990547882-0fetl8pv81t71vk4pme2bbtesor3vv1n.apps.googleusercontent.com",
+          "client_id": "675990547882-7juk5fu021mqgnpukg8cudjbaumn1hnr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.fame.plumbum.chataround.development",
+            "certificate_hash": "43021f0d5d87762756e6078a0f1503a087d42e05"
+          }
+        },
+        {
+          "client_id": "675990547882-6n1it4u3p4abi51l3th546m341moet1b.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.fame.plumbum.chataround.development",
@@ -77,22 +85,6 @@
         {
           "client_id": "675990547882-gqavgqtn0br5n2sqgsnhbs91ai0huval.apps.googleusercontent.com",
           "client_type": 3
-        },
-        {
-          "client_id": "675990547882-72g08tdep19chddmd4s868k5crj2ssuh.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.fame.plumbum.chataround.development",
-            "certificate_hash": "92c343cdadec87c922abd2cf25cfb83855e7e948"
-          }
-        },
-        {
-          "client_id": "675990547882-0jg2k6qq7mvffidfsd54d5oss6m50bb7.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.fame.plumbum.chataround.development",
-            "certificate_hash": "3b2397f3746ba476c73c9309762eda0142ec98c2"
-          }
         }
       ],
       "api_key": [

@@ -26,5 +26,7 @@ public class Urls {
     public static final String SUB_URL_UPDATE_SOS_LOCATION = "UpdateSosLocation";
     public static final String SUB_URL_DELETE_EMERGENCY_CONTACTS = "DeleteContact";
 
+    public static final String SUB_URL_VERIFY_REFERRAL = "VerifyReferralOtp";
+    public static final String SUB_URL_SHOUTS_VOTE = "ShoutsVote";
 }
 

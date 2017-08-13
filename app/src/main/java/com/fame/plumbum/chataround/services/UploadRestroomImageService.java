@@ -224,6 +224,7 @@ public class UploadRestroomImageService extends Service {
                 .setContentText("Restroom has been added successfully by you and now we are waiting for Verification Process. It will be accepted within 48 hours")
                 .setSmallIcon(R.drawable.ic_file_upload_white)
                 .setAutoCancel(true)
+                .setOngoing(false)
                 .setSound(defaultSoundUri)
         ;
 // Start a lengthy operation in a background thread

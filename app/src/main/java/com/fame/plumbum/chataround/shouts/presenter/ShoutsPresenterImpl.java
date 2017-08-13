@@ -3,7 +3,9 @@ package com.fame.plumbum.chataround.shouts.presenter;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
 import com.fame.plumbum.chataround.shouts.OnShoutsReceived;
+import com.fame.plumbum.chataround.shouts.OnVoteResponse;
 import com.fame.plumbum.chataround.shouts.model.ShoutsData;
+import com.fame.plumbum.chataround.shouts.model.VoteData;
 import com.fame.plumbum.chataround.shouts.provider.ShoutsProvider;
 import com.fame.plumbum.chataround.shouts.view.ShoutsView;
 
@@ -27,10 +29,10 @@ public class ShoutsPresenterImpl implements ShoutsPresenter {
         shoutsProvider.requestShouts(userId, counter, latitude, longitude, new OnShoutsReceived() {
             @Override
             public void onSuccess(ShoutsData shoutsData) {
-                if(shoutsData.getStatus()==200){
+                if (shoutsData.getStatus() == 200) {
                     shoutsView.setData(shoutsData.getPosts());
 
-                }else{
+                } else {
                     shoutsView.showMessage(shoutsData.getMessage());
                     Answers.getInstance().logCustom(new CustomEvent("Shout module loading failed - Server end"));
 
@@ -41,7 +43,7 @@ public class ShoutsPresenterImpl implements ShoutsPresenter {
             @Override
             public void onFailed(String message) {
 
-                    Answers.getInstance().logCustom(new CustomEvent("Shout module loading failed - local"));
+                Answers.getInstance().logCustom(new CustomEvent("Shout module loading failed - local"));
 
                 shoutsView.showLoader(false);
                 shoutsView.showMessage(message);
@@ -50,4 +52,30 @@ public class ShoutsPresenterImpl implements ShoutsPresenter {
             }
         });
     }
+
+    @Override
+    public void requestVote(String userId, String postId, final int vote_type, final int position) {
+        shoutsProvider.requestVote(userId, postId, vote_type, new OnVoteResponse() {
+            @Override
+            public void onSuccess(VoteData voteData) {
+
+                if(voteData.isSuccess()) {
+                    shoutsView.onVoteSuccessful(position,vote_type);
+                }else{
+                    shoutsView.showMessage(voteData.getMessage());
+                }
+            }
+
+            @Override
+            public void onFailed(String message) {
+
+                shoutsView.showMessage(message);
+            }
+        });
+
+
+
+    }
+
+
 }

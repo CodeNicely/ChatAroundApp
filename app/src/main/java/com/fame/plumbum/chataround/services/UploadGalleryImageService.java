@@ -118,7 +118,7 @@ public class UploadGalleryImageService extends Service {
         Log.i(TAG, "Service uploadImage");
 
         imageUploader.uploadImage(sharedPrefs.getUserId(),
-                userMobile,description, latitude, longitude, new File(imageData.getFile())
+                userMobile, description, latitude, longitude, new File(imageData.getFile())
                 , new UploadCallback() {
 
 
@@ -127,9 +127,10 @@ public class UploadGalleryImageService extends Service {
                         if (imageUploadData.isSuccess()) {
                             Log.i(TAG, "Image Uploaded");
 
-                            startForeground(NOTIFICATION_ID, showNotification());
+//                            startForeground(NOTIFICATION_ID, showNotification());
                             UploadImages = false;
                             uploadImages();
+//                            onDestroy();
 
                         } else {
                             showMessage("Photo uploading Failed " + imageUploadData.getMessage() +
@@ -219,9 +220,9 @@ public class UploadGalleryImageService extends Service {
         mBuilder.setContentTitle("Photo Added Successfully")
                 .setContentText("Photo has been added successfully by you and now we are waiting for Verification Process. It will be accepted within 48 hours")
                 .setSmallIcon(R.drawable.ic_file_upload_white)
-                .setAutoCancel(true)
                 .setSound(defaultSoundUri)
-        ;
+                .setAutoCancel(true)
+                .setOngoing(false);
 // Start a lengthy operation in a background thread
    /*     new Thread(
                 new Runnable() {

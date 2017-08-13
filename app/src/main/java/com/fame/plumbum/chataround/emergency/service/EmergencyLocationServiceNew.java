@@ -40,7 +40,7 @@ public class EmergencyLocationServiceNew extends Service implements GoogleApiCli
     Location mLastLocation;
     public double lat, lng;
     LocationRequest mLocationRequest;
-    private String sosId="";
+    private String sosId = "";
     private UpdateSosHelper updateSosHelper;
     private SharedPrefs sharedPrefs;
 
@@ -67,7 +67,8 @@ public class EmergencyLocationServiceNew extends Service implements GoogleApiCli
 
 
         mGoogleApiClient.connect();
-        return super.onStartCommand(intent, flags, startId);
+        return START_STICKY;
+//        return super.onStartCommand(intent, flags, startId);
     }
 
     @Override
@@ -79,9 +80,11 @@ public class EmergencyLocationServiceNew extends Service implements GoogleApiCli
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if(mGoogleApiClient.isConnected()){
+        if (mGoogleApiClient.isConnected()) {
             mGoogleApiClient.disconnect();
         }
+
+        sharedPrefs.setSosOngoing(false);
 
     }
 
@@ -124,13 +127,13 @@ public class EmergencyLocationServiceNew extends Service implements GoogleApiCli
 
     protected void createLocationRequest() {
         mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(10000);
-        mLocationRequest.setFastestInterval(5000);
+        mLocationRequest.setInterval(5000);
+        mLocationRequest.setFastestInterval(1000);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        mLocationRequest = new LocationRequest();
+       /* mLocationRequest = new LocationRequest();
         mLocationRequest.setInterval(5000); //5 seconds
-        mLocationRequest.setFastestInterval(3000); //3 seconds
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+        mLocationRequest.setFastestInterval(1000); //3 seconds
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);*/
 
         LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
                 .addLocationRequest(mLocationRequest);
@@ -180,22 +183,23 @@ public class EmergencyLocationServiceNew extends Service implements GoogleApiCli
         lat = location.getLatitude();
         lng = location.getLongitude();
 
-        updateSosHelper.updateSos(sharedPrefs.getUserId(), sosId, location.getLatitude(), location.getLongitude(), new OnLocationUpdateResponse() {
+        if (sharedPrefs.isSosOngoing()) {
+            updateSosHelper.updateSos(sharedPrefs.getUserId(), sosId, location.getLatitude(), location.getLongitude(), new OnLocationUpdateResponse() {
 
-            @Override
-            public void onSuccess(UpdateSosData updateSosData) {
+                @Override
+                public void onSuccess(UpdateSosData updateSosData) {
 
-                Log.d(TAG, updateSosData.getMessage());
+                    Log.d(TAG, updateSosData.getMessage());
 
-            }
+                }
 
-            @Override
-            public void onFailed(String message) {
-                Log.d(TAG, message);
+                @Override
+                public void onFailed(String message) {
+                    Log.d(TAG, message);
 
-            }
-        });
-
+                }
+            });
+        }
 
     }
 

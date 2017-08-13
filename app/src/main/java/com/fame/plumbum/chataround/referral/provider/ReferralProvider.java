@@ -14,4 +14,7 @@ public interface ReferralProvider {
     void requestReferal(String userId,String deviceId,String mobile, OnReferralResponse onReferralResponse);
 
 
+    void requestReferalOtp(String userId,String deviceId,String mobile,String otp, OnReferralResponse onReferralResponse);
+
+
 }
